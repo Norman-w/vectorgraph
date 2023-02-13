@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../../../utils/utils.dart';
 import '../lines/line_segment.dart';
 import '../points/point_ex.dart';
-import '../../utils.dart';
 
 class Polygon{
   Polygon(this.points);

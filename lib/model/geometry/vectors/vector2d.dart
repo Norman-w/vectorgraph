@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../points/point_ex.dart';
-import '../../utils.dart';
 
 class Vector2D{
   double x;

@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:vectorgraph/geometry/lines/line_segment.dart';
 
-import '../geometry/points/point_ex.dart';
+import '../model/geometry/lines/line_segment.dart';
+import '../model/geometry/points/point_ex.dart';
 
 
 class Canva extends StatefulWidget {

@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:ui';
 
 import '../points/point_ex.dart';
-import '../../utils.dart';
 import 'ray.dart';
 import 'straight_line.dart';
 import '../vectors/vector2d.dart';

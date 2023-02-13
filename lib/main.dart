@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:vectorgraph/viewer/rect_painter.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'canvas/canva.dart';
+import 'viewer/canva.dart';
+import 'viewer/view_port.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +35,33 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Canva(),
+      home:
+        Scaffold(
+          body:
+          Stack(
+            children: [
+              //先绘制背景
+              Container(
+                decoration:
+                BoxDecoration(
+                  color: Colors.grey[700],
+                  border: Border.all(color: Colors.grey[350]!),
+                ),
+              ),
+              //在上面绘制视口
+              ViewPort(),
+              //测试绘制一些矩形
+              RectPaint(
+                [
+                  Rect.fromLTWH(30, 30, 100, 100),
+                  Rect.fromLTWH(100, 100, 100, 100),
+                  Rect.fromLTWH(200, 200, 100, 100),
+                ],
+                Colors.black,
+              ),
+            ],
+          )
+        )
     );
   }
 }
