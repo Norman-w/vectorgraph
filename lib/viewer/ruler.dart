@@ -172,8 +172,6 @@ class RulerPainter extends CustomPainter {
     var subDivideMid10000 = subDivideList[subDividesStart-1]*10000;
     double? subDivideSmall10000 = subDivideList.length == 4 ?subDivideList[1]*10000 : null;
     double usingPaperWidth10000 = usingPaperRect.width * 10000;
-    print(currentUsingLevel);
-    print(perTinyStepPixels10000);
     //从0开始,绘制到要展示的纸张的最宽位置,每次步进最小格的值
     for(
     double currentLocalValue10000=0;
