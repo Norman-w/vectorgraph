@@ -139,7 +139,7 @@ class RulerPainter extends CustomPainter {
     //一个最大格代表多长
     double bigGridValue10000 = 0;
     //要展示的区域要被分成分多少段
-    int divideCount = 0;
+    double divideCount = 0;
     //每一段的像素步长
     double perTinyStepPixels10000 = 0;
     var currentUsingLevel = 0;
@@ -149,7 +149,7 @@ class RulerPainter extends CustomPainter {
       tinyGridValue10000 = allDrawDivideList[level]![0]* 10000;
       bigGridValue10000 = allDrawDivideList[level]![allDrawDivideList[level]!.length-1]*10000;
       // print('tinyGridValue:$tinyGridValue');
-      divideCount = usingPaperRect.width*10000 ~/ tinyGridValue10000;
+      divideCount = usingPaperRect.width*10000 / tinyGridValue10000;
       perTinyStepPixels10000 = viewRect.width * 10000 / divideCount;
       if(perTinyStepPixels10000>minPixelsPerTinyGrid10000)
         {
