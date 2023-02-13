@@ -16,7 +16,7 @@ class _ViewPortState extends State<ViewPort>
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(milliseconds: 2000), (timer) {
+    Timer.periodic(Duration(milliseconds: 20), (timer) {
       setState(() {
         // rectWidth = rectWidth *1.01;
         rectLeft = rectLeft * 1.001;
