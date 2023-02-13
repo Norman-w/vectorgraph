@@ -20,9 +20,10 @@ class _ViewPortState extends State<ViewPort>
     super.initState();
     Timer.periodic(Duration(milliseconds: 20), (timer) {
       setState(() {
-        // rectWidth = rectWidth *1.01;
-        rectLeft = rectLeft * 1.011;
-        rectTop = rectTop * 1.015;
+        rectWidth = rectWidth *1.001;
+        rectHeight = rectHeight *1.001;
+        rectLeft = rectLeft * 1.0011;
+        rectTop = rectTop * 1.0015;
         // print(rectTop);
       });
     });

@@ -1,6 +1,8 @@
 /// 在视口上有标尺,可以根据用户选择是否开启
 
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'dash_line_painter.dart';
@@ -138,7 +140,7 @@ class RulerPainter extends CustomPainter {
     var viewRect = Rect.fromLTWH(0, 0, size.width, size.height);
     //endregion
     //region 4
-    double minPixelsPerTinyGrid10000 = 10 * 10000;
+    double minPixelsPerTinyGrid10000 = 5 * 10000;
     //endregion
     //region 5 略过
     //endregion
@@ -175,9 +177,32 @@ class RulerPainter extends CustomPainter {
     double subDivideYOffset10000 = (usingPaperTop10000 % (tinyGridValue10000));
     //8 绘制
     //最大的线时的画笔
+    //region 各个层级的线的绘制参数
+    double maxDivideDrawingLineStart = 2;
+    double midDivideDrawingLineStart = 5;
+    double smallDivideDrawingLineStart = 8;
+    double tinyDivideDrawingLineStart = 10;
+    double allDivideDrawingLineEnd = 15;
+
+
+
     var maxDividePaint = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 5;
+      ..color = Colors.white
+      ..strokeWidth = 1;
+    var midDividePaint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 1;
+    var smallDividePaint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 0.8;
+    var tinyDividePaint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 0.5;
+    //竖排时,文字和横线之间的缝隙
+    double verticalTextGap = 2;
+    //endregion
+
+
     var subDividesStart = subDivideList.length - 1;
     //最长的线的间隔
     var subDivideLongest10000 = subDivideList[subDividesStart] * 10000;
@@ -217,40 +242,40 @@ class RulerPainter extends CustomPainter {
       //region 检查长的,如果当前的数值匹配到长的,就画长的.最长的那个上要画出来数字文字
       //如果匹配到了最长的,别的就不画了
       if (currentStepValue10000.toInt() % subDivideLongest10000.toInt() == 0) {
-        canvas.drawLine(Offset(x, 0), Offset(x, 40), maxDividePaint);
+        canvas.drawLine(Offset(x, maxDivideDrawingLineStart), Offset(x, allDivideDrawingLineEnd), maxDividePaint);
         // print(currentValue10000);
         var currentStepString = (currentStepValue10000 / 10000).toStringAsFixed(
-            2);
+            2).replaceAll('.00', '');
         TextPainter(
           text: TextSpan(
             text: currentStepString,
             style: const TextStyle(
-              color: Colors.red,
+              color: Colors.white,
               fontSize: 10,
             ),
           ),
           textDirection: TextDirection.ltr,
         )
           ..layout()
-          ..paint(canvas, Offset(x, 40));
+          ..paint(canvas, Offset(x, allDivideDrawingLineEnd));
         continue;
       }
       //endregion
       //region 如果匹配到了中等长度的,别的就不画了.
       if (currentStepValue10000 % subDivideMid10000 == 0) {
-        canvas.drawLine(Offset(x, 0), Offset(x, 24), maxDividePaint);
+        canvas.drawLine(Offset(x, midDivideDrawingLineStart), Offset(x, allDivideDrawingLineEnd), midDividePaint);
         continue;
       }
       //endregion
       //region 四个规格中的第二短的如果存在并且match到了.绘制
       if (subDivideSmall10000 != null &&
           currentStepValue10000 % subDivideSmall10000 == 0) {
-        canvas.drawLine(Offset(x, 0), Offset(x, 16), maxDividePaint);
+        canvas.drawLine(Offset(x, smallDivideDrawingLineStart), Offset(x, allDivideDrawingLineEnd), smallDividePaint);
         continue;
       }
       //endregion
       //region 绘制最短的
-      canvas.drawLine(Offset(x, 0), Offset(x, 8), maxDividePaint);
+      canvas.drawLine(Offset(x, tinyDivideDrawingLineStart), Offset(x, allDivideDrawingLineEnd), tinyDividePaint);
       //endregion
     }
     //endregion
@@ -276,40 +301,49 @@ class RulerPainter extends CustomPainter {
       //region 检查长的,如果当前的数值匹配到长的,就画长的.最长的那个上要画出来数字文字
       //如果匹配到了最长的,别的就不画了
       if (currentStepWorldValue10000.toInt() % subDivideLongest10000.toInt() == 0) {
-        canvas.drawLine(Offset(0, y), Offset(40, y), maxDividePaint);
+        canvas.drawLine(Offset(maxDivideDrawingLineStart, y), Offset(allDivideDrawingLineEnd, y), maxDividePaint);
         // print(currentValue10000);
         var currentStepString = (currentStepWorldValue10000 / 10000).toStringAsFixed(
-            2);
-        TextPainter(
+            2).replaceAll('.00', '');
+        var fill = TextPainter(
           text: TextSpan(
             text: currentStepString,
             style: const TextStyle(
-              color: Colors.red,
+              color: Colors.white,
               fontSize: 10,
             ),
           ),
           textDirection: TextDirection.ltr,
-        )
-          ..layout()
-          ..paint(canvas, Offset(40, y));
+        );
+          fill.layout();
+        canvas.save();
+        var offset = Offset(allDivideDrawingLineEnd, y);
+        final pivot = fill.size.topLeft(offset);
+        canvas.translate(pivot.dx + fill.size.height, pivot.dy+ verticalTextGap);
+        canvas.rotate(pi/2);
+        canvas.translate(-pivot.dx, -pivot.dy);
+        fill.paint(canvas, offset);
+        canvas.restore();
+
+
         continue;
       }
       //endregion
       //region 如果匹配到了中等长度的,别的就不画了.
       if (currentStepWorldValue10000 % subDivideMid10000 == 0) {
-        canvas.drawLine(Offset(0, y), Offset(24, y), maxDividePaint);
+        canvas.drawLine(Offset(midDivideDrawingLineStart, y), Offset(allDivideDrawingLineEnd, y), midDividePaint);
         continue;
       }
       //endregion
       //region 四个规格中的第二短的如果存在并且match到了.绘制
       if (subDivideSmall10000 != null &&
           currentStepWorldValue10000 % subDivideSmall10000 == 0) {
-        canvas.drawLine(Offset(0, y), Offset(16, y), maxDividePaint);
+        canvas.drawLine(Offset(smallDivideDrawingLineStart, y), Offset(allDivideDrawingLineEnd, y), smallDividePaint);
         continue;
       }
       //endregion
       //region 绘制最短的
-      canvas.drawLine(Offset(0, y), Offset(8, y), maxDividePaint);
+      canvas.drawLine(Offset(tinyDivideDrawingLineStart, y), Offset(allDivideDrawingLineEnd, y), tinyDividePaint);
       //endregion
     }
     //endregion
