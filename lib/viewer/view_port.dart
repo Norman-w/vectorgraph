@@ -11,13 +11,15 @@ class _ViewPortState extends State<ViewPort>
 {
   double currentScale =0.5;
   Offset currentOffset = Offset.zero;
-  double rectWidth = 1;
+  double rectWidth = 100;
+  double rectLeft = 29.57429;
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(milliseconds: 50), (timer) {
+    Timer.periodic(Duration(milliseconds: 2000), (timer) {
       setState(() {
-        rectWidth = rectWidth *1.01;
+        // rectWidth = rectWidth *1.01;
+        rectLeft = rectLeft * 1.001;
       });
     });
   }
@@ -30,8 +32,12 @@ class _ViewPortState extends State<ViewPort>
           width: double.infinity,
           height: double.infinity,
           child:Ruler(
-            Rect.fromLTWH(10, 0, rectWidth, 0),
+            Rect.fromLTWH(rectLeft, 0, rectWidth, 0),
           )
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Text(rectLeft.toStringAsFixed(5)),
         )
       ],
     );

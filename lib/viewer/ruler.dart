@@ -19,126 +19,6 @@ class RulerPainter extends CustomPainter {
   final Rect usingPaperRect;
   RulerPainter(this.usingPaperRect);
 
-  // RulerPainter(this.size, this.scale, this.color);
-  // final Size size;
-  // final double scale;
-  // final Color color;
-  // @override
-  // void paint(Canvas canvas, Size size) {
-  //   final shortLinePaint = Paint()
-  //     ..color = color
-  //     ..strokeWidth = 0.5;
-  //   final longLinePaint = Paint()
-  //     ..color = Colors.black12
-  //     ..strokeWidth = 3;
-  //
-  //   const double shortLineLength = 8;
-  //   const double longLineLength = 12;
-  //
-  //   //横向刻度
-  //   for (var i = 0; i < size.width; i += 10) {
-  //     if(i%100==0) {
-  //       continue;
-  //     }
-  //     canvas.drawLine(Offset(i.toDouble(), 0), Offset(i.toDouble(), shortLineLength), shortLinePaint);
-  //   }
-  //   //纵向刻度
-  //   for (var i = 0; i < size.height; i += 10) {
-  //     if(i%100==0) {
-  //       continue;
-  //     }
-  //     canvas.drawLine(Offset(0, i.toDouble()), Offset(shortLineLength, i.toDouble()), shortLinePaint);
-  //   }
-  //
-  //   //从中间向左右两侧绘制标尺
-  //   for (var i = 0; i < size.width / 2; i += 100) {
-  //     canvas.drawLine(Offset(size.width / 2 - i, 0), Offset(size.width / 2 - i, longLineLength), longLinePaint);
-  //     TextPainter(
-  //       text: TextSpan(
-  //         text: '${i / scale ~/ 2}',
-  //         style: TextStyle(
-  //           color: color,
-  //           fontSize: 10,
-  //         ),
-  //       ),
-  //       textDirection: TextDirection.ltr,
-  //     )
-  //       ..layout()
-  //       ..paint(canvas, Offset(size.width / 2 - i, longLineLength));
-  //     canvas.drawLine(Offset(size.width / 2 + i, 0), Offset(size.width / 2 + i, longLineLength), longLinePaint);
-  //     TextPainter(
-  //       text: TextSpan(
-  //         text: '${i / scale ~/ 2}',
-  //         style: TextStyle(
-  //           color: color,
-  //           fontSize: 10,
-  //         ),
-  //       ),
-  //       textDirection: TextDirection.ltr,
-  //     )
-  //       ..layout()
-  //       ..paint(canvas, Offset(size.width / 2 + i, longLineLength));
-  //   }
-  //   //从中间向上下两侧绘制标尺
-  //   for (var i = 0; i < size.height / 2; i += 100) {
-  //     canvas.drawLine(Offset(0, size.height / 2 - i), Offset(longLineLength, size.height / 2 - i), longLinePaint);
-  //     TextPainter(
-  //       text: TextSpan(
-  //         text: '${i / scale ~/ 2}',
-  //         style: TextStyle(
-  //           color: color,
-  //           fontSize: 10,
-  //         ),
-  //       ),
-  //       textDirection: TextDirection.ltr,
-  //     )
-  //       ..layout()
-  //       ..paint(canvas, Offset(longLineLength, size.height / 2 - i));
-  //     canvas.drawLine(Offset(0, size.height / 2 + i), Offset(longLineLength, size.height / 2 + i), longLinePaint);
-  //     TextPainter(
-  //       text: TextSpan(
-  //         text: '${i / scale ~/ 2}',
-  //         style: TextStyle(
-  //           color: color,
-  //           fontSize: 10,
-  //         ),
-  //       ),
-  //       textDirection: TextDirection.ltr,
-  //     )
-  //       ..layout()
-  //       ..paint(canvas, Offset(longLineLength, size.height / 2 + i));
-  //   }
-  //
-  //
-  //   double dashWidth = shortLineLength/2, dashSpace = longLineLength/2, startX = 0;
-  //   final paint = Paint()
-  //     ..color = color
-  //     ..strokeWidth = 0.2;
-  //   //draw dashed center lines
-  //   while (startX < size.width) {
-  //     canvas.drawLine(Offset(startX, size.height / 2), Offset(startX + dashWidth, size.height / 2), paint);
-  //     startX += dashWidth + dashSpace;
-  //   }
-  //   startX = 0;
-  //   while (startX < size.height) {
-  //     canvas.drawLine(Offset(size.width / 2, startX), Offset(size.width / 2, startX + dashWidth), paint);
-  //     startX += dashWidth + dashSpace;
-  //   }
-  //
-  //
-  //   final gridPaint = Paint()
-  //     ..color = color
-  //     ..strokeWidth = 0.1;
-  //   for (var i = 0; i < size.width / 2; i += 10) {
-  //     canvas.drawLine(Offset(size.width / 2 - i, 0), Offset(size.width / 2 - i, size.height), gridPaint);
-  //     canvas.drawLine(Offset(size.width / 2 + i, 0), Offset(size.width / 2 + i, size.height), gridPaint);
-  //   }
-  //   for (var i = 0; i < size.height / 2; i += 10) {
-  //     canvas.drawLine(Offset(0, size.height / 2 - i), Offset(size.width, size.height / 2 - i), gridPaint);
-  //     canvas.drawLine(Offset(0, size.height / 2 + i), Offset(size.width, size.height / 2 + i), gridPaint);
-  //   }
-  // }
-
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
@@ -146,28 +26,6 @@ class RulerPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // //short line length is 8
-    // //long line length is 12
-    // const double shortLineLength = 8;
-    // const double longLineLength = 12;
-    // //lines color is gray350
-    // const Color color = Colors.white;
-    // //short line paint is 0.3 width and long line paint is 1.2 width
-    // final Paint shortLinePaint = Paint()
-    //   ..color = color
-    //   ..strokeWidth = 0.3;
-    // final Paint longLinePaint = Paint()
-    //   ..color = color
-    //   ..strokeWidth = 1.2;
-    // //calc step x and y
-    // final double stepX = size.width / rect.width;
-    // final double stepY = size.height / rect.height;
-    // //draw vertical lines
-    // for(double i=rect.left;i<rect.width;i+=10){
-    //   //calc x
-    //   double x = (i-rect.left)*stepX;
-    //   canvas.drawLine(Offset(x, 0), Offset(x, shortLineLength), shortLinePaint);
-    // }
     /*画线的的时候始终保持两级
     思路A:
     比如宽度640,正常绘制是10一个小格
@@ -272,56 +130,79 @@ class RulerPainter extends CustomPainter {
     //3
     var viewRect = Rect.fromLTWH(0, 0, size.width, size.height);
     //4
-    double minPixelsPerTinyGrid = 8;
+    double minPixelsPerTinyGrid10000 = 10 * 10000;
     //5
     //6
     //7
     //一个小格代表多长
-    double tinyGridValue = 0;
+    double tinyGridValue10000 = 0;
+    //一个最大格代表多长
+    double bigGridValue10000 = 0;
     //要展示的区域要被分成分多少段
     int divideCount = 0;
     //每一段的像素步长
-    double perTinyStepPixels = 0;
+    double perTinyStepPixels10000 = 0;
+    var currentUsingLevel = 0;
     List<double> subDivideList = [];
     for(var level in allDrawDivideList.keys){
-      tinyGridValue = allDrawDivideList[level]![0];
+      currentUsingLevel ++;
+      tinyGridValue10000 = allDrawDivideList[level]![0]* 10000;
+      bigGridValue10000 = allDrawDivideList[level]![allDrawDivideList[level]!.length-1]*10000;
       // print('tinyGridValue:$tinyGridValue');
-      divideCount = usingPaperRect.width ~/ tinyGridValue;
-      perTinyStepPixels = viewRect.width / divideCount;
-      if(perTinyStepPixels>minPixelsPerTinyGrid)
+      divideCount = usingPaperRect.width*10000 ~/ tinyGridValue10000;
+      perTinyStepPixels10000 = viewRect.width * 10000 / divideCount;
+      if(perTinyStepPixels10000>minPixelsPerTinyGrid10000)
         {
           subDivideList = allDrawDivideList[level]!;
           break;
         }
     }
-    if(perTinyStepPixels<minPixelsPerTinyGrid)
+    if(perTinyStepPixels10000<minPixelsPerTinyGrid10000) {
       return;
+    }
+    var usingPaperLeft10000 = usingPaperRect.left *10000;
+    //最小段的偏移量
+    double subDivideOffset10000 = (usingPaperLeft10000 % (tinyGridValue10000));
     //8
     var maxDividePaint = Paint()
     ..color = Colors.red
-    ..strokeWidth = 1;
+    ..strokeWidth = 5;
     var subDividesStart = subDivideList.length-1;
     var subDivideLongest10000 = subDivideList[subDividesStart]*10000;
     var subDivideMid10000 = subDivideList[subDividesStart-1]*10000;
     double? subDivideSmall10000 = subDivideList.length == 4 ?subDivideList[1]*10000 : null;
-    // print(usingPaperRect.width);
     double usingPaperWidth10000 = usingPaperRect.width * 10000;
-    double tinyGridValue10000 = tinyGridValue * 10000;
-    for(double i=0;i<usingPaperWidth10000;i+=tinyGridValue10000){
-      var currentValue = i;
-      var x = currentValue / tinyGridValue * perTinyStepPixels /10000;
+    print(currentUsingLevel);
+    print(perTinyStepPixels10000);
+    //从0开始,绘制到要展示的纸张的最宽位置,每次步进最小格的值
+    for(
+    double currentLocalValue10000=0;
+    currentLocalValue10000<usingPaperWidth10000;
+    currentLocalValue10000+=tinyGridValue10000){
+      //当前世界坐标上的值为
+      var currentWorldValue10000 = usingPaperLeft10000 + currentLocalValue10000;
+      //当前坐落在坐标上的下一个点为:
+      var currentStepValue10000 = (currentWorldValue10000 - subDivideOffset10000) + tinyGridValue10000;
+      if(subDivideOffset10000/10000 == 0){
+        currentStepValue10000 += subDivideOffset10000;
+      }
+      // print(subDivideOffset10000/10000);
+      var x = currentStepValue10000 / tinyGridValue10000 * perTinyStepPixels10000;
+      var a = usingPaperLeft10000 / tinyGridValue10000 * perTinyStepPixels10000;
+      var f = x -a;
+      x = f / 10000;
       //检查长的,如果当前的数值匹配到长的,就画长的.最长的那个上要画出来数字文字
       // for(var j=subDividesStart;j>0;j--){
       //如果匹配到了最长的,别的就不画了
-      var t1 = currentValue.toInt();
-      var t2 = subDivideLongest10000.toInt();
       // print("s1: $t1, s2:$t2");
-        if(currentValue.toInt()%subDivideLongest10000.toInt() ==0){
-          canvas.drawLine(Offset(x, 0), Offset(x, 20), maxDividePaint);
+        if(currentStepValue10000.toInt()%subDivideLongest10000.toInt() ==0){
+          canvas.drawLine(Offset(x, 0), Offset(x, 40), maxDividePaint);
+          // print(currentValue10000);
+          var currentStepString = (currentStepValue10000/10000).toStringAsFixed(2);
           TextPainter(
             text: TextSpan(
-              text: '${currentValue/10000 + usingPaperRect.left}',
-              style: TextStyle(
+              text: currentStepString,
+              style: const TextStyle(
                 color: Colors.red,
                 fontSize: 10,
               ),
@@ -329,21 +210,37 @@ class RulerPainter extends CustomPainter {
             textDirection: TextDirection.ltr,
           )
             ..layout()
-            ..paint(canvas, Offset(x, 20));
+            ..paint(canvas, Offset(x, 40));
           continue;
         }
         //如果匹配到了中等长度的,别的就不画了.
-        if(currentValue%subDivideMid10000 == 0){
-          canvas.drawLine(Offset(x, 0), Offset(x, 12), maxDividePaint);
+        if(currentStepValue10000%subDivideMid10000 == 0){
+          canvas.drawLine(Offset(x, 0), Offset(x, 24), maxDividePaint);
           continue;
         }
       // }
       //四个规格中的第二短的如果存在并且match到了.绘制
-      if(subDivideSmall10000!= null && currentValue%subDivideSmall10000 == 0){
-        canvas.drawLine(Offset(x, 0), Offset(x, 8), maxDividePaint);
+      if(subDivideSmall10000!= null && currentStepValue10000%subDivideSmall10000 == 0){
+        canvas.drawLine(Offset(x, 0), Offset(x, 16), maxDividePaint);
         continue;
       }
-      canvas.drawLine(Offset(x, 0), Offset(x, 4), maxDividePaint);
+      canvas.drawLine(Offset(x, 0), Offset(x, 8), maxDividePaint);
+
+
+
+      // TextPainter(
+      //   text: TextSpan(
+      //     text: '$currentStepString',
+      //     style: TextStyle(
+      //       color: Colors.red,
+      //       fontSize: 10,
+      //     ),
+      //   ),
+      //   textDirection: TextDirection.ltr,
+      // )
+      //   ..layout()
+      //   ..paint(canvas, Offset(x, 40));
+      
     }
 
     //draw vertical long lines and numbers start with 0 from left
