@@ -15,8 +15,37 @@ class Ruler extends StatelessWidget {
   }
 }
 
+List<List<double>> allDrawDivideList = [
+  [0.005, 0.01, 0.05, 0.1],
+  [0.001, 0.02, 0.1],
+  [0.002, 0.05, 0.2],
+  [0.005, 0.01, 0.5],
+  [0.01, 0.02, 0.05, 0.1],
+  [0.02, 0.1, 0.2, 0.5],
+  [0.05, 0.1, 0.5, 1],
+  [0.1, 0.25, 0.5, 1],
+  [0.2, 0.5, 1, 2],
+  [0.5, 1, 2.5, 5],
+  [1, 2.5, 5, 10],
+  [2.5, 12.5, 25],
+  [5, 25, 50],
+  [10, 50, 100],
+  [25, 125, 250],
+  [50, 250, 500],
+  [100, 500, 1000],
+  [250, 125, 2500],
+  [500, 250, 5000],
+  [1000, 5000, 10000],
+  [2500, 12500, 25000],
+  [5000, 25000, 50000],
+  [10000, 50000, 100000],
+  [25000, 125000, 250000],
+  [50000, 250000, 1000000],
+];
+
 class RulerPainter extends CustomPainter {
   final Rect usingPaperRect;
+
   RulerPainter(this.usingPaperRect);
 
   @override
@@ -99,164 +128,190 @@ class RulerPainter extends CustomPainter {
 
     试试这个方法吧2023-02-12 15:07:17
      */
-    //1
-    Map<double, List<double>> allDrawDivideList = {
-      0.1: [0.005, 0.01, 0.05, 0.1],
-      0.2: [0.001, 0.02, 0.1],
-      0.5: [0.002, 0.05, 0.2],
-      0.8: [0.005, 0.01, 0.5],
-      0.9:[0.01,0.02,0.05,0.1],
-      1: [0.02, 0.1, 0.2, 0.5],
-      2: [0.05, 0.1, 0.5, 1],
-      5: [0.1,0.25, 0.5, 1],
-      10: [0.2,0.5, 1, 2],
-      25: [0.5,1, 2.5, 5],
-      50: [1,2.5, 5, 10],
-      100: [2.5, 12.5, 25],
-      250: [5, 25, 50],
-      500: [10, 50, 100],
-      1000: [25, 125, 250],
-      2500: [50, 250, 500],
-      5000: [100, 500, 1000],
-      5002: [250, 125, 2500],
-      5003: [500, 250, 5000],
-      10000: [1000, 5000, 10000],
-      25000: [2500, 12500, 25000],
-      50000: [5000, 25000, 50000],
-      100000: [10000, 50000, 100000],
-      250000: [25000, 125000, 250000],
-      500000: [50000, 250000, 1000000],
-    };
-    //3
+    //region 1
+    //allDrawDivideList
+    //endregion
+    //region 2
+    //usingPaperRect
+    //endregion
+    //region 3
     var viewRect = Rect.fromLTWH(0, 0, size.width, size.height);
-    //4
+    //endregion
+    //region 4
     double minPixelsPerTinyGrid10000 = 10 * 10000;
-    //5
-    //6
-    //7
-    //一个小格代表多长
+    //endregion
+    //region 5 略过
+    //endregion
+    //一个小格代表多长/最短的线的间隔.
     double tinyGridValue10000 = 0;
-    //一个最大格代表多长
-    double bigGridValue10000 = 0;
     //要展示的区域要被分成分多少段
     double divideCount = 0;
     //每一段的像素步长
     double perTinyStepPixels10000 = 0;
-    var currentUsingLevel = 0;
     List<double> subDivideList = [];
-    for(var level in allDrawDivideList.keys){
-      currentUsingLevel ++;
-      tinyGridValue10000 = allDrawDivideList[level]![0]* 10000;
-      bigGridValue10000 = allDrawDivideList[level]![allDrawDivideList[level]!.length-1]*10000;
-      // print('tinyGridValue:$tinyGridValue');
-      divideCount = usingPaperRect.width*10000 / tinyGridValue10000;
+    //region 6 7 按照最小格子在显示上必须要满足多少像素的要求,来选择最小格子的值,同时计算要拆分成多少段
+    for (var level in allDrawDivideList) {
+      //6
+      tinyGridValue10000 = level[0] * 10000;
+      //7
+      divideCount = usingPaperRect.width * 10000 / tinyGridValue10000;
       perTinyStepPixels10000 = viewRect.width * 10000 / divideCount;
-      if(perTinyStepPixels10000>minPixelsPerTinyGrid10000)
-        {
-          subDivideList = allDrawDivideList[level]!;
-          break;
-        }
+      if (perTinyStepPixels10000 > minPixelsPerTinyGrid10000) {
+        subDivideList = level;
+        break;
+      }
     }
-    if(perTinyStepPixels10000<minPixelsPerTinyGrid10000) {
+    //endregion
+    //region 如果检测了完了以后最小的格子都不满足最小像素要求,那么就不画了
+    if (perTinyStepPixels10000 < minPixelsPerTinyGrid10000) {
       return;
     }
-    var usingPaperLeft10000 = usingPaperRect.left *10000;
-    //最小段的偏移量
-    double subDivideOffset10000 = (usingPaperLeft10000 % (tinyGridValue10000));
-    //8
+    //endregion
+    //要绘制的世界坐标的最小值,也就是画面的最左边的值
+    var usingPaperLeft10000 = usingPaperRect.left * 10000;
+    var usingPaperTop10000 = usingPaperRect.top * 10000;
+    //最小段的偏移量,比如从左边开始,一个小格子是10,如果要显示的100,那从0开始直接画线就可以,当前要显示的是101.1,那么偏移出来1.1以后再画线
+    double subDivideXOffset10000 = (usingPaperLeft10000 % (tinyGridValue10000));
+    double subDivideYOffset10000 = (usingPaperTop10000 % (tinyGridValue10000));
+    //8 绘制
+    //最大的线时的画笔
     var maxDividePaint = Paint()
-    ..color = Colors.red
-    ..strokeWidth = 5;
-    var subDividesStart = subDivideList.length-1;
-    var subDivideLongest10000 = subDivideList[subDividesStart]*10000;
-    var subDivideMid10000 = subDivideList[subDividesStart-1]*10000;
-    double? subDivideSmall10000 = subDivideList.length == 4 ?subDivideList[1]*10000 : null;
+      ..color = Colors.red
+      ..strokeWidth = 5;
+    var subDividesStart = subDivideList.length - 1;
+    //最长的线的间隔
+    var subDivideLongest10000 = subDivideList[subDividesStart] * 10000;
+    //次长的线的间隔
+    var subDivideMid10000 = subDivideList[subDividesStart - 1] * 10000;
+    //次短的线的间隔
+    double? subDivideSmall10000 = subDivideList.length == 4 ? subDivideList[1] *
+        10000 : null;
+    //要绘制的纸张上的区域的宽度.这个宽度是世界坐标中的宽度,不是像素宽度
     double usingPaperWidth10000 = usingPaperRect.width * 10000;
-    //从0开始,绘制到要展示的纸张的最宽位置,每次步进最小格的值
-    for(
-    double currentLocalValue10000=0;
-    currentLocalValue10000<usingPaperWidth10000;
-    currentLocalValue10000+=tinyGridValue10000){
+    //要绘制的纸张上的区域的高度.这个高度是世界坐标中的高度,不是像素高度
+    double usingPaperHeight10000 = usingPaperRect.height * 10000;
+    //8
+    //把要绘制的区间的值当做是世界坐标中的值.把矩形框中作为本地坐标.
+    //本地坐标从0开始绘制,绘制到usingPaperWidth10000结束.
+    //每次绘制的步长是每一个小格子的值,也就是tinyGridValue10000
+
+    //region 绘制横尺
+    for (
+    double currentLocalValue10000 = 0;
+    currentLocalValue10000 < usingPaperWidth10000;
+    currentLocalValue10000 += tinyGridValue10000) {
+      //region 坐标计算
       //当前世界坐标上的值为
       var currentWorldValue10000 = usingPaperLeft10000 + currentLocalValue10000;
-      //当前坐落在坐标上的下一个点为:
-      var currentStepValue10000 = (currentWorldValue10000 - subDivideOffset10000) + tinyGridValue10000;
-      if(subDivideOffset10000/10000 == 0){
-        currentStepValue10000 += subDivideOffset10000;
-      }
-      // print(subDivideOffset10000/10000);
-      var x = currentStepValue10000 / tinyGridValue10000 * perTinyStepPixels10000;
+      //当前坐落在坐标上的下一个本地坐标点为:
+      var currentStepValue10000 = (currentWorldValue10000 -
+          subDivideXOffset10000) + tinyGridValue10000;
+      //当前坐落在坐标上的下一个本地坐标点的像素值为:
+      var x = currentStepValue10000 / tinyGridValue10000 *
+          perTinyStepPixels10000;
       var a = usingPaperLeft10000 / tinyGridValue10000 * perTinyStepPixels10000;
-      var f = x -a;
+      var f = x - a;
+      //上面三行加上下面这一行具体咋回事我也不知道了.一点一点瞎猫碰死耗子测试出来的反正显示是正确的.
       x = f / 10000;
-      //检查长的,如果当前的数值匹配到长的,就画长的.最长的那个上要画出来数字文字
-      // for(var j=subDividesStart;j>0;j--){
+      //endregion
+      //region 检查长的,如果当前的数值匹配到长的,就画长的.最长的那个上要画出来数字文字
       //如果匹配到了最长的,别的就不画了
-      // print("s1: $t1, s2:$t2");
-        if(currentStepValue10000.toInt()%subDivideLongest10000.toInt() ==0){
-          canvas.drawLine(Offset(x, 0), Offset(x, 40), maxDividePaint);
-          // print(currentValue10000);
-          var currentStepString = (currentStepValue10000/10000).toStringAsFixed(2);
-          TextPainter(
-            text: TextSpan(
-              text: currentStepString,
-              style: const TextStyle(
-                color: Colors.red,
-                fontSize: 10,
-              ),
+      if (currentStepValue10000.toInt() % subDivideLongest10000.toInt() == 0) {
+        canvas.drawLine(Offset(x, 0), Offset(x, 40), maxDividePaint);
+        // print(currentValue10000);
+        var currentStepString = (currentStepValue10000 / 10000).toStringAsFixed(
+            2);
+        TextPainter(
+          text: TextSpan(
+            text: currentStepString,
+            style: const TextStyle(
+              color: Colors.red,
+              fontSize: 10,
             ),
-            textDirection: TextDirection.ltr,
-          )
-            ..layout()
-            ..paint(canvas, Offset(x, 40));
-          continue;
-        }
-        //如果匹配到了中等长度的,别的就不画了.
-        if(currentStepValue10000%subDivideMid10000 == 0){
-          canvas.drawLine(Offset(x, 0), Offset(x, 24), maxDividePaint);
-          continue;
-        }
-      // }
-      //四个规格中的第二短的如果存在并且match到了.绘制
-      if(subDivideSmall10000!= null && currentStepValue10000%subDivideSmall10000 == 0){
+          ),
+          textDirection: TextDirection.ltr,
+        )
+          ..layout()
+          ..paint(canvas, Offset(x, 40));
+        continue;
+      }
+      //endregion
+      //region 如果匹配到了中等长度的,别的就不画了.
+      if (currentStepValue10000 % subDivideMid10000 == 0) {
+        canvas.drawLine(Offset(x, 0), Offset(x, 24), maxDividePaint);
+        continue;
+      }
+      //endregion
+      //region 四个规格中的第二短的如果存在并且match到了.绘制
+      if (subDivideSmall10000 != null &&
+          currentStepValue10000 % subDivideSmall10000 == 0) {
         canvas.drawLine(Offset(x, 0), Offset(x, 16), maxDividePaint);
         continue;
       }
+      //endregion
+      //region 绘制最短的
       canvas.drawLine(Offset(x, 0), Offset(x, 8), maxDividePaint);
-
-
-
-      // TextPainter(
-      //   text: TextSpan(
-      //     text: '$currentStepString',
-      //     style: TextStyle(
-      //       color: Colors.red,
-      //       fontSize: 10,
-      //     ),
-      //   ),
-      //   textDirection: TextDirection.ltr,
-      // )
-      //   ..layout()
-      //   ..paint(canvas, Offset(x, 40));
-      
+      //endregion
     }
-
-    //draw vertical long lines and numbers start with 0 from left
-    // for(double i=rect.left;i<rect.width;i+=10){
-    //   double x = (i-rect.left)*stepX;
-    //   canvas.drawLine(Offset(x, 0), Offset(x, longLineLength), longLinePaint);
-    //   TextPainter(
-    //     text: TextSpan(
-    //       text: '${i ~/ 2}',
-    //       style: TextStyle(
-    //         color: color,
-    //         fontSize: 10,
-    //       ),
-    //     ),
-    //     textDirection: TextDirection.ltr,
-    //   )
-    //     ..layout()
-    //     ..paint(canvas, Offset(x, longLineLength));
-    // }
+    //endregion
+    //region 绘制竖尺
+    for (
+    double currentLocalValue10000 = 0;
+    currentLocalValue10000 < usingPaperHeight10000;
+    currentLocalValue10000 += tinyGridValue10000) {
+      //region 坐标计算
+      //当前世界坐标上的值为
+      var currentWorldValue10000 = usingPaperTop10000 + currentLocalValue10000;
+      //当前坐落在坐标上的下一个本地坐标点为:
+      var currentStepWorldValue10000 = (currentWorldValue10000 -
+          subDivideYOffset10000) + tinyGridValue10000;
+      //当前坐落在坐标上的下一个本地坐标点的像素值为:
+      var y = currentStepWorldValue10000 / tinyGridValue10000 *
+          perTinyStepPixels10000;
+      var a = usingPaperTop10000 / tinyGridValue10000 * perTinyStepPixels10000;
+      var f = y - a;
+      //上面三行加上下面这一行具体咋回事我也不知道了.一点一点瞎猫碰死耗子测试出来的反正显示是正确的.
+      y = f / 10000;
+      //endregion
+      //region 检查长的,如果当前的数值匹配到长的,就画长的.最长的那个上要画出来数字文字
+      //如果匹配到了最长的,别的就不画了
+      if (currentStepWorldValue10000.toInt() % subDivideLongest10000.toInt() == 0) {
+        canvas.drawLine(Offset(0, y), Offset(40, y), maxDividePaint);
+        // print(currentValue10000);
+        var currentStepString = (currentStepWorldValue10000 / 10000).toStringAsFixed(
+            2);
+        TextPainter(
+          text: TextSpan(
+            text: currentStepString,
+            style: const TextStyle(
+              color: Colors.red,
+              fontSize: 10,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        )
+          ..layout()
+          ..paint(canvas, Offset(40, y));
+        continue;
+      }
+      //endregion
+      //region 如果匹配到了中等长度的,别的就不画了.
+      if (currentStepWorldValue10000 % subDivideMid10000 == 0) {
+        canvas.drawLine(Offset(0, y), Offset(24, y), maxDividePaint);
+        continue;
+      }
+      //endregion
+      //region 四个规格中的第二短的如果存在并且match到了.绘制
+      if (subDivideSmall10000 != null &&
+          currentStepWorldValue10000 % subDivideSmall10000 == 0) {
+        canvas.drawLine(Offset(0, y), Offset(16, y), maxDividePaint);
+        continue;
+      }
+      //endregion
+      //region 绘制最短的
+      canvas.drawLine(Offset(0, y), Offset(8, y), maxDividePaint);
+      //endregion
+    }
+    //endregion
   }
 }
