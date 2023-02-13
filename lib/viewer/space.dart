@@ -2,6 +2,21 @@
 //在需要显示space上的内容时,用户通过鼠标键盘等交互确认显示范围(宽度,高度)以及相对于space中心点的偏移量确认视口(view_port)
 //在视口外的内容不进行渲染,视口内的内容根据缩放比例进行渲染.
 
-class Space{
+import 'paper.dart';
+import 'space_layer.dart';
 
+class Space {
+  final layers = <SpaceLayer>[];
+  //get all layer's objects
+  List<Object> get objects {
+    var result = <Object>[];
+    for (var layer in layers) {
+      result.addAll(layer.objects);
+    }
+    return result;
+  }
+  final papers = <Paper>[];
+  void addPaper(Paper paper){
+    papers.add(paper);
+  }
 }
