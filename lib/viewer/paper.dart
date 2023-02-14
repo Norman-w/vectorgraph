@@ -8,9 +8,14 @@ import 'package:flutter/material.dart';
 
 class Paper{
   String name;
+  late double left;
+  late double top;
   double width;
   double height;
   Color color;
+  Rect get rect{
+    return Rect.fromLTWH(left, top, width, height);
+  }
   Paper({required this.name,required this.width,required this.height,required this.color});
 }
 

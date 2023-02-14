@@ -40,10 +40,21 @@ Space initSpace(){
 
   var paper = Paper(
     name: "paper1",
-    width: 1000,
-    height: 1000,
-    color: Colors.white,
-  );
+    width: 400,
+    height: 300,
+    color: Colors.lightGreen,
+  )..left = 180..top = 150;
+
+
+  var rect1 = Rect.fromLTWH(20, 30, 20, 20);
+  var rect2 = Rect.fromLTWH(50, 60, 15, 20);
+  var rect3 = Rect.fromLTWH(70, 80, 20, 12);
+  var rect4 = Rect.fromLTWH(85, 105, 30, 25);
+
+  layer.addRect(rect1);
+  layer.addRect(rect2);
+  layer.addRect(rect3);
+  layer.addRect(rect4);
 
   space.addPaper(paper);
 
