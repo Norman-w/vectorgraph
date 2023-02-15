@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import '../utils/widget.dart';
 import 'package:vectorgraph/viewer/rect_painter.dart';
 import 'package:vectorgraph/viewer/space_layer.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'viewer/canva.dart';
 import 'viewer/paper.dart';
+import 'viewer/path_painter.dart';
+import 'viewer/points_painter.dart';
 import 'viewer/space.dart';
 import 'viewer/view_port.dart';
+import 'dart:math';
 //import layer class
 
 
@@ -61,9 +65,57 @@ Space initSpace(){
   space.layers.add(layer);
     return space;
 }
+
+List<Offset> smoothPoints(List<Offset> points, int level) {
+  List<Offset> result = [];
+  for (int i = 0; i < points.length - 1; i++) {
+    Offset p1 = points[i];
+    Offset p2 = points[i + 1];
+    double dx = (p2.dx - p1.dx) / level;
+    double dy = (p2.dy - p1.dy) / level;
+    for (int j = 0; j < level; j++) {
+      result.add(Offset(p1.dx + dx * j, p1.dy + dy * j));
+    }
+  }
+  return result;
+}
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    const int nodeCount = 50;
+    double maxHeight = 50;
+    const int yOffset = 400;
+    const int smoothLevel = 10;
+    var bound = context.globalPaintBounds ?? Rect.zero;
+    double perNodeWidth = bound.width / nodeCount;
+    List<Offset> randomPoints = [];
+    for (int i = 0; i <= nodeCount; i++) {
+      maxHeight *= 1.05;
+        randomPoints.add(Offset(
+            i * perNodeWidth,
+            Random().nextDouble() * maxHeight + yOffset));
+    }
+    // print(randomPoints.length);
+
+    var path = Path();
+    //path cubicTo each random point
+    path.moveTo(randomPoints[0].dx, randomPoints[0].dy);
+    for (int i = 1; i < randomPoints.length; i++) {
+      path.cubicTo(
+        //     #region nice curve
+        //     randomPoints[i - 1].dx + perNodeWidth/0.8,
+        //     randomPoints[i - 1].dy,
+        //     randomPoints[i].dx - perNodeWidth/1.5,
+        //     #endregion
+          randomPoints[i - 1].dx + perNodeWidth/2,
+          randomPoints[i - 1].dy,
+          randomPoints[i].dx - perNodeWidth/2,
+          randomPoints[i].dy,
+          randomPoints[i].dx,
+          randomPoints[i].dy);
+    }
+
     //初始化空间以进行渲染
     var space = initSpace();
     return MaterialApp(
@@ -96,6 +148,25 @@ class MyApp extends StatelessWidget {
                   Rect.fromLTWH(200, 200, 100, 100),
                 ],
                 Colors.black,
+              ),
+
+              PathPaint(
+                //move to each random point
+                path,
+                Colors.amber,
+                3.0,
+              ),
+              PointsPaint(
+                randomPoints,
+                Colors.tealAccent,
+                10.0,
+              ),
+
+              PointsPaint(
+                  // randomPoints,
+                smoothPoints(randomPoints, smoothLevel),
+                Colors.white,
+                3.0,
               ),
             ],
           )
