@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:vectorgraph/utils/widget.dart';
 import 'package:vectorgraph/viewer/ruler.dart';
 
 import '../objects/rect_object.dart';
@@ -39,7 +40,11 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    var viewPortPixelSize = Size(1920,1080);
+    var bound = context.globalPaintBounds;
+    if(bound == null){
+      return Container();
+    }
+    Size viewPortPixelSize = Size(bound.width, bound.height);
     Offset viewPortLocalCenter = Offset(viewPortPixelSize.width/2, viewPortPixelSize.height/2);
     Size validViewPortSizeOfSpace = viewPortPixelSize/ currentScale;
     var allObjectInViewPort = widget.space.getInViewPortObjects(currentOffset, validViewPortSizeOfSpace);
