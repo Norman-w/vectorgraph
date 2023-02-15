@@ -63,6 +63,9 @@ Space initSpace(){
   layer.addRect(
     RectEX.fromCenter(center: Offset(0,0), width: 100, height: 100)
   );
+  layer.addRect(
+      RectEX.fromCenter(center: Offset(0,0), width: 400, height: 300)
+  );
 
   space.addPaper(paper);
 
