@@ -18,6 +18,8 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
 {
   //放大倍数
   double currentScale =1;
+  //触摸板开始双指缩放时的放大倍数,不直接*=currentScale 防止因为刷新频率的问题导致放大倍数不准确
+  double panScaleStart = 1;
   Offset currentOffset = Offset.zero;
   double rectWidth = 200;
   double rectLeft = 0;
@@ -76,6 +78,27 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
               }
             });
           }
+        },
+        //苹果笔记本触摸板支持双指拖动
+        onPointerPanZoomUpdate: (event) {
+          setState(() {
+            logText = '触摸板双指滑动 scale ${event.scale} pan ${event.localPanDelta}';
+            currentOffset = currentOffset.translate(event.localPanDelta.dx, event.localPanDelta.dy);
+            //在上一次放大倍数的基础上缩放
+            currentScale = panScaleStart * event.scale;
+          });
+        },
+        onPointerPanZoomStart: (event) {
+          setState(() {
+            //保存现在的缩放倍数,不直接修改放大倍数防止setState造成过量乘数
+            panScaleStart = currentScale;
+          });
+        },
+        onPointerPanZoomEnd: (event) {
+          setState(() {
+            // logText = '触摸板双指滑动结束';
+            panScaleStart = 1;
+          });
         },
         onPointerDown: (event) {
           if(event.buttons == 2){
