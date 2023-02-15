@@ -2,6 +2,9 @@
 //在需要显示space上的内容时,用户通过鼠标键盘等交互确认显示范围(宽度,高度)以及相对于space中心点的偏移量确认视口(view_port)
 //在视口外的内容不进行渲染,视口内的内容根据缩放比例进行渲染.
 
+import 'dart:ui';
+
+import '../objects/space_object.dart';
 import 'paper.dart';
 import 'space_layer.dart';
 
@@ -18,5 +21,24 @@ class Space {
   final papers = <Paper>[];
   void addPaper(Paper paper){
     papers.add(paper);
+  }
+
+  List<SpaceObject> getInViewPortObjects(Offset viewPortCenter, Size viewPortSize){
+    var result = <SpaceObject>[];
+    for (var layer in layers) {
+      result.addAll(layer.getInBounds(
+          Rect.fromLTWH(
+              viewPortCenter.dx - viewPortSize.width / 2,
+              viewPortCenter.dy - viewPortSize.height / 2,
+              viewPortSize.width,
+              viewPortSize.height)
+      //   Rect.fromCenter(
+      //       center: viewPortCenter,
+      //       width: viewPortSize.width,
+      //       height: viewPortSize.height
+      // )
+      ));
+    }
+    return result;
   }
 }

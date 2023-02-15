@@ -2,15 +2,38 @@
 
 import 'dart:ui';
 
+import '../objects/rect_object.dart';
+import '../objects/space_object.dart';
+
 class SpaceLayer{
   String name;
   int zIndex;
   //dynamic objects list
-  final objects = <Object>[];
+  final objects = <SpaceObject>[];
   SpaceLayer(this.zIndex, {this.name = ''});
-  void addRect(Rect rect){
+  void addRect(RectEX rect){
     objects.add(rect);
   }
   //get all rects
-  List<Rect> get rects => objects.whereType<Rect>().toList();
+  List<Rect> get rectangles => objects.whereType<Rect>().toList();
+
+  List<SpaceObject> getInBounds(Rect bounds){
+    // var b = Rect.fromLTWH(bounds.left * 10000, bounds.top * 10000, bounds.width * 10000, bounds.height * 10000);
+    // print(b);
+    // return objects.where((element) {
+    //   var eb = Rect.fromLTWH(element.bounds.left * 10000, element.bounds.top * 10000, element.bounds.width * 10000, element.bounds.height * 10000);
+    //   var contains = b.overlaps(eb);
+    //   print(contains );
+    //   return contains;
+    //   // return element.bounds.overlaps(bounds);
+    // }).toList();
+    return objects.where((element) {
+      var contains = element.bounds.overlaps(bounds);
+      if(!contains){
+        print('not contains 元素 ${element.bounds} 外围 ${bounds}');
+      }
+      return contains;
+    }
+    ).toList();
+  }
 }

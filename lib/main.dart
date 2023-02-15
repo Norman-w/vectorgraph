@@ -5,6 +5,7 @@ import 'package:vectorgraph/viewer/rect_painter.dart';
 import 'package:vectorgraph/viewer/space_layer.dart';
 import 'package:window_manager/window_manager.dart';
 
+import 'objects/rect_object.dart';
 import 'viewer/canva.dart';
 import 'viewer/paper.dart';
 import 'viewer/path_painter.dart';
@@ -50,15 +51,18 @@ Space initSpace(){
   )..left = 180..top = 150;
 
 
-  var rect1 = Rect.fromLTWH(20, 30, 20, 20);
-  var rect2 = Rect.fromLTWH(50, 60, 15, 20);
-  var rect3 = Rect.fromLTWH(70, 80, 20, 12);
-  var rect4 = Rect.fromLTWH(85, 105, 30, 25);
+  // var rect1 = RectEX.fromLTWH(20, 30, 20, 20);
+  // var rect2 = RectEX.fromLTWH(50, 60, 15, 20);
+  // var rect3 = RectEX.fromLTWH(70, 80, 20, 12);
+  // var rect4 = RectEX.fromLTWH(85, 105, 30, 25);
 
-  layer.addRect(rect1);
-  layer.addRect(rect2);
-  layer.addRect(rect3);
-  layer.addRect(rect4);
+  // layer.addRect(rect1);
+  // layer.addRect(rect2);
+  // layer.addRect(rect3);
+  // layer.addRect(rect4);
+  layer.addRect(
+    RectEX.fromCenter(center: Offset(0,0), width: 100, height: 100)
+  );
 
   space.addPaper(paper);
 
@@ -84,14 +88,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const int nodeCount = 50;
-    double maxHeight = 50;
+    double maxHeight = 400;
     const int yOffset = 400;
-    const int smoothLevel = 10;
+    const int smoothLevel = 20;
     var bound = context.globalPaintBounds ?? Rect.zero;
     double perNodeWidth = bound.width / nodeCount;
     List<Offset> randomPoints = [];
     for (int i = 0; i <= nodeCount; i++) {
-      maxHeight *= 1.05;
+      maxHeight /= 1.02;
         randomPoints.add(Offset(
             i * perNodeWidth,
             Random().nextDouble() * maxHeight + yOffset));
@@ -141,33 +145,33 @@ class MyApp extends StatelessWidget {
               //在上面绘制视口
               ViewPort(space),
               //测试绘制一些矩形
-              RectPaint(
-                [
-                  Rect.fromLTWH(30, 30, 100, 100),
-                  Rect.fromLTWH(100, 100, 100, 100),
-                  Rect.fromLTWH(200, 200, 100, 100),
-                ],
-                Colors.black,
-              ),
-
-              PathPaint(
-                //move to each random point
-                path,
-                Colors.amber,
-                3.0,
-              ),
-              PointsPaint(
-                randomPoints,
-                Colors.tealAccent,
-                10.0,
-              ),
-
-              PointsPaint(
-                  // randomPoints,
-                smoothPoints(randomPoints, smoothLevel),
-                Colors.white,
-                3.0,
-              ),
+              // RectPaint(
+              //   [
+              //     Rect.fromLTWH(30, 30, 100, 100),
+              //     Rect.fromLTWH(100, 100, 100, 100),
+              //     Rect.fromLTWH(200, 200, 100, 100),
+              //   ],
+              //   Colors.black,
+              // ),
+              // PointsPaint(
+              //   randomPoints,
+              //   Colors.tealAccent,
+              //   10.0,
+              //   showPositionText: true,
+              // ),
+              //
+              // PointsPaint(
+              //     // randomPoints,
+              //   smoothPoints(randomPoints, smoothLevel),
+              //   Colors.deepOrangeAccent,
+              //   2.0,
+              // ),
+              // PathPaint(
+              //   //move to each random point
+              //   path,
+              //   Colors.amber,
+              //   3.0,
+              // ),
             ],
           )
         )

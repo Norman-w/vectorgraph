@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:vectorgraph/viewer/ruler.dart';
 
+import '../objects/rect_object.dart';
+import 'rect_painter.dart';
 import 'space.dart';
 class ViewPort extends StatefulWidget {
   final Space space;
@@ -13,128 +16,132 @@ class ViewPort extends StatefulWidget {
 class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
 {
   //放大倍数
-  double currentScale =1.5;
+  double currentScale =1;
   Offset currentOffset = Offset.zero;
   double rectWidth = 200;
-  double rectLeft = 80;
+  double rectLeft = 0;
   double rectHeight = 150;
-  double rectTop = 91.5;
+  double rectTop = 0;
 
-  String logText = '';
+  String logText = '3333333';
 
-
-  double _previousScale = 0;
+  Offset? mouseDownPosition;
+  Offset? mouseMoveToPosition;
 
 
 
   @override
   void initState() {
     super.initState();
-    // Timer.periodic(Duration(milliseconds: 100), (timer) {
-    //   setState(() {
-    //     currentScale *= 1.001;
-    //   });
-    // });
-    // Timer.periodic(Duration(milliseconds: 20), (timer) {
-    //   setState(() {
-    //     rectWidth = rectWidth *1.001;
-    //     rectHeight = rectHeight *1.001;
-    //     rectLeft = rectLeft * 1.0011;
-    //     rectTop = rectTop * 1.0015;
-    //     // print(rectTop);
-    //   });
-    // });
   }
 
 
 
   @override
   Widget build(BuildContext context) {
-
-    Offset _normalizedOffset = Offset.zero;
-
-    Offset _clampOffset(Offset offset) {
-      final Size? size = context.size;
-      // widget的屏幕宽度
-      final Offset minOffset = Offset(size!.width, size!.height) * (1.0 - currentScale);
-      // 限制他的最小尺寸
-      return Offset(
-          offset.dx.clamp(minOffset.dx, 0.0), offset.dy.clamp(minOffset.dy, 0.0));
-    }
-
-
-    var allRects = widget.space.layers.expand((element) => element.rects).toList();
+    var viewPortPixelSize = Size(1920,1080);
+    Offset viewPortLocalCenter = Offset(viewPortPixelSize.width/2, viewPortPixelSize.height/2);
+    Size validViewPortSizeOfSpace = viewPortPixelSize/ currentScale;
+    var allObjectInViewPort = widget.space.getInViewPortObjects(currentOffset, validViewPortSizeOfSpace);
     return
-      GestureDetector(
-        onScaleUpdate: (details){
-          setState(() {
-            currentScale = (_previousScale * details.scale).clamp(1.0, 3.0);
-            // 限制放大倍数 1~3倍
-            currentOffset = _clampOffset(details.focalPoint - _normalizedOffset * currentScale);
-            // 更新当前位置
-          });
-        },
-        onScaleStart: (details){
-          setState(() {
-            _previousScale = currentScale;
-            _normalizedOffset = (details.focalPoint - currentOffset) / currentScale;
-            // 计算图片放大后的位置
-            // _controller.stop();
-          });
-        }
-          ,
-          onDoubleTap: () {
+    MouseRegion(
+      onHover: (event) {
+        setState(() {
+          logText = 'MouseRegion hover ${event.position}';
+        });
+      },
+      child:Listener(
+        onPointerMove: (event) {
+          if(event.buttons == 2){
             setState(() {
-              currentScale = 1.0;
+              mouseDownPosition = event.position;
+              logText = '鼠标移动 ${event.position}';
+              currentOffset = currentOffset.translate(event.delta.dx, event.delta.dy);
             });
-          },
+          }
+        },
+        //on mouse wheel
+        onPointerSignal: (event) {
+          if(event is PointerScrollEvent){
+            setState(() {
+              logText = '鼠标滚轮 ${event.scrollDelta}';
+              currentScale = currentScale + event.scrollDelta.dy/1000;
+              if(currentScale < 0.1){
+                currentScale = 0.1;
+              }
+            });
+          }
+        },
+        onPointerDown: (event) {
+          if(event.buttons == 2){
+            setState(() {
+              mouseDownPosition = event.position;
+              logText = '鼠标按下 ${event.position}';
+            });
+          }
+        },
+        onPointerUp: (event) {
+          //因为在抬起的时候 event.buttons 就是0了 所以要通过刚才是不是按下的状态来判断
+          if(mouseDownPosition != null || mouseMoveToPosition != null){
+            setState(() {
+              mouseDownPosition = null;
+              mouseMoveToPosition = null;
+              logText = '鼠标抬起 ${event.position}';
+            });
+          }
+        },
         child: Stack(
-              children: [
-                Transform(
-                transform: Matrix4.identity()
-              ..translate(currentOffset.dx, currentOffset.dy)
-              ..scale(currentScale),
-                child: Stack(
                   children: [
-                    //绘制所有矩形
-                    ...allRects.map((e) => Positioned(
-                      left: e.left * currentScale,
-                      top: e.top*currentScale,
-                      child: Container(
-                        width: e.width*currentScale,
-                        height: e.height*currentScale,
-                        color: Colors.red,
-                      ),
-                    )),
-                    //绘制所有的纸张
-                    ...widget.space.papers.map((e) => Positioned(
-                      left: e.left * currentScale,
-                      top: e.top*currentScale,
-                      child: Container(
-                        width: e.width*currentScale,
-                        height: e.height*currentScale,
-                        color: e.color,
-                      ),
-                    )),
+                    //draw all rectEX
+                    ...allObjectInViewPort.map((e) {
+                      Widget ret = Container();
+                        switch (e.runtimeType) {
+                          case RectEX:
+                            var rectEX = e as RectEX;
+                            var newWidth = rectEX.width * currentScale;
+                            var newHeight = rectEX.height * currentScale;
+                            var oldWidth = rectEX.width;
+                            var oldHeight = rectEX.height;
+                            var xAdded = (newWidth - oldWidth) / 2;
+                            var yAdded = (newHeight - oldHeight) / 2;
+                            var newLeft = rectEX.left + currentOffset.dx + viewPortLocalCenter.dx - xAdded;
+                            var newTop = rectEX.top + currentOffset.dy + viewPortLocalCenter.dy  -yAdded;
+                            var realViewRect = Rect.fromLTWH(
+                                newLeft,
+                                newTop,
+                                newWidth,
+                                newHeight
+                            );
+                            ret = CustomPaint(
+                              painter: RectPainter(realViewRect, Colors.red),
+                            );
+                        }
+                        return ret;
+                      }
+                    ),
                     Align(
                       alignment: Alignment.center,
                       child: Text(rectLeft.toStringAsFixed(5)),
-                    )
+                    ),
+                    Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child:Ruler(
+                          Rect.fromCenter(
+                              center: -currentOffset / currentScale,
+                              width: validViewPortSizeOfSpace.width,
+                              height: validViewPortSizeOfSpace.height,
+                          ),
+                        )
+                    ),
+                    Transform.translate(offset: Offset(
+                        300,400),
+                        child: Text(logText)
+                    ),
                   ],
                     ),
                 ),
-                Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child:Ruler(
-                      Rect.fromLTWH(rectLeft, rectTop, rectWidth, rectHeight),
-                    )
-                ),
-
-                Text(logText),
-          ],
-        ),
-      );
+    );
   }
 }
 
