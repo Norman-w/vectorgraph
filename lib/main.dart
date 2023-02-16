@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:vectorgraph/objects/point_object.dart';
 import 'package:vectorgraph/viewer/painging_board.dart';
 import '../utils/widget.dart';
-import 'package:vectorgraph/viewer/rect_painter.dart';
 import 'package:vectorgraph/viewer/space_layer.dart';
-import 'package:window_manager/window_manager.dart';
 
 import 'objects/rect_object.dart';
-import 'viewer/canva.dart';
 import 'viewer/paper.dart';
-import 'viewer/path_painter.dart';
-import 'viewer/points_painter.dart';
 import 'viewer/space.dart';
 import 'viewer/viewState.dart';
 import 'viewer/view_port.dart';
 import 'dart:math';
+
 //import layer class
 
 
@@ -101,7 +96,7 @@ class MyApp extends StatelessWidget {
     const int nodeCount = 50;
     double maxHeight = 400;
     const int yOffset = 400;
-    const int smoothLevel = 20;
+    // const int smoothLevel = 20;
     var bound = context.globalPaintBounds ?? Rect.zero;
     double perNodeWidth = bound.width / nodeCount;
     List<Offset> randomPoints = [];
@@ -132,7 +127,7 @@ class MyApp extends StatelessWidget {
     }
 
     //初始化空间以进行渲染
-    var space = initSpace();
+    initSpace();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
