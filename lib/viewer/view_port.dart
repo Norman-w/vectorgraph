@@ -101,9 +101,14 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
       setState(() {
         // logText = '鼠标滚轮 ${event.scrollDelta}';
         currentScale = currentScale + (reverseMouseWheel?event.scrollDelta.dy / 1000: - event.scrollDelta.dy / 1000);
+        //region 限制最小和最大放大倍数
         if (currentScale < 0.1) {
           currentScale = 0.1;
         }
+        else if(currentScale >10000){
+          currentScale = 10000;
+        }
+        //endregion
       });
     }
   }
@@ -119,6 +124,14 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
           event.localPanDelta.dx, event.localPanDelta.dy);
       //在上一次放大倍数的基础上缩放
       currentScale = panScaleStart! * event.scale;
+      //region 限制最小和最大放大倍数
+      if (currentScale < 0.1) {
+        currentScale = 0.1;
+      }
+      else if(currentScale >10000){
+        currentScale = 10000;
+      }
+      //endregion
       // logText = '检测区域offset: ${currentOffset} space: ${validViewPortSizeOfSpace} 检测到在区域内的物体数量 ${allObjectInViewPort.length}';
     });
   }
