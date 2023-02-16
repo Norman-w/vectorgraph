@@ -16,7 +16,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:vectorgraph/utils/utils.dart';
 import 'package:vectorgraph/utils/widget.dart';
 import 'package:vectorgraph/viewer/ruler.dart';
 
@@ -169,7 +168,7 @@ class _PaintingBoardState extends State<PaintingBoard> with SingleTickerProvider
     //当前显示的空间范围
     ViewState.validViewPortSizeOfSpace = ViewState.viewPortPixelSize / ViewState.currentScale;
     //在当前有效空间范围内的物件
-    var allObjectInPaintingBoard = ViewState.space.getInViewPortObjects(
+    ViewState.allObjectInViewPort = ViewState.space.getInViewPortObjects(
         currentOffset / ViewState.currentScale, ViewState.validViewPortSizeOfSpace);
     return
       MouseRegion(
