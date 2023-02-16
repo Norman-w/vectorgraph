@@ -11,10 +11,6 @@ import 'viewer/viewState.dart';
 import 'viewer/view_port.dart';
 import 'dart:math';
 
-
-//import layer class
-
-
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   // // 必须加上这一行。
@@ -33,7 +29,7 @@ void main() async {
   //   await windowManager.focus();
   // });
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 void initSpace(){
