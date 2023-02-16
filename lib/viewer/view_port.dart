@@ -19,6 +19,11 @@ Size viewPortPixelSize = Size.zero;
 Size validViewPortSizeOfSpace = Size.zero;
 List<SpaceObject> allObjectInViewPort = [];
 
+Offset viewPortPointPos2SpacePointPos(Offset? mouseMoveToPosition, double currentScale) {
+  return mouseMoveToPosition! / currentScale
+      - Offset(validViewPortSizeOfSpace.width / 2, validViewPortSizeOfSpace.height / 2);
+}
+
 
 class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin {
   //视口的当前使用放大倍数
@@ -73,9 +78,8 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
         mouseMoveToPosition = event.position;
         logText = '鼠标左键移动 ${event.position}';
         //鼠标在世界中的坐标
-        var mousePositionInSpace =
-            mouseMoveToPosition! / currentScale
-                - Offset(validViewPortSizeOfSpace.width / 2, validViewPortSizeOfSpace.height / 2);
+        var mousePositionInSpace = viewPortPointPos2SpacePointPos(mouseMoveToPosition, currentScale);
+
         logText2 = '鼠标在世界中的坐标 $mousePositionInSpace';
       });
     }
