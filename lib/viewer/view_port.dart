@@ -4,6 +4,7 @@ import 'package:vectorgraph/utils/utils.dart';
 import 'package:vectorgraph/utils/widget.dart';
 import 'package:vectorgraph/viewer/ruler.dart';
 
+import '../objects/space_object.dart';
 import 'space.dart';
 class ViewPort extends StatefulWidget {
   final Space space;
@@ -11,6 +12,14 @@ class ViewPort extends StatefulWidget {
   @override
   createState() => _ViewPortState();
 }
+
+
+Rect? bound;
+Size viewPortPixelSize = Size.zero;
+Size validViewPortSizeOfSpace = Size.zero;
+List<SpaceObject> allObjectInViewPort = [];
+
+
 class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin {
   //视口的当前使用放大倍数
   double currentScale = 1;
@@ -36,12 +45,49 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
     // });
   }
 
+  onPointerDown(event) {
+    if (event.buttons == 2) {
+      setState(() {
+        mouseDownPosition = event.position;
+        // logText = '鼠标按下 ${event.position}';
+      });
+    }
+    else if(event.buttons == 1){
+      setState(() {
+        mouseDownPosition = event.position;
+        logText = '鼠标左键按下 ${event.position}';
+      });
+    }
+  }
+
   onPointerMove(PointerMoveEvent event) {
     if (event.buttons == 2) {
       setState(() {
         mouseDownPosition = event.position;
         // logText = '鼠标移动 ${event.position}';
         currentOffset = currentOffset.translate(event.delta.dx, event.delta.dy);
+      });
+    }
+    else if(event.buttons == 1){
+      setState(() {
+        mouseMoveToPosition = event.position;
+        logText = '鼠标左键移动 ${event.position}';
+        //鼠标在世界中的坐标
+        var mousePositionInSpace =
+            mouseMoveToPosition! / currentScale
+                - Offset(validViewPortSizeOfSpace.width / 2, validViewPortSizeOfSpace.height / 2);
+        logText2 = '鼠标在世界中的坐标 $mousePositionInSpace';
+      });
+    }
+  }
+
+  onPointerUp(event) {
+    //因为在抬起的时候 event.buttons 就是0了 所以要通过刚才是不是按下的状态来判断
+    if (mouseDownPosition != null || mouseMoveToPosition != null) {
+      setState(() {
+        mouseDownPosition = null;
+        mouseMoveToPosition = null;
+        // logText = '鼠标抬起 ${event.position}';
       });
     }
   }
@@ -87,25 +133,6 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
     });
   }
 
-  onPointerDown(event) {
-    if (event.buttons == 2) {
-      setState(() {
-        mouseDownPosition = event.position;
-        // logText = '鼠标按下 ${event.position}';
-      });
-    }
-  }
-
-  onPointerUp(event) {
-    //因为在抬起的时候 event.buttons 就是0了 所以要通过刚才是不是按下的状态来判断
-    if (mouseDownPosition != null || mouseMoveToPosition != null) {
-      setState(() {
-        mouseDownPosition = null;
-        mouseMoveToPosition = null;
-        // logText = '鼠标抬起 ${event.position}';
-      });
-    }
-  }
   //endregion
 
   @override
@@ -116,14 +143,14 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    var bound = context.globalPaintBounds;
+    bound = context.globalPaintBounds;
     if (bound == null) {
       return Container();
     }
     //当前显示区域的像素大小
-    Size viewPortPixelSize = Size(bound.width, bound.height);
+    viewPortPixelSize = Size(bound!.width, bound!.height);
     //当前显示的空间范围
-    Size validViewPortSizeOfSpace = viewPortPixelSize / currentScale;
+    validViewPortSizeOfSpace = viewPortPixelSize / currentScale;
     //在当前有效空间范围内的物件
     var allObjectInViewPort = widget.space.getInViewPortObjects(
         currentOffset / currentScale, validViewPortSizeOfSpace);
