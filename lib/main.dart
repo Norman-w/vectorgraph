@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:vectorgraph/objects/point_object.dart';
+import 'package:vectorgraph/viewer/painging_board.dart';
 import '../utils/widget.dart';
 import 'package:vectorgraph/viewer/rect_painter.dart';
 import 'package:vectorgraph/viewer/space_layer.dart';
@@ -12,6 +13,7 @@ import 'viewer/paper.dart';
 import 'viewer/path_painter.dart';
 import 'viewer/points_painter.dart';
 import 'viewer/space.dart';
+import 'viewer/viewState.dart';
 import 'viewer/view_port.dart';
 import 'dart:math';
 //import layer class
@@ -38,7 +40,7 @@ void main() async {
   runApp(MyApp());
 }
 
-Space initSpace(){
+void initSpace(){
   var space = Space();
   var layer = SpaceLayer(0);
 
@@ -75,7 +77,8 @@ Space initSpace(){
   space.addPaper(paper);
 
   space.layers.add(layer);
-    return space;
+
+  ViewState.space = space;
 }
 
 List<Offset> smoothPoints(List<Offset> points, int level) {
@@ -151,7 +154,8 @@ class MyApp extends StatelessWidget {
                 ),
               ),
               //在上面绘制视口
-              ViewPort(space),
+              const ViewPort(),
+              const PaintingBoard(),
               //测试绘制一些矩形
               // RectPaint(
               //   [

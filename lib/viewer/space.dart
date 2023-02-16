@@ -7,6 +7,7 @@ import 'dart:ui';
 import '../objects/space_object.dart';
 import 'paper.dart';
 import 'space_layer.dart';
+import 'viewState.dart';
 
 class Space {
   final layers = <SpaceLayer>[];
@@ -40,5 +41,10 @@ class Space {
       ));
     }
     return result;
+  }
+
+  static Offset viewPortPointPos2SpacePointPos(Offset? mousePosition) {
+    return mousePosition == null? Offset.zero: mousePosition! / ViewState.currentScale
+        - Offset(ViewState.validViewPortSizeOfSpace.width / 2, ViewState.validViewPortSizeOfSpace.height / 2);
   }
 }
