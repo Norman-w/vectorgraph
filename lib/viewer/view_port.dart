@@ -26,6 +26,8 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
   Offset? mouseDownPosition;
   //鼠标移动到的目标位置
   Offset? mouseMoveToPosition;
+  //支持反向鼠标滚轮
+  bool reverseMouseWheel = false;
 
   //region 鼠标和触摸板事件
   onHoverMouseRegion(PointerHoverEvent event) {
@@ -48,7 +50,7 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
     if (event is PointerScrollEvent) {
       setState(() {
         // logText = '鼠标滚轮 ${event.scrollDelta}';
-        currentScale = currentScale + event.scrollDelta.dy / 1000;
+        currentScale = currentScale + (reverseMouseWheel?event.scrollDelta.dy / 1000: - event.scrollDelta.dy / 1000);
         if (currentScale < 0.1) {
           currentScale = 0.1;
         }
