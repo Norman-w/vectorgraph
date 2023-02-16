@@ -12,23 +12,22 @@ class ViewPort extends StatefulWidget {
   createState() => _ViewPortState();
 }
 class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin {
-  //放大倍数
-  double currentScale = 2;
-
+  //视口的当前使用放大倍数
+  double currentScale = 1;
   //触摸板开始双指缩放时的放大倍数,不直接*=currentScale 防止因为刷新频率的问题导致放大倍数不准确
-  double panScaleStart = 1;
+  double? panScaleStart;
+  //视口的当前使用偏移量
   Offset currentOffset = Offset.zero;
-  double rectWidth = 200;
-  double rectLeft = 0;
-  double rectHeight = 150;
-  double rectTop = 0;
-
-  String logText = '3333333';
-  String logText2 = '';
-
+  //测试用日志文本1
+  String logText = 'This is log text 1';
+  //测试用日志文本2
+  String logText2 = 'This is log text 2';
+  //鼠标点击的位置
   Offset? mouseDownPosition;
+  //鼠标移动到的目标位置
   Offset? mouseMoveToPosition;
 
+  //region 鼠标和触摸板事件
   onHoverMouseRegion(PointerHoverEvent event) {
     setState(() {
       // logText = 'MouseRegion hover ${event.position}';
@@ -58,12 +57,16 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
   }
 
   onPointerPanZoomUpdate(PointerPanZoomUpdateEvent event) {
+    //没有检测到触摸板按下时的原始放大倍数,不进行缩放,这个原始放大倍数应当在触摸板按下时保存
+    if(panScaleStart == null) {
+      return ;
+    }
     setState(() {
       // logText = '触摸板双指滑动 scale ${event.scale} pan ${event.localPanDelta}';
       currentOffset = currentOffset.translate(
           event.localPanDelta.dx, event.localPanDelta.dy);
       //在上一次放大倍数的基础上缩放
-      currentScale = panScaleStart * event.scale;
+      currentScale = panScaleStart! * event.scale;
       // logText = '检测区域offset: ${currentOffset} space: ${validViewPortSizeOfSpace} 检测到在区域内的物体数量 ${allObjectInViewPort.length}';
     });
   }
@@ -78,7 +81,7 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
   onPointerPanZoomEnd(event) {
     setState(() {
       // logText = '触摸板双指滑动结束';
-      panScaleStart = 1;
+      panScaleStart = null;
     });
   }
 
@@ -101,7 +104,7 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
       });
     }
   }
-
+  //endregion
 
   @override
   void initState() {
@@ -156,10 +159,6 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
               }
               ),
               //region 在视口中显示临时检测图形和log文字等
-              Align(
-                alignment: Alignment.center,
-                child: Text(rectLeft.toStringAsFixed(5)),
-              ),
               SizedBox(
                   width: double.infinity,
                   height: double.infinity,
