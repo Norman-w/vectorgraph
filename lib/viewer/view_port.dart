@@ -31,9 +31,9 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
 
   //region 鼠标和触摸板事件
   onHoverMouseRegion(PointerHoverEvent event) {
-    setState(() {
-      // logText = 'MouseRegion hover ${event.position}';
-    });
+    // setState(() {
+    //   // logText = 'MouseRegion hover ${event.position}';
+    // });
   }
 
   onPointerMove(PointerMoveEvent event) {
