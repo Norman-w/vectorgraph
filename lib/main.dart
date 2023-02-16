@@ -10,6 +10,7 @@ import 'viewer/space.dart';
 import 'viewer/viewState.dart';
 import 'viewer/view_port.dart';
 import 'dart:math';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +30,7 @@ void main() async {
   //   await windowManager.focus();
   // });
 
-  runApp(const MyApp());
+  runApp(const ProviderScope(child:MyApp()));
 }
 
 void initSpace(){
