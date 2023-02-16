@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vectorgraph/objects/point_object.dart';
-import 'package:vectorgraph/viewer/painging_board.dart';
+import 'package:vectorgraph/viewer/painting_board.dart';
 import '../utils/widget.dart';
 import 'package:vectorgraph/viewer/space_layer.dart';
 
