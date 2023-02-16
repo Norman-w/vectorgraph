@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:vectorgraph/model/geometry/points/point_ex.dart';
+import 'package:vectorgraph/utils/utils.dart';
 import 'package:vectorgraph/utils/widget.dart';
 import 'package:vectorgraph/viewer/ruler.dart';
 
@@ -50,9 +52,9 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
     Size viewPortPixelSize = Size(bound.width, bound.height);
     Offset viewPortLocalCenter = Offset(viewPortPixelSize.width/2, viewPortPixelSize.height/2);
     Size validViewPortSizeOfSpace = viewPortPixelSize / currentScale;
-    logText = "当前有效的检测区域是: $validViewPortSizeOfSpace  位移:${currentOffset}";
+    // logText = "当前有效的检测区域是: $validViewPortSizeOfSpace  位移:${currentOffset}";
     var allObjectInViewPort = widget.space.getInViewPortObjects(currentOffset /currentScale, validViewPortSizeOfSpace);
-    logText2 = '在区域内的物件数量: ${allObjectInViewPort.length}';
+    // logText2 = '在区域内的物件数量: ${allObjectInViewPort.length}';
     return
     MouseRegion(
       onHover: (event) {
@@ -89,7 +91,7 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
             currentOffset = currentOffset.translate(event.localPanDelta.dx, event.localPanDelta.dy);
             //在上一次放大倍数的基础上缩放
             currentScale = panScaleStart * event.scale;
-            logText = '检测区域offset: ${currentOffset} space: ${validViewPortSizeOfSpace} 检测到在区域内的物体数量 ${allObjectInViewPort.length}';
+            // logText = '检测区域offset: ${currentOffset} space: ${validViewPortSizeOfSpace} 检测到在区域内的物体数量 ${allObjectInViewPort.length}';
           });
         },
         onPointerPanZoomStart: (event) {
@@ -126,29 +128,10 @@ class _ViewPortState extends State<ViewPort> with SingleTickerProviderStateMixin
                   children: [
                     //draw all rectEX
                     ...allObjectInViewPort.map((e) {
-                      Widget ret = Container();
-                        switch (e.runtimeType) {
-                          case RectEX:
-                            var rectEX = e as RectEX;
-                            var newWidth = rectEX.width * currentScale;
-                            var newHeight = rectEX.height * currentScale;
-                            var oldWidth = rectEX.width;
-                            var oldHeight = rectEX.height;
-                            var xAdded = (newWidth - oldWidth) / 2;
-                            var yAdded = (newHeight - oldHeight) / 2;
-                            var newLeft = rectEX.left + currentOffset.dx + viewPortLocalCenter.dx - xAdded;
-                            var newTop = rectEX.top + currentOffset.dy + viewPortLocalCenter.dy  -yAdded;
-                            var realViewRect = Rect.fromLTWH(
-                                newLeft,
-                                newTop,
-                                newWidth,
-                                newHeight
-                            );
-                            ret = CustomPaint(
-                              painter: RectPainter(realViewRect, Colors.red),
-                            );
-                        }
-                        return ret;
+                      return e.getWidget(viewPortPixelSize, currentOffset, currentScale,
+                          // Colors.red
+                        getRandomColor(),
+                      );
                       }
                     ),
                     Align(

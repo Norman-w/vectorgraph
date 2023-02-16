@@ -55,3 +55,54 @@ class PointsPainter extends CustomPainter {
     return true;
   }
 }
+
+
+class PointPaint extends StatelessWidget {
+  final Offset point;
+  final Color color;
+  final double strokeWidth;
+  final bool showPositionText;
+  const PointPaint(this.point, this.color, this.strokeWidth,
+      {this.showPositionText = false, super.key});
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: PointPainter(point, color, strokeWidth,
+          showPositionText: showPositionText)
+    );
+  }
+}
+
+class PointPainter extends CustomPainter {
+  final Offset point;
+  final Color color;
+  final double strokeWidth;
+  final bool showPositionText;
+  PointPainter(this.point, this.color, this.strokeWidth,
+      {this.showPositionText = false});
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+    ..strokeCap = StrokeCap.round
+      ..filterQuality = FilterQuality.high;
+    canvas.drawPoints(PointMode.points, [point], paint);
+    if(showPositionText){
+      TextPainter(
+        text: TextSpan(
+          text: '(${point.dx.toStringAsFixed(2)},${point.dy.toStringAsFixed(2)})',
+          style: TextStyle(color: color, fontSize: 12),
+        ),
+        textDirection: TextDirection.ltr,
+      )
+        ..layout()
+        ..paint(canvas, point);
+    }
+  }
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}

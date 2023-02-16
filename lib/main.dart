@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:vectorgraph/objects/point_object.dart';
 import '../utils/widget.dart';
 import 'package:vectorgraph/viewer/rect_painter.dart';
 import 'package:vectorgraph/viewer/space_layer.dart';
@@ -61,10 +62,14 @@ Space initSpace(){
   // layer.addRect(rect3);
   // layer.addRect(rect4);
   layer.addRect(
-    RectEX.fromCenter(center: Offset(0,0), width: 100, height: 100)
+      RectObject.fromCenter(center: Offset(0,0), width: 100, height: 100)
   );
   layer.addRect(
-      RectEX.fromCenter(center: Offset(0,0), width: 400, height: 300)
+      RectObject.fromCenter(center: Offset(0,0), width: 400, height: 300)
+  );
+  
+  layer.addPoint(
+      PointObject(0, 0)
   );
 
   space.addPaper(paper);
