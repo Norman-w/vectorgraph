@@ -11,6 +11,7 @@ import 'viewer/viewState.dart';
 import 'viewer/view_port.dart';
 import 'dart:math';
 
+
 //import layer class
 
 
@@ -59,10 +60,10 @@ void initSpace(){
   // layer.addRect(rect3);
   // layer.addRect(rect4);
   layer.addRect(
-      RectObject.fromCenter(center: Offset(0,0), width: 100, height: 100)
+      RectObject.fromCenter(center: const Offset(0,0), width: 100, height: 100)
   );
   layer.addRect(
-      RectObject.fromCenter(center: Offset(0,0), width: 400, height: 300)
+      RectObject.fromCenter(center: const Offset(0,0), width: 400, height: 300)
   );
   
   layer.addPoint(
@@ -91,6 +92,8 @@ List<Offset> smoothPoints(List<Offset> points, int level) {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     const int nodeCount = 50;
