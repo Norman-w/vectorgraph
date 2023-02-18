@@ -80,7 +80,7 @@ class ViewStateController extends ChangeNotifier {
       center: _currentOffset,
       width: _validViewPortSizeOfSpace.width,
       height: _validViewPortSizeOfSpace.height);
-  Space _space = Space();
+  Space _space = initSpace();
   // Space get space => _space;
   // set space(Space value) {
   //   _space = value;
