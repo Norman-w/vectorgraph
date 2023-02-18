@@ -77,7 +77,7 @@ class ViewStateController extends ChangeNotifier {
   List<SpaceObject> _allObjectInViewPort = [];
   List<SpaceObject> get allObjectInViewPort => _allObjectInViewPort;
   Rect get rulerRectFromCenter => Rect.fromCenter(
-      center: _currentOffset,
+      center: -_currentOffset / _currentScale,
       width: _validViewPortSizeOfSpace.width,
       height: _validViewPortSizeOfSpace.height);
   Space _space = initSpace();
