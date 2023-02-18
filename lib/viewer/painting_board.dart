@@ -16,21 +16,25 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:vectorgraph/utils/widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/viewer/ruler.dart';
 
+import 'size_listener.dart';
 import 'space.dart';
-import 'viewState.dart';
-class PaintingBoard extends StatefulWidget {
+import 'view_state.dart';
+class PaintingBoard extends ConsumerStatefulWidget {
   const PaintingBoard({super.key});
   @override
   createState() => _PaintingBoardState();
 }
 
-class _PaintingBoardState extends State<PaintingBoard> with SingleTickerProviderStateMixin {
-  double? panScaleStart;
+Size? currentContextSize;
+
+
+class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTickerProviderStateMixin {
+  double? panScaleStart ;
   //视口的当前使用偏移量
-  Offset currentOffset = Offset.zero;
+  // Offset currentOffset = Offset.zero;
   //测试用日志文本1
   String logText = 'This is log text 1';
   //测试用日志文本2
@@ -41,6 +45,13 @@ class _PaintingBoardState extends State<PaintingBoard> with SingleTickerProvider
   Offset? mouseMoveToPosition;
   //支持反向鼠标滚轮
   bool reverseMouseWheel = false;
+  //
+  // @override
+  // initState() {
+  //   ref.read(viewStateControllerProvider.notifier).init();
+  //   super.initState();
+  // }
+
 
   //region 鼠标和触摸板事件
   onHoverMouseRegion(PointerHoverEvent event) {
@@ -69,15 +80,19 @@ class _PaintingBoardState extends State<PaintingBoard> with SingleTickerProvider
       setState(() {
         mouseDownPosition = event.position;
         // logText = '鼠标移动 ${event.position}';
-        currentOffset = currentOffset.translate(event.delta.dx, event.delta.dy);
       });
+      var oldOffset = ref.watch(viewStateControllerProvider).currentOffset;
+      ref.read(viewStateControllerProvider).currentOffset = oldOffset.translate(event.delta.dx, event.delta.dy);
     }
     else if(event.buttons == 1){
+      var viewState = ref.read(viewStateControllerProvider);
       setState(() {
         mouseMoveToPosition = event.position;
         logText = '鼠标左键移动 ${event.position}';
         //鼠标在世界中的坐标
-        var mousePositionInSpace = Space.viewPortPointPos2SpacePointPos(mouseMoveToPosition);
+        var mousePositionInSpace = Space.viewPortPointPos2SpacePointPos(mouseMoveToPosition,
+          viewState.currentScale, viewState.validViewPortSizeOfSpace
+        );
 
         logText2 = '鼠标在世界中的坐标 $mousePositionInSpace';
       });
@@ -97,48 +112,70 @@ class _PaintingBoardState extends State<PaintingBoard> with SingleTickerProvider
 
   onPointerSignal(PointerSignalEvent event) {
     if (event is PointerScrollEvent) {
-      setState(() {
-        // logText = '鼠标滚轮 ${event.scrollDelta}';
-        ViewState.currentScale = ViewState.currentScale + (reverseMouseWheel?event.scrollDelta.dy / 1000: - event.scrollDelta.dy / 1000);
-        //region 限制最小和最大放大倍数
-        if (ViewState.currentScale < 0.1) {
-          ViewState.currentScale = 0.1;
-        }
-        else if(ViewState.currentScale >10000){
-          ViewState.currentScale = 10000;
-        }
-        //endregion
-      });
+      // logText = '鼠标滚轮 ${event.scrollDelta}';
+      var oldScale = ref
+          .watch(viewStateControllerProvider)
+          .currentScale;
+
+      var newScale = oldScale +
+          (reverseMouseWheel ? event.scrollDelta.dy / 1000 : -event.scrollDelta
+              .dy / 1000);
+      //region 限制最小和最大放大倍数
+      if (newScale < 0.1) {
+        ref.read(viewStateControllerProvider).currentScale = 0.1;
+      }
+      else if (newScale > 10000) {
+        ref.read(viewStateControllerProvider).currentScale = 10000;
+      }
+      else {
+        ref.read(viewStateControllerProvider).currentScale = newScale;
+      }
+      //endregion
     }
   }
 
   onPointerPanZoomUpdate(PointerPanZoomUpdateEvent event) {
     //没有检测到触摸板按下时的原始放大倍数,不进行缩放,这个原始放大倍数应当在触摸板按下时保存
-    if(panScaleStart == null) {
-      return ;
+    if (panScaleStart == null) {
+      return;
     }
     setState(() {
-      // logText = '触摸板双指滑动 scale ${event.scale} pan ${event.localPanDelta}';
-      currentOffset = currentOffset.translate(
-          event.localPanDelta.dx, event.localPanDelta.dy);
-      //在上一次放大倍数的基础上缩放
-      ViewState.currentScale = panScaleStart! * event.scale;
-      //region 限制最小和最大放大倍数
-      if (ViewState.currentScale < 0.1) {
-        ViewState.currentScale = 0.1;
-      }
-      else if(ViewState.currentScale >10000){
-        ViewState.currentScale = 10000;
-      }
-      //endregion
-      // logText = '检测区域offset: ${currentOffset} space: ${validPaintingBoardSizeOfSpace} 检测到在区域内的物体数量 ${allObjectInPaintingBoard.length}';
+      logText =
+      '触摸板双指滑动 scale ${event.scale} pan ${event.localPanDelta}';
     });
+    //region 位移
+    var oldOffset = ref
+        .watch(viewStateControllerProvider)
+        .currentOffset;
+
+    var newOffset = oldOffset.translate(
+        event.localPanDelta.dx, event.localPanDelta.dy);
+    ref.read(viewStateControllerProvider).currentOffset = newOffset;
+    //endregion
+    // var oldScale = ref
+    //     .watch(viewStateControllerProvider)
+    //     .currentScale;
+
+    //在上一次放大倍数的基础上缩放
+    var newScale = panScaleStart! * event.scale;
+    //region 限制最小和最大放大倍数
+    if (newScale < 0.1) {
+      ref.read(viewStateControllerProvider).currentScale = 0.1;
+    }
+    else if (newScale > 10000) {
+      ref.read(viewStateControllerProvider).currentScale = 10000;
+    }
+    else {
+      ref.read(viewStateControllerProvider).currentScale = newScale;
+    }
+    //endregion
+    // logText = '检测区域offset: ${currentOffset} space: ${validPaintingBoardSizeOfSpace} 检测到在区域内的物体数量 ${allObjectInPaintingBoard.length}';);
   }
 
   onPointerPanZoomStart(event) {
     setState(() {
       //保存现在的缩放倍数,不直接修改放大倍数防止setState造成过量乘数
-      panScaleStart = ViewState.currentScale;
+      panScaleStart = ref.watch(viewStateControllerProvider).currentScale;
     });
   }
 
@@ -151,25 +188,11 @@ class _PaintingBoardState extends State<PaintingBoard> with SingleTickerProvider
 
   //endregion
 
-  @override
-  void initState() {
-    super.initState();
-  }
+
 
 
   @override
   Widget build(BuildContext context) {
-    ViewState.bound = context.globalPaintBounds;
-    if (ViewState.bound == null) {
-      return Container();
-    }
-    //当前显示区域的像素大小
-    ViewState.viewPortPixelSize = Size(ViewState.bound!.width, ViewState.bound!.height);
-    //当前显示的空间范围
-    ViewState.validViewPortSizeOfSpace = ViewState.viewPortPixelSize / ViewState.currentScale;
-    //在当前有效空间范围内的物件
-    ViewState.allObjectInViewPort = ViewState.space.getInViewPortObjects(
-        currentOffset / ViewState.currentScale, ViewState.validViewPortSizeOfSpace);
     return
       MouseRegion(
         onHover: onHoverMouseRegion,
@@ -192,22 +215,33 @@ class _PaintingBoardState extends State<PaintingBoard> with SingleTickerProvider
           //结束双指缩放时,重置放大倍数临时值
           onPointerPanZoomEnd: onPointerPanZoomEnd,
           //endregion
-          child: Stack(
+          child:
+              //listen size change
+
+
+          SizeListener(
+              onWidgetSizeChange: (size) {
+                ref.read(viewStateControllerProvider).viewPortPixelSize = size;
+              },
+            child:
+          Stack(
             children: [
               //region 在视口中显示临时检测图形和log文字等
               SizedBox(
                   width: double.infinity,
                   height: double.infinity,
                   child: Ruler(
-                    Rect.fromCenter(
-                      center: -currentOffset / ViewState.currentScale,
-                      width: ViewState.validViewPortSizeOfSpace.width,
-                      height: ViewState.validViewPortSizeOfSpace.height,
-                    ),
+                    ref.watch(viewStateControllerProvider).rulerRectFromCenter
                   )
+              ),
+              Positioned(
+                left: 100,
+                top: 100,
+                child: Text(logText),
               ),
               //endregion
             ],
+          ),
           ),
         ),
       );
