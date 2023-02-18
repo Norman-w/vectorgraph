@@ -80,8 +80,11 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         mouseMoveToPosition = event.position;
         logText = '鼠标左键移动 ${event.position}';
         //鼠标在世界中的坐标
-        var mousePositionInSpace = Space.viewPortPointPos2SpacePointPos(mouseMoveToPosition,
-          viewState.currentScale, viewState.validViewPortSizeOfSpace
+        var mousePositionInSpace = Space.viewPortPointPos2SpacePointPos(
+            mouseMoveToPosition,
+            viewState.currentOffset,
+            viewState.currentScale,
+            viewState.validViewPortSizeOfSpace
         );
 
         logText2 = '鼠标在世界中的坐标 $mousePositionInSpace';

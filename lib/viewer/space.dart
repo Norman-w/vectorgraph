@@ -43,8 +43,10 @@ class Space {
     return result;
   }
 
-  static Offset viewPortPointPos2SpacePointPos(Offset? mousePosition, double currentScale, Size validViewPortSizeOfSpace) {
+  static Offset viewPortPointPos2SpacePointPos(Offset? mousePosition,Offset currentOffset, double currentScale, Size validViewPortSizeOfSpace) {
     return mousePosition == null? Offset.zero: mousePosition! / currentScale
-        - Offset(validViewPortSizeOfSpace.width / 2, validViewPortSizeOfSpace.height / 2);
+        - Offset(validViewPortSizeOfSpace.width / 2, validViewPortSizeOfSpace.height / 2)
+        - currentOffset/currentScale
+    ;
   }
 }
