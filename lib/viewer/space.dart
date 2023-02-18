@@ -7,7 +7,6 @@ import 'dart:ui';
 import '../objects/space_object.dart';
 import 'paper.dart';
 import 'space_layer.dart';
-import 'view_state.dart';
 
 class Space {
   final layers = <SpaceLayer>[];
@@ -42,7 +41,6 @@ class Space {
     }
     return result;
   }
-
   static Offset viewPortPointPos2SpacePointPos(Offset? mousePosition,Offset currentOffset, double currentScale, Size validViewPortSizeOfSpace) {
     return mousePosition == null? Offset.zero: mousePosition! / currentScale
         - Offset(validViewPortSizeOfSpace.width / 2, validViewPortSizeOfSpace.height / 2)

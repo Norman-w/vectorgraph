@@ -30,10 +30,6 @@ class ViewStateController extends ChangeNotifier {
   Rect? _bound;
   Rect? get bound => _bound;
   set bound(Rect? value) {
-    if(value == null){
-      print('这应该是第一次');
-      return ;
-    }
     if(_bound == value || value == null){
       return;
     }
@@ -75,7 +71,9 @@ class ViewStateController extends ChangeNotifier {
   Size _validViewPortSizeOfSpace = const Size(800,600);
   Size get validViewPortSizeOfSpace => _validViewPortSizeOfSpace;
   List<SpaceObject> _allObjectInViewPort = [];
+  List<SpaceObject> _interactiveObjects = [];
   List<SpaceObject> get allObjectInViewPort => _allObjectInViewPort;
+  List<SpaceObject> get interactiveObjects => _interactiveObjects;
   Rect get rulerRectFromCenter => Rect.fromCenter(
       center: -_currentOffset / _currentScale,
       width: _validViewPortSizeOfSpace.width,
@@ -89,6 +87,19 @@ class ViewStateController extends ChangeNotifier {
   init(){
     _space = initSpace();
     _viewPortPixelSize = const Size(800,600);
+    notifyListeners();
+  }
+  void updateInteractiveObjects(Offset mousePosition){
+    final worldPoint = mousePosition / currentScale
+        - Offset(validViewPortSizeOfSpace.width / 2, validViewPortSizeOfSpace.height / 2)
+        - currentOffset/currentScale;
+    List<SpaceObject> list = [];
+    for (var element in _allObjectInViewPort) {
+      if(element.bounds.contains(worldPoint)){
+        list.add(element);
+      }
+    }
+    _interactiveObjects = list;
     notifyListeners();
   }
 }

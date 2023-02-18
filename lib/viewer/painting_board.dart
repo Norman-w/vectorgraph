@@ -45,9 +45,8 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
 
   //region 鼠标和触摸板事件
   onHoverMouseRegion(PointerHoverEvent event) {
-    // setState(() {
-    //   // logText = 'MouseRegion hover ${event.position}';
-    // });
+    //鼠标移动检测鼠标焦点上的物件
+    ref.read(viewStateControllerProvider).updateInteractiveObjects(event.position);
   }
 
   onPointerDown(event) {
@@ -73,6 +72,9 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
       });
       var oldOffset = ref.watch(viewStateControllerProvider).currentOffset;
       ref.read(viewStateControllerProvider.notifier).currentOffset = oldOffset.translate(event.delta.dx, event.delta.dy);
+
+      //更新坐标检测鼠标焦点上的物件
+      ref.read(viewStateControllerProvider).updateInteractiveObjects(event.position);
     }
     else if(event.buttons == 1){
       var viewState = ref.read(viewStateControllerProvider);
@@ -124,6 +126,8 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         ref.read(viewStateControllerProvider).currentScale = newScale;
       }
       //endregion
+      //鼠标滚轮更新尺寸检测鼠标焦点上的物件
+      ref.read(viewStateControllerProvider).updateInteractiveObjects(event.position);
     }
   }
 
@@ -162,6 +166,9 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
       ref.read(viewStateControllerProvider).currentScale = newScale;
     }
     //endregion
+
+    //更新尺寸检测鼠标焦点上的物件
+    ref.read(viewStateControllerProvider).updateInteractiveObjects(event.position);
     // logText = '检测区域offset: ${currentOffset} space: ${validPaintingBoardSizeOfSpace} 检测到在区域内的物体数量 ${allObjectInPaintingBoard.length}';);
   }
 

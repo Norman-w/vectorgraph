@@ -23,6 +23,16 @@ class ViewPort extends ConsumerWidget {
           );
         }
         ),
+        //绘制所有焦点中的物件
+        ...ref.watch(viewStateControllerProvider).interactiveObjects.map((e) {
+          return e.getWidget(
+            ref.watch(viewStateControllerProvider).viewPortPixelSize,
+            ref.watch(viewStateControllerProvider).currentOffset,
+            ref.watch(viewStateControllerProvider).currentScale,
+            Colors.white
+          );
+        }
+        ),
         SizedBox(
             width: double.infinity,
             height: double.infinity,
