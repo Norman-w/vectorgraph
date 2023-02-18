@@ -220,7 +220,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
           Stack(
             children: [
               //region 在视口中显示临时检测图形和log文字等
-              Container(
+              const SizedBox(
                 width: double.infinity,
                 height: double.infinity,
                   //必须写点什么,不然Container和SizedBox等里面什么都没有的话,是检测不到鼠标和触摸板事件的.
