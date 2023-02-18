@@ -1,5 +1,3 @@
-
-
 /**
  * view port 相当于是显示器，显示器的大小是固定的，但是显示器上的内容是可以变化的。
  * 例如，显示器的大小是 800*600，但是显示器上的内容可以是 400*300，也可以是 800*600，也可以是 1600*1200。
@@ -17,7 +15,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vectorgraph/viewer/ruler.dart';
 
 import 'size_listener.dart';
 import 'space.dart';
@@ -45,13 +42,6 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
   Offset? mouseMoveToPosition;
   //支持反向鼠标滚轮
   bool reverseMouseWheel = false;
-  //
-  // @override
-  // initState() {
-  //   ref.read(viewStateControllerProvider.notifier).init();
-  //   super.initState();
-  // }
-
 
   //region 鼠标和触摸板事件
   onHoverMouseRegion(PointerHoverEvent event) {
@@ -82,7 +72,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         // logText = '鼠标移动 ${event.position}';
       });
       var oldOffset = ref.watch(viewStateControllerProvider).currentOffset;
-      ref.read(viewStateControllerProvider).currentOffset = oldOffset.translate(event.delta.dx, event.delta.dy);
+      ref.read(viewStateControllerProvider.notifier).currentOffset = oldOffset.translate(event.delta.dx, event.delta.dy);
     }
     else if(event.buttons == 1){
       var viewState = ref.read(viewStateControllerProvider);
@@ -227,17 +217,22 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
           Stack(
             children: [
               //region 在视口中显示临时检测图形和log文字等
-              SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: Ruler(
-                    ref.watch(viewStateControllerProvider).rulerRectFromCenter
-                  )
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                  //必须写点什么,不然Container和SizedBox等里面什么都没有的话,是检测不到鼠标和触摸板事件的.
+                  //可能是因为没有内容以后,Container之类的尺寸就是0,因为在下面Positioned组件里面的Text上移动鼠标时可促发事件.
+                  child: Text(''),
+              ),
+              Positioned(
+                left: 100,
+                top: 50,
+                child: Text(logText),
               ),
               Positioned(
                 left: 100,
                 top: 100,
-                child: Text(logText),
+                child: Text(logText2),
               ),
               //endregion
             ],
