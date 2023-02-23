@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
 import '../objects/point_object.dart';
@@ -8,20 +9,26 @@ import 'space.dart';
 import '../objects/space_object.dart';
 import 'space_layer.dart';
 
-// class ViewStateController extends ChangeNotifier {
-//   double currentScale = 1.0;
-//   Offset currentOffset = Offset.zero;
-//
-//   Space space = Space();
-//
-//   Rect? bound;
-//   Size viewPortPixelSize = Size.zero;
-//   Size validViewPortSizeOfSpace = Size.zero;
-//   List<SpaceObject> allObjectInViewPort = [];
-// }
 
-// var stateControllerProvider =
-// ChangeNotifierProvider<ViewStateController>((ref) => ViewStateController());
+class ViewState{
+  double currentScale = 1;
+  Offset currentOffset = Offset.zero;
+  Rect bound = Rect.zero;
+  Size viewPortPixelSize = Size.zero;
+  Offset validViewPortSizeOfSpace = Offset.zero;
+}
+
+final viewStateNotifierProvider = StateNotifierProvider<ViewStateNotifier, ViewState>((ref) {
+  return ViewStateNotifier(ViewState());
+});
+
+class ViewStateNotifier extends StateNotifier<ViewState>{
+  ViewStateNotifier(super.state);
+  void updateScale(double newScale){
+    state.currentScale = newScale;
+  }
+}
+
 
 var viewStateControllerProvider =
 ChangeNotifierProvider<ViewStateController>((ref) => ViewStateController());
@@ -71,9 +78,9 @@ class ViewStateController extends ChangeNotifier {
   Size _validViewPortSizeOfSpace = const Size(800,600);
   Size get validViewPortSizeOfSpace => _validViewPortSizeOfSpace;
   List<SpaceObject> _allObjectInViewPort = [];
-  List<SpaceObject> _interactiveObjects = [];
+  // List<SpaceObject> _interactiveObjects = [];
   List<SpaceObject> get allObjectInViewPort => _allObjectInViewPort;
-  List<SpaceObject> get interactiveObjects => _interactiveObjects;
+  // List<SpaceObject> get interactiveObjects => _interactiveObjects;
   Rect get rulerRectFromCenter => Rect.fromCenter(
       center: -_currentOffset / _currentScale,
       width: _validViewPortSizeOfSpace.width,
@@ -93,14 +100,24 @@ class ViewStateController extends ChangeNotifier {
     final worldPoint = mousePosition / currentScale
         - Offset(validViewPortSizeOfSpace.width / 2, validViewPortSizeOfSpace.height / 2)
         - currentOffset/currentScale;
-    List<SpaceObject> list = [];
+    final worldPointEX = PointEX(worldPoint.dx, worldPoint.dy);
+    // bool needUpdate = false;
     for (var element in _allObjectInViewPort) {
       if(element.bounds.contains(worldPoint)){
-        list.add(element);
+        switch(element.runtimeType){
+          case RectObject:
+            var old = element.isInteractive;
+            var interactive = (element as RectObject).isPointOnSides(worldPointEX);
+            // if(old!= interactive){
+              // needUpdate = true;
+              element.isInteractive = interactive;
+            // }
+        }
       }
     }
-    _interactiveObjects = list;
-    notifyListeners();
+    // if(needUpdate) {
+      notifyListeners();
+    // }
   }
 }
 

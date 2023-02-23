@@ -2,8 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/viewer/rect_painter.dart';
 
+import '../model/geometry/lines/line_segment.dart';
 import 'space_object.dart';
 
 class RectObject extends Rect with SpaceObject{
@@ -15,29 +17,31 @@ class RectObject extends Rect with SpaceObject{
 
   @override
   Rect get bounds => this;
-
-  @override
-  Widget getWidget(
-      Size viewPortSize,
-      Offset viewPortOffset,
-      double viewPortScale,
-      Color color) {
-    var newWidth = width * viewPortScale;
-    var newHeight = height * viewPortScale;
-    var oldWidth = width;
-    var oldHeight = height;
-    var xAdded = (newWidth - oldWidth) / 2;
-    var yAdded = (newHeight - oldHeight) / 2;
-    var newLeft = left + viewPortOffset.dx + viewPortSize.width/2 - xAdded;
-    var newTop = top + viewPortOffset.dy + viewPortSize.height/2  -yAdded;
-    var realViewRect = Rect.fromLTWH(
-        newLeft,
-        newTop,
-        newWidth,
-        newHeight
-    );
-    return CustomPaint(
-      painter: RectPainter(realViewRect, color),
-    );
+  List<LineSegment> _lines = [];
+  List<LineSegment> get lines {
+    if(_lines.isEmpty && !isEmpty){
+      //init lines
+      var p1 = PointEX(left, top);
+      var p2 = PointEX(right, top);
+      var p3 = PointEX(right, bottom);
+      var p4 = PointEX(left, bottom);
+      _lines = [
+        LineSegment(p1,p2),
+        LineSegment(p2,p3),
+        LineSegment(p3,p4),
+        LineSegment(p4,p1),
+      ];
+    }
+    return _lines;
+  }
+  ///检测点是否在矩形的边缘上.
+  bool isPointOnSides(PointEX point){
+    var list = lines;
+    for(var l in list){
+      if(l.isPointOnLine(point)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

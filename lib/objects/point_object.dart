@@ -11,13 +11,13 @@ class PointObject extends PointEX with SpaceObject{
   PointObject(super.x, super.y, {this.radius = 1});
   @override
   Rect get bounds => Rect.fromCircle(center: Offset(x, y), radius: radius);
-  @override
-  Widget getWidget(Size viewPortSize, Offset viewPortOffset, double viewPortScale, Color color) {
-    var newX = x * viewPortScale + viewPortOffset.dx + viewPortSize.width/2;
-    var newY = y * viewPortScale + viewPortOffset.dy + viewPortSize.height/2;
-        var newPoint = Offset(newX, newY);
-    return CustomPaint(
-      painter: PointPainter(newPoint, color,radius * viewPortScale),
-    );
-  }
+  // @override
+  // Widget getWidget(Size viewPortSize, Offset viewPortOffset, double viewPortScale) {
+  //   var newX = x * viewPortScale + viewPortOffset.dx + viewPortSize.width/2;
+  //   var newY = y * viewPortScale + viewPortOffset.dy + viewPortSize.height/2;
+  //       var newPoint = Offset(newX, newY);
+  //   return CustomPaint(
+  //     painter: PointPainter(newPoint, color,radius * viewPortScale),
+  //   );
+  // }
 }
