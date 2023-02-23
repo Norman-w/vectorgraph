@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../model/geometry/points/point_ex.dart';
+import '../objects/rect_object.dart';
 import 'size_listener.dart';
 import 'space.dart';
 import 'view_state.dart';
@@ -46,7 +48,37 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
   //region 鼠标和触摸板事件
   onHoverMouseRegion(PointerHoverEvent event) {
     //鼠标移动检测鼠标焦点上的物件
-    ref.read(viewStateControllerProvider).updateInteractiveObjects(event.position);
+    // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
+    var state = ref.watch(viewStateProvider);
+    var worldPoint = event.position / state.currentScale
+        - Offset(state.validViewPortSizeOfSpace.width / 2, state.validViewPortSizeOfSpace.height / 2)
+        - state.currentOffset/state.currentScale;
+    final worldPointEX = PointEX(worldPoint.dx, worldPoint.dy);
+
+    for (var element in state.allObjectInViewPort) {
+      if(element.bounds.contains(worldPoint)){
+        switch(element.runtimeType){
+          case RectObject:
+            var oldIsInteractive = element.isInteractive;
+            var newIsInteractive = (element as RectObject).isPointOnSides(worldPointEX,deviation: 5);
+            if(oldIsInteractive!= newIsInteractive){
+              element.isInteractive = newIsInteractive;
+              ref.read(rectObjectsProvider(element as RectObject).notifier).updateIsInteractive(newIsInteractive);
+            }
+        }
+      }
+      else
+        {
+          if(element.isInteractive){
+            element.isInteractive = false;
+            ref.read(rectObjectsProvider(element as RectObject).notifier).updateIsInteractive(false);
+          }
+        }
+      setState(() {
+        logText = '世界坐标$worldPointEX';
+      });
+    }
+
   }
 
   onPointerDown(event) {
@@ -70,14 +102,14 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         mouseDownPosition = event.position;
         // logText = '鼠标移动 ${event.position}';
       });
-      var oldOffset = ref.watch(viewStateControllerProvider).currentOffset;
-      ref.read(viewStateControllerProvider.notifier).currentOffset = oldOffset.translate(event.delta.dx, event.delta.dy);
+      var oldOffset = ref.watch(viewStateProvider).currentOffset;
+      ref.read(viewStateProvider).currentOffset = oldOffset.translate(event.delta.dx, event.delta.dy);
 
       //更新坐标检测鼠标焦点上的物件
-      ref.read(viewStateControllerProvider).updateInteractiveObjects(event.position);
+      // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
     }
     else if(event.buttons == 1){
-      var viewState = ref.read(viewStateControllerProvider);
+      var viewState = ref.read(viewStateProvider);
       setState(() {
         mouseMoveToPosition = event.position;
         logText = '鼠标左键移动 ${event.position}';
@@ -109,7 +141,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     if (event is PointerScrollEvent) {
       // logText = '鼠标滚轮 ${event.scrollDelta}';
       var oldScale = ref
-          .watch(viewStateControllerProvider)
+          .watch(viewStateProvider)
           .currentScale;
 
       var newScale = oldScale +
@@ -117,17 +149,17 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
               .dy / 1000);
       //region 限制最小和最大放大倍数
       if (newScale < 0.1) {
-        ref.read(viewStateControllerProvider).currentScale = 0.1;
+        ref.read(viewStateProvider.notifier).currentScale = 0.1;
       }
       else if (newScale > 10000) {
-        ref.read(viewStateControllerProvider).currentScale = 10000;
+        ref.read(viewStateProvider.notifier).currentScale = 10000;
       }
       else {
-        ref.read(viewStateControllerProvider).currentScale = newScale;
+        ref.read(viewStateProvider.notifier).currentScale = newScale;
       }
       //endregion
       //鼠标滚轮更新尺寸检测鼠标焦点上的物件
-      ref.read(viewStateControllerProvider).updateInteractiveObjects(event.position);
+      // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
     }
   }
 
@@ -142,12 +174,12 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     });
     //region 位移
     var oldOffset = ref
-        .watch(viewStateControllerProvider)
+        .watch(viewStateProvider)
         .currentOffset;
 
     var newOffset = oldOffset.translate(
         event.localPanDelta.dx, event.localPanDelta.dy);
-    ref.read(viewStateControllerProvider).currentOffset = newOffset;
+    ref.read(viewStateProvider.notifier).currentOffset = newOffset;
     //endregion
     // var oldScale = ref
     //     .watch(viewStateControllerProvider)
@@ -157,25 +189,25 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     var newScale = panScaleStart! * event.scale;
     //region 限制最小和最大放大倍数
     if (newScale < 0.1) {
-      ref.read(viewStateControllerProvider).currentScale = 0.1;
+      ref.read(viewStateProvider.notifier).currentScale = 0.1;
     }
     else if (newScale > 10000) {
-      ref.read(viewStateControllerProvider).currentScale = 10000;
+      ref.read(viewStateProvider.notifier).currentScale = 10000;
     }
     else {
-      ref.read(viewStateControllerProvider).currentScale = newScale;
+      ref.read(viewStateProvider.notifier).currentScale = newScale;
     }
     //endregion
 
     //更新尺寸检测鼠标焦点上的物件
-    ref.read(viewStateControllerProvider).updateInteractiveObjects(event.position);
+    // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
     // logText = '检测区域offset: ${currentOffset} space: ${validPaintingBoardSizeOfSpace} 检测到在区域内的物体数量 ${allObjectInPaintingBoard.length}';);
   }
 
   onPointerPanZoomStart(event) {
     setState(() {
       //保存现在的缩放倍数,不直接修改放大倍数防止setState造成过量乘数
-      panScaleStart = ref.watch(viewStateControllerProvider).currentScale;
+      panScaleStart = ref.watch(viewStateProvider).currentScale;
     });
   }
 
@@ -221,7 +253,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
 
           SizeListener(
               onWidgetSizeChange: (size) {
-                ref.read(viewStateControllerProvider).viewPortPixelSize = size;
+                ref.read(viewStateProvider.notifier).viewPortPixelSize = size;
               },
             child:
           Stack(

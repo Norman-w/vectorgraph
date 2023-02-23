@@ -15,8 +15,13 @@ class ViewState{
   Offset currentOffset = Offset.zero;
   Rect bound = Rect.zero;
   Size viewPortPixelSize = Size.zero;
-  Offset validViewPortSizeOfSpace = Offset.zero;
+  Size validViewPortSizeOfSpace = Size.zero;
   List<SpaceObject> allObjectInViewPort = [];
+  Rect get rulerRectFromCenter => Rect.fromCenter(
+      center: -currentOffset / currentScale,
+      width: validViewPortSizeOfSpace.width,
+      height: validViewPortSizeOfSpace.height);
+  // Space _space = initSpace();
   ViewState copyWith(){
     return ViewState()
       ..currentScale = currentScale
@@ -28,105 +33,89 @@ class ViewState{
     ;
   }
 }
-
-class ViewStateNotifier extends StateNotifier<ViewState>{
-  ViewStateNotifier(super.state);
-  void updateScale(double newScale){
-    state.currentScale = newScale;
-  }
-}
+//
+// class ViewStateNotifier extends StateNotifier<ViewState>{
+//   ViewStateNotifier(super.state);
+//   void updateScale(double newScale){
+//     state.currentScale = newScale;
+//   }
+// }
 
 final viewStateProvider = StateNotifierProvider<ViewStateNotifier, ViewState>((ref) {
   return ViewStateNotifier(ViewState());
 });
+//
+// var viewStateControllerProvider =
+// ChangeNotifierProvider<ViewStateController>((ref) => ViewStateController());
 
-var viewStateControllerProvider =
-ChangeNotifierProvider<ViewStateController>((ref) => ViewStateController());
-
-class ViewStateController extends ChangeNotifier {
+class ViewStateNotifier extends StateNotifier<ViewState> {
   Rect? _bound;
+
+  ViewStateNotifier(super.state);
+
   Rect? get bound => _bound;
   set bound(Rect? value) {
     if(_bound == value || value == null){
       return;
     }
-    _bound = value;
-    _viewPortPixelSize = value!.size;
-    _validViewPortSizeOfSpace = _viewPortPixelSize / _currentScale;
-    _allObjectInViewPort = _space.getInViewPortObjects(
-        _currentOffset / _currentScale, _validViewPortSizeOfSpace);
-    notifyListeners();
+    state = state.copyWith()
+    ..bound = value
+    ..viewPortPixelSize = value!.size
+    ..validViewPortSizeOfSpace = state.viewPortPixelSize / state.currentScale
+    ..allObjectInViewPort = _space.getInViewPortObjects(state.currentOffset/state.currentScale, state.validViewPortSizeOfSpace);
   }
-  double _currentScale = 1;
-  double get currentScale => _currentScale;
   set currentScale(double value) {
-    _currentScale = value;
-    _validViewPortSizeOfSpace = _viewPortPixelSize / _currentScale;
-    _allObjectInViewPort = _space.getInViewPortObjects(
-        _currentOffset / _currentScale, _validViewPortSizeOfSpace);
-    notifyListeners();
+    state = state.copyWith()
+    ..currentScale = value
+      ..validViewPortSizeOfSpace = state.viewPortPixelSize / state.currentScale
+      ..allObjectInViewPort = _space.getInViewPortObjects(state.currentOffset/state.currentScale, state.validViewPortSizeOfSpace);
   }
-  Offset _currentOffset = Offset.zero;
-  Offset get currentOffset => _currentOffset;
   set currentOffset(Offset value) {
-    _currentOffset = value;
-    _validViewPortSizeOfSpace = _viewPortPixelSize / _currentScale;
-    _allObjectInViewPort = _space.getInViewPortObjects(
-        _currentOffset / _currentScale, _validViewPortSizeOfSpace);
-    notifyListeners();
+    state = state.copyWith()..currentOffset = value
+    ..validViewPortSizeOfSpace = state.viewPortPixelSize/state.currentScale
+    ..allObjectInViewPort = _space.getInViewPortObjects(state.currentOffset / state.currentScale, state.validViewPortSizeOfSpace);
   }
-  Size _viewPortPixelSize = const Size(800,600);
-  Size get viewPortPixelSize => _viewPortPixelSize;
   set viewPortPixelSize(Size value) {
-    _viewPortPixelSize = value;
-    _validViewPortSizeOfSpace = _viewPortPixelSize / _currentScale;
-    _allObjectInViewPort = _space.getInViewPortObjects(
-        _currentOffset / _currentScale, _validViewPortSizeOfSpace);
-
-    notifyListeners();
+    state = state.copyWith()
+      ..viewPortPixelSize = value
+      ..validViewPortSizeOfSpace = state.viewPortPixelSize / state.currentScale
+      ..allObjectInViewPort = _space.getInViewPortObjects(state.currentOffset/state.currentScale, state.validViewPortSizeOfSpace);
   }
-  Size _validViewPortSizeOfSpace = const Size(800,600);
-  Size get validViewPortSizeOfSpace => _validViewPortSizeOfSpace;
-  List<SpaceObject> _allObjectInViewPort = [];
-  // List<SpaceObject> _interactiveObjects = [];
-  List<SpaceObject> get allObjectInViewPort => _allObjectInViewPort;
-  // List<SpaceObject> get interactiveObjects => _interactiveObjects;
-  Rect get rulerRectFromCenter => Rect.fromCenter(
-      center: -_currentOffset / _currentScale,
-      width: _validViewPortSizeOfSpace.width,
-      height: _validViewPortSizeOfSpace.height);
   Space _space = initSpace();
-  // Space get space => _space;
-  // set space(Space value) {
-  //   _space = value;
-  //   notifyListeners();
-  // }
   init(){
     _space = initSpace();
-    _viewPortPixelSize = const Size(800,600);
-    notifyListeners();
+    state.viewPortPixelSize = const Size(800,600);
   }
+  var worldPoint = Offset.zero;
   void updateInteractiveObjects(Offset mousePosition){
-    final worldPoint = mousePosition / currentScale
-        - Offset(validViewPortSizeOfSpace.width / 2, validViewPortSizeOfSpace.height / 2)
-        - currentOffset/currentScale;
+    worldPoint = mousePosition / state.currentScale
+        - Offset(state.validViewPortSizeOfSpace.width / 2, state.validViewPortSizeOfSpace.height / 2)
+        - state.currentOffset/state.currentScale;
     final worldPointEX = PointEX(worldPoint.dx, worldPoint.dy);
-    // bool needUpdate = false;
-    for (var element in _allObjectInViewPort) {
+
+    bool needUpdate = false;
+    for (var element in state.allObjectInViewPort) {
       if(element.bounds.contains(worldPoint)){
         switch(element.runtimeType){
           case RectObject:
-            var old = element.isInteractive;
-            var interactive = (element as RectObject).isPointOnSides(worldPointEX);
-            // if(old!= interactive){
-              // needUpdate = true;
-              element.isInteractive = interactive;
-            // }
+            var oldIsInteractive = element.isInteractive;
+            var newIsInteractive = (element as RectObject).isPointOnSides(worldPointEX);
+            if(oldIsInteractive!= newIsInteractive){
+              print('有交集');
+              needUpdate = true;
+              element.isInteractive = newIsInteractive;
+              // }
+            }
         }
       }
     }
+    if(!needUpdate)
+    {
+      return;
+    }
+    state = state.copyWith()
+      ..allObjectInViewPort = state.allObjectInViewPort;
     // if(needUpdate) {
-      notifyListeners();
     // }
   }
 }

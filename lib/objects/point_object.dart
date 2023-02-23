@@ -29,6 +29,6 @@ class PointObjectNotifier extends StateNotifier<PointObject>{
   }
 }
 
-final rectObjectProvider =
+final pointObjectProvider =
 StateNotifierProvider.family<PointObjectNotifier, PointObject, PointObject>(
         (ref, point) => PointObjectNotifier(point, false));

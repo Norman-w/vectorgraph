@@ -60,15 +60,15 @@ class RectPaint extends StatelessWidget {
     );
   }
 }
-
-class RectObjectWidget extends ConsumerWidget {
-  final RectObject rectObject;
-  const RectObjectWidget(this.rectObject, {super.key});
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final rectObjectProvider = ref.watch(rectObjectsProvider(rectObject));
-    return CustomPaint(
-      painter: RectPainter(rectObject, rectObjectProvider.isInteractive ? Colors.red : Colors.blue),
-    );
-  }
-}
+//
+// class RectObjectWidget extends ConsumerWidget {
+//   final RectObject rectObject;
+//   const RectObjectWidget(this.rectObject, {super.key});
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final rectObjectProvider = ref.watch(rectObjectsProvider(rectObject));
+//     return CustomPaint(
+//       painter: RectPainter(rectObject, rectObjectProvider.isInteractive ? Colors.red : Colors.blue),
+//     );
+//   }
+// }
