@@ -16,11 +16,18 @@ class ViewState{
   Rect bound = Rect.zero;
   Size viewPortPixelSize = Size.zero;
   Offset validViewPortSizeOfSpace = Offset.zero;
+  List<SpaceObject> allObjectInViewPort = [];
+  ViewState copyWith(){
+    return ViewState()
+      ..currentScale = currentScale
+      ..currentOffset = currentOffset
+      ..bound = bound
+      ..viewPortPixelSize = viewPortPixelSize
+      ..validViewPortSizeOfSpace = validViewPortSizeOfSpace
+      ..allObjectInViewPort = allObjectInViewPort
+    ;
+  }
 }
-
-final viewStateNotifierProvider = StateNotifierProvider<ViewStateNotifier, ViewState>((ref) {
-  return ViewStateNotifier(ViewState());
-});
 
 class ViewStateNotifier extends StateNotifier<ViewState>{
   ViewStateNotifier(super.state);
@@ -29,6 +36,9 @@ class ViewStateNotifier extends StateNotifier<ViewState>{
   }
 }
 
+final viewStateProvider = StateNotifierProvider<ViewStateNotifier, ViewState>((ref) {
+  return ViewStateNotifier(ViewState());
+});
 
 var viewStateControllerProvider =
 ChangeNotifierProvider<ViewStateController>((ref) => ViewStateController());

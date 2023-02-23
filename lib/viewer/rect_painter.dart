@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vectorgraph/objects/rect_object.dart';
 class RectanglesPaint extends StatelessWidget {
   final List<Rect> rects;
   final Color color;
@@ -55,6 +57,18 @@ class RectPaint extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: RectPainter(rect, color),
+    );
+  }
+}
+
+class RectObjectWidget extends ConsumerWidget {
+  final RectObject rectObject;
+  const RectObjectWidget(this.rectObject, {super.key});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final rectObjectProvider = ref.watch(rectObjectsProvider(rectObject));
+    return CustomPaint(
+      painter: RectPainter(rectObject, rectObjectProvider.isInteractive ? Colors.red : Colors.blue),
     );
   }
 }

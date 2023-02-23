@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/viewer/rect_painter.dart';
 
@@ -44,4 +45,22 @@ class RectObject extends Rect with SpaceObject{
     }
     return false;
   }
+  @override
+  RectObject copyWith({Offset? center, double? width, double? height, double? radius, double? left, double? top, double? right, double? bottom}){
+    return RectObject.fromLTWH(left ?? this.left, top ?? this.top, width ?? this.width, height ?? this.height);
+  }
 }
+class RectObjectNotifier extends StateNotifier<RectObject>{
+  bool _isInteractive = false;
+  RectObjectNotifier(super.state, this._isInteractive);
+  get isInteractive => _isInteractive;
+  void updateIsInteractive(bool newIsInteractive){
+    _isInteractive = newIsInteractive;
+    state = state.copyWith()
+      ..isInteractive = newIsInteractive;
+  }
+}
+
+final rectObjectsProvider =
+StateNotifierProvider.family<RectObjectNotifier, RectObject, RectObject>(
+        (ref, rect) => RectObjectNotifier(rect, false));
