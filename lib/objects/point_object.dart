@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../viewer/points_painter.dart';
@@ -8,12 +9,14 @@ import '../model/geometry/points/point_ex.dart';
 import 'space_object.dart';
 
 class PointObject extends PointEX with SpaceObject{
-  double radius;
-  PointObject(super.x, super.y, {this.radius = 1});
+  late Decimal radius;
+  PointObject(super.x, super.y, {Decimal? radius}){
+    this.radius = radius ?? Decimal.fromInt(1);
+  }
   @override
   Rect get bounds => Rect.fromCircle(center: Offset(x, y), radius: radius);
   @override
-  PointObject copyWith({double? x, double? y, double? radius}){
+  PointObject copyWith({Decimal? x, Decimal? y, Decimal? radius}){
     return PointObject(x ?? this.x, y ?? this.y, radius: radius ?? this.radius);
   }
 }

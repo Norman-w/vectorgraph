@@ -1,11 +1,12 @@
 import 'dart:ui';
 
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 mixin SpaceObject{
-  double x = 0;
-  double y = 0;
+  Decimal x = Decimal.zero;
+  Decimal y = Decimal.zero;
   Rect get bounds;
   bool isInteractive = false;
   SpaceObject copyWith();

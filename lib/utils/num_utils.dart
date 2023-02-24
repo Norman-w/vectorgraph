@@ -195,3 +195,20 @@ class NumUtil {
     return format.format(fee);
   }
 }
+
+Decimal decimalSqrt(Decimal decimal) {
+  Decimal x = decimal;
+  Decimal y = ((x + Decimal.one) / Decimal.fromInt(2)).toDecimal();
+  while (x - y > Decimal.zero) {
+    x = y;
+    y = ((x + (decimal / x).toDecimal()) / Decimal.fromInt(2)).toDecimal();
+  }
+  return x;
+}
+Decimal decimalPow(Decimal decimal, int exponent) {
+  Decimal result = Decimal.one;
+  for (int i = 0; i < exponent; i++) {
+    result *= decimal;
+  }
+  return result;
+}
