@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vectorgraph/utils/widget.dart';
 
 import '../model/geometry/points/point_ex.dart';
 import '../objects/rect_object.dart';
@@ -253,6 +254,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
 
           SizeListener(
               onWidgetSizeChange: (size) {
+                ref.read(viewStateProvider.notifier).bound = context.globalPaintBounds;
                 ref.read(viewStateProvider.notifier).viewPortPixelSize = size;
               },
             child:

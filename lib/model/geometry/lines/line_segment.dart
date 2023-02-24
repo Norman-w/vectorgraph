@@ -112,10 +112,10 @@ class LineSegment{
 extension LineSegmentMethods on LineSegment{
   bool isPointOnLine(PointEX point, {double deviation = 1})
   {
-    var vector1 = getVector();
-    var vector2 = point - start;
-    var cross = vector1.x * vector2.y - vector1.y * vector2.x;
-    return cross.abs() / vector1.distance(Vector2D(0, 0)) < deviation;
+    Vector2D vector1 = getVector() * 10000;
+    PointEX vector2 = point * 10000 - start * 10000;
+    double cross = vector1.x * vector2.y - vector1.y * vector2.x;
+    return cross.abs() / vector1.distance(Vector2D(0, 0)) < deviation *10000;
   }
   // 判断线段相交 老方法
   bool intersect(LineSegment L1, LineSegment L2)
