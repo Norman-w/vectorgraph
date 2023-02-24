@@ -103,7 +103,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         // logText = '鼠标移动 ${event.position}';
       });
       var oldOffset = ref.watch(viewStateProvider).currentOffset;
-      ref.read(viewStateProvider).currentOffset = oldOffset.translate(event.delta.dx, event.delta.dy);
+      ref.read(viewStateProvider.notifier).currentOffset = oldOffset.translate(event.delta.dx, event.delta.dy);
 
       //更新坐标检测鼠标焦点上的物件
       // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
