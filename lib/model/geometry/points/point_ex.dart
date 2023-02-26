@@ -11,6 +11,13 @@ class PointEX {
   bool equals(other){
     return other.x == x && other.y == y;
   }
+
+  PointEX operator -() {
+    return PointEX(-x, -y);
+  }
+
+  static final zero = PointEX(Decimal.zero, Decimal.zero);
+
   @override
   String toString() {
     // return "点(x:$x , y:$y)";
@@ -28,7 +35,13 @@ class PointEX {
     return PointEX(x * value, y * value);
   }
   PointEX operator /(Decimal value){
-    return PointEX((x / value).toDecimal(), (y / value).toDecimal());
+    var rx = x/value;
+    var px = Decimal.parse(rx.toDecimal(scaleOnInfinitePrecision:60).toString());
+
+    var ry = y/value;
+    var py = Decimal.parse(ry.toDecimal(scaleOnInfinitePrecision:60).toString());
+
+    return PointEX(px,py);
   }
   Decimal CrossProduct(PointEX other){
     return x * other.y - y * other.x;
@@ -40,9 +53,18 @@ class PointEX {
   toOffset(){
     return Offset(x.toDouble(), y.toDouble());
   }
+  static PointEX fromOffset(Offset value){
+    return PointEX(value.dx.toDecimal(), value.dy.toDecimal());
+  }
 }
 // 计算叉乘 |P0P1| × |P0P2|
 Decimal pointMultiply(PointEX p1, PointEX p2, PointEX p0)
 {
   return ( (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y) );
+}
+
+extension OffsetExternFunctions on Offset{
+  PointEX toPointEX(){
+    return PointEX(dx.toDecimal(), dy.toDecimal());
+  }
 }

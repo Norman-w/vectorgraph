@@ -4,10 +4,12 @@ import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../model/geometry/rect/RectEX.dart';
+
 mixin SpaceObject{
   Decimal x = Decimal.zero;
   Decimal y = Decimal.zero;
-  Rect get bounds;
+  RectEX get bounds;
   bool isInteractive = false;
   SpaceObject copyWith();
 }

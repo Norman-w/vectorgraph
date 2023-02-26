@@ -1,8 +1,12 @@
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
+import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
+import '../model/geometry/SizeEX.dart';
+import '../model/geometry/Rect/RectEX.dart';
 import '../objects/point_object.dart';
 import '../objects/rect_object.dart';
 import 'space.dart';
@@ -11,16 +15,16 @@ import 'space_layer.dart';
 
 
 class ViewState{
-  double currentScale = 1;
+  Decimal currentScale = Decimal.one;
   Offset currentOffset = Offset.zero;
   Rect bound = Rect.zero;
   Size viewPortPixelSize = Size.zero;
-  Size validViewPortSizeOfSpace = Size.zero;
+  SizeEX validViewPortSizeOfSpace = SizeEX.zero;
   List<SpaceObject> allObjectInViewPort = [];
   Rect get rulerRectFromCenter => Rect.fromCenter(
-      center: -currentOffset / currentScale,
-      width: validViewPortSizeOfSpace.width,
-      height: validViewPortSizeOfSpace.height);
+      center: (-PointEX.fromOffset(currentOffset) / currentScale).toOffset(),
+      width: validViewPortSizeOfSpace.width.toDouble(),
+      height: validViewPortSizeOfSpace.height.toDouble());
   // Space _space = initSpace();
   ViewState copyWith(){
     return ViewState()
@@ -36,7 +40,7 @@ class ViewState{
 //
 // class ViewStateNotifier extends StateNotifier<ViewState>{
 //   ViewStateNotifier(super.state);
-//   void updateScale(double newScale){
+//   void updateScale(Decimal newScale){
 //     state.currentScale = newScale;
 //   }
 // }
@@ -61,37 +65,44 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
     state = state.copyWith()
     ..bound = value
     ..viewPortPixelSize = value!.size
-    ..validViewPortSizeOfSpace = state.viewPortPixelSize / state.currentScale
-    ..allObjectInViewPort = _space.getInViewPortObjects(state.currentOffset/state.currentScale, state.validViewPortSizeOfSpace);
+    ..validViewPortSizeOfSpace = SizeEX.fromSize(state.viewPortPixelSize) / state.currentScale
+    ..allObjectInViewPort = _space.getInViewPortObjects(
+        PointEX.fromOffset(state.currentOffset)/state.currentScale,
+        state.validViewPortSizeOfSpace);
   }
-  set currentScale(double value) {
+  set currentScale(Decimal value) {
     state = state.copyWith()
     ..currentScale = value
-      ..validViewPortSizeOfSpace = state.viewPortPixelSize / state.currentScale
-      ..allObjectInViewPort = _space.getInViewPortObjects(state.currentOffset/state.currentScale, state.validViewPortSizeOfSpace);
+      ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX() / state.currentScale
+      ..allObjectInViewPort = _space.getInViewPortObjects(
+          PointEX.fromOffset(state.currentOffset)/state.currentScale,
+          state.validViewPortSizeOfSpace);
   }
   set currentOffset(Offset value) {
     state = state.copyWith()..currentOffset = value
-    ..validViewPortSizeOfSpace = state.viewPortPixelSize/state.currentScale
-    ..allObjectInViewPort = _space.getInViewPortObjects(state.currentOffset / state.currentScale, state.validViewPortSizeOfSpace);
+    ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX()/state.currentScale
+      ..allObjectInViewPort = _space.getInViewPortObjects(
+          PointEX.fromOffset(state.currentOffset)/state.currentScale,
+          state.validViewPortSizeOfSpace);
   }
   set viewPortPixelSize(Size value) {
     state = state.copyWith()
       ..viewPortPixelSize = value
-      ..validViewPortSizeOfSpace = state.viewPortPixelSize / state.currentScale
-      ..allObjectInViewPort = _space.getInViewPortObjects(state.currentOffset/state.currentScale, state.validViewPortSizeOfSpace);
+      ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX() / state.currentScale
+      ..allObjectInViewPort = _space.getInViewPortObjects(
+          PointEX.fromOffset(state.currentOffset)/state.currentScale,
+          state.validViewPortSizeOfSpace);
   }
   Space _space = initSpace();
   init(){
     _space = initSpace();
     state.viewPortPixelSize = const Size(800,600);
   }
-  var worldPoint = Offset.zero;
+  PointEX worldPoint = PointEX.zero;
   void updateInteractiveObjects(Offset mousePosition){
-    worldPoint = mousePosition / state.currentScale
-        - Offset(state.validViewPortSizeOfSpace.width / 2, state.validViewPortSizeOfSpace.height / 2)
-        - state.currentOffset/state.currentScale;
-    final worldPointEX = PointEX(worldPoint.dx, worldPoint.dy);
+    worldPoint = mousePosition.toPointEX() / state.currentScale
+        - PointEX((state.validViewPortSizeOfSpace.width / decimal2).toDecimal(scaleOnInfinitePrecision:60), (state.validViewPortSizeOfSpace.height / decimal2).toDecimal(scaleOnInfinitePrecision:60))
+        - state.currentOffset.toPointEX()/state.currentScale;
 
     bool needUpdate = false;
     for (var element in state.allObjectInViewPort) {
@@ -99,7 +110,7 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
         switch(element.runtimeType){
           case RectObject:
             var oldIsInteractive = element.isInteractive;
-            var newIsInteractive = (element as RectObject).isPointOnSides(worldPointEX);
+            var newIsInteractive = (element as RectObject).isPointOnSides(worldPoint);
             if(oldIsInteractive!= newIsInteractive){
               print('有交集');
               needUpdate = true;
@@ -134,24 +145,28 @@ Space initSpace(){
   )..left = 180..top = 150;
 
 
-  // var rect1 = RectEX.fromLTWH(20, 30, 20, 20);
-  // var rect2 = RectEX.fromLTWH(50, 60, 15, 20);
-  // var rect3 = RectEX.fromLTWH(70, 80, 20, 12);
-  // var rect4 = RectEX.fromLTWH(85, 105, 30, 25);
+  // var RectEX1 = RectEX.fromLTWH(20, 30, 20, 20);
+  // var RectEX2 = RectEX.fromLTWH(50, 60, 15, 20);
+  // var RectEX3 = RectEX.fromLTWH(70, 80, 20, 12);
+  // var RectEX4 = RectEX.fromLTWH(85, 105, 30, 25);
 
-  // layer.addRect(rect1);
-  // layer.addRect(rect2);
-  // layer.addRect(rect3);
-  // layer.addRect(rect4);
+  // layer.addRectEX(RectEX1);
+  // layer.addRectEX(RectEX2);
+  // layer.addRectEX(RectEX3);
+  // layer.addRectEX(RectEX4);
+  RectObject rectObject = RectObject.fromCenter(
+      center: PointEX(Decimal.zero,Decimal.zero),
+      width: Decimal.fromInt(100),
+      height: Decimal.fromInt(100));
   layer.addRect(
-      RectObject.fromCenter(center: const Offset(0,0), width: 100, height: 100)
+      rectObject
   );
   layer.addRect(
-      RectObject.fromCenter(center: const Offset(0,0), width: 400, height: 300)
+      RectObject.fromCenter(center: PointEX(Decimal.zero,Decimal.zero), width: Decimal.fromInt(400), height: Decimal.fromInt(300))
   );
 
   layer.addPoint(
-      PointObject(0, 0)
+      PointObject(Decimal.zero, Decimal.zero)
   );
 
   space.addPaper(paper);

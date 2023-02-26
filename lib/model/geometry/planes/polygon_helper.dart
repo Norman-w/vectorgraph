@@ -176,7 +176,7 @@ extension PolygonPathRelativeWith on Polygon
   }
   Path toPath(){
     Path path = Path();
-    path.addPolygon(points.map((e) => Offset(e.x,e.y)).toList(), true);
+    path.addPolygon(points.map((e) => Offset(e.x.toDouble(),e.y.toDouble())).toList(), true);
     return path;
   }
 }

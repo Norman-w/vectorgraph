@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
+import 'package:vectorgraph/utils/num_utils.dart';
 
 import '../../../utils/utils.dart';
 import '../lines/line_segment.dart';
@@ -20,7 +22,7 @@ class Polygon{
   bool isPointIn(PointEX point) {
     return Polygon.isPointInPolygon(point, points);
   }
-  bool isPointXYIn(double x, double y)
+  bool isPointXYIn(Decimal x, Decimal y)
   {
     return isPointIn(PointEX(x, y));
   }
@@ -40,7 +42,7 @@ class Polygon{
     //cross points count of x
     int intersectCount = 0;
     //浮点类型计算时候与0比较时候的容差
-    double precision = 2e-10;
+    Decimal precision = Decimal.parse((2e-10).toString());
     //neighbour bound vertices
     PointEX p1, p2;
     //当前点
@@ -56,17 +58,17 @@ class Polygon{
       //right vertex
       p2 = pts[i % N];
       //ray is outside of our interests
-      if (p.x < min(p1.x, p2.x) || p.x > max(p1.x, p2.x)) {
+      if (p.x < decimalMin(p1.x, p2.x) || p.x > decimalMax(p1.x, p2.x)) {
         p1 = p2;
         //next ray left point
         continue;
       }
       //ray is crossing over by the algorithm (common part of)
-      if (p.x > min(p1.x, p2.x) && p.x < max(p1.x, p2.x)) {
+      if (p.x > decimalMin(p1.x, p2.x) && p.x < decimalMax(p1.x, p2.x)) {
         //x is before of ray
-        if (p.y <= max(p1.y, p2.y)) {
+        if (p.y <= decimalMax(p1.y, p2.y)) {
           //overlies on a horizontal ray
-          if (p1.x == p2.x && p.y >= min(p1.y, p2.y)) {
+          if (p1.x == p2.x && p.y >= decimalMin(p1.y, p2.y)) {
             return boundOrVertex;
           }
           //ray is vertical
@@ -81,9 +83,9 @@ class Polygon{
           } else {
             //cross point on the left side
             //cross point of y
-            double xinters = (p.x - p1.x) * (p2.y - p1.y) / (p2.x - p1.x) + p1.y;
+            Decimal xinters = ((p.x - p1.x) * (p2.y - p1.y) / (p2.x - p1.x)).toDecimal(scaleOnInfinitePrecision:60) + p1.y;
             //overlies on a ray
-            if (fabs(p.y - xinters) < precision) {
+            if ((p.y - xinters).abs() < precision) {
               return boundOrVertex;
             }
             //before ray
@@ -99,7 +101,7 @@ class Polygon{
           //next vertex
           PointEX p3 = pts[(i + 1) % N];
           //p.x lies between p1.x & p3.x
-          if (p.x >= min(p1.x, p3.x) && p.x <= max(p1.x, p3.x)) {
+          if (p.x >= decimalMin(p1.x, p3.x) && p.x <= decimalMax(p1.x, p3.x)) {
             ++intersectCount;
           } else {
             intersectCount += 2;
@@ -118,7 +120,7 @@ class Polygon{
     }
   }
   ///移动当前的对象并创建一个新实例
-  void offset(double x,double y)
+  void offset(Decimal x,Decimal y)
   {
     // var newPath = PolygonalPath(size:size,count:count);
     // for(var p in newPath.points)
@@ -134,7 +136,7 @@ class Polygon{
   Path getPath()
   {
     var path = Path();
-    path.addPolygon(points.map((e) => Offset(e.x,e.y)).toList(), true);
+    path.addPolygon(points.map((e) => Offset(e.x.toDouble(),e.y.toDouble())).toList(), true);
     return path;
   }
 

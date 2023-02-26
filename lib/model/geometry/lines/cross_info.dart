@@ -1,11 +1,13 @@
+import 'package:decimal/decimal.dart';
+
 import '../points/point_ex.dart';
 import 'line_segment.dart';
 
 class CrossInfo {
   bool isCross = false;
   PointEX? crossPoint;
-  double? startPointToCrossPointDistance;
-  double? endPointToCrossPointDistance;
+  Decimal? startPointToCrossPointDistance;
+  Decimal? endPointToCrossPointDistance;
 
   CrossInfo(this.isCross,
       {
@@ -100,7 +102,7 @@ CrossInfo getTwoLineSegmentsCrossInfo(LineSegment lineA, LineSegment lineB) {
 
   // 面积符号相同则两点在线段同侧,不相交 (对点在线段上的情况,本例当作不相交处理（==0则对点）);
   // 对点也当作相交则 > 0 即可
-  if (area_abc * area_abd > 0) {
+  if (area_abc * area_abd > Decimal.zero) {
     return CrossInfo(false);
   }
 
@@ -109,18 +111,18 @@ CrossInfo getTwoLineSegmentsCrossInfo(LineSegment lineA, LineSegment lineB) {
   // 三角形cdb 面积的2倍
   // 注意: 这里有一个小优化.不需要再用公式计算面积,而是通过已知的三个面积加减得出.
   final area_cdb = area_cda + area_abc - area_abd;
-  if (area_cda * area_cdb > 0) {
+  if (area_cda * area_cdb > Decimal.zero) {
     return CrossInfo(false);
   }
 
   // 计算交点坐标
-  final t = area_cda / (area_abd - area_abc);
+  final t = (area_cda / (area_abd - area_abc)).toDecimal(scaleOnInfinitePrecision:60);
   // eslint-disable-next-line one-var
   final dx = t * (b.x - a.x);
   final dy = t * (b.y - a.y);
   // const x = Math.trunc(a.x + dx);
-  final x = (a.x + dx).toDouble();
-  final y = (a.y + dy).toDouble();
+  final x = (a.x + dx);
+  final y = (a.y + dy);
   return CrossInfo(true,
       crossPoint: PointEX(x, y),
       startPointToCrossPointDistance: lineA.start.distanceTo(PointEX(x, y)),

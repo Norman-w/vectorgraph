@@ -12,9 +12,11 @@
  * 相较于视口(显示器,显示区域),绘图板(绘画板,触摸屏,绘图屏)是距离用户更近的一层.但他是透明的.
  */
 
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/utils/widget.dart';
 
 import '../model/geometry/points/point_ex.dart';
@@ -32,7 +34,7 @@ Size? currentContextSize;
 
 
 class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTickerProviderStateMixin {
-  double? panScaleStart ;
+  Decimal? panScaleStart ;
   //视口的当前使用偏移量
   // Offset currentOffset = Offset.zero;
   //测试用日志文本1
@@ -51,17 +53,17 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     //鼠标移动检测鼠标焦点上的物件
     // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
     var state = ref.watch(viewStateProvider);
-    var worldPoint = event.position / state.currentScale
-        - Offset(state.validViewPortSizeOfSpace.width / 2, state.validViewPortSizeOfSpace.height / 2)
-        - state.currentOffset/state.currentScale;
-    final worldPointEX = PointEX(worldPoint.dx, worldPoint.dy);
+    PointEX worldPoint = event.position.toPointEX() / state.currentScale
+        - PointEX((state.validViewPortSizeOfSpace.width / decimal2).toDecimal(scaleOnInfinitePrecision:60), (state.validViewPortSizeOfSpace.height / decimal2).toDecimal(scaleOnInfinitePrecision:60))
+        - state.currentOffset.toPointEX()/state.currentScale;
 
+    
     for (var element in state.allObjectInViewPort) {
       if(element.bounds.contains(worldPoint)){
         switch(element.runtimeType){
           case RectObject:
             var oldIsInteractive = element.isInteractive;
-            var newIsInteractive = (element as RectObject).isPointOnSides(worldPointEX,deviation: 5);
+            var newIsInteractive = (element as RectObject).isPointOnSides(worldPoint,deviation: Decimal.fromInt(5));
             if(oldIsInteractive!= newIsInteractive){
               element.isInteractive = newIsInteractive;
               ref.read(rectObjectsProvider(element as RectObject).notifier).updateIsInteractive(newIsInteractive);
@@ -76,7 +78,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
           }
         }
       setState(() {
-        logText = '世界坐标$worldPointEX';
+        logText = '世界坐标$worldPoint';
       });
     }
 
@@ -115,7 +117,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         mouseMoveToPosition = event.position;
         logText = '鼠标左键移动 ${event.position}';
         //鼠标在世界中的坐标
-        var mousePositionInSpace = Space.viewPortPointPos2SpacePointPos(
+        PointEX mousePositionInSpace = Space.viewPortPointPos2SpacePointPos(
             mouseMoveToPosition,
             viewState.currentOffset,
             viewState.currentScale,
@@ -138,6 +140,9 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     }
   }
 
+  Decimal decimal1000 = Decimal.fromInt(1000);
+  Decimal decimal10000 = Decimal.fromInt(10000);
+  Decimal decimalDot1 = Decimal.parse("0.1");
   onPointerSignal(PointerSignalEvent event) {
     if (event is PointerScrollEvent) {
       // logText = '鼠标滚轮 ${event.scrollDelta}';
@@ -145,15 +150,15 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
           .watch(viewStateProvider)
           .currentScale;
 
-      var newScale = oldScale +
-          (reverseMouseWheel ? event.scrollDelta.dy / 1000 : -event.scrollDelta
-              .dy / 1000);
+      Decimal newScale = oldScale +
+          (reverseMouseWheel ? (event.scrollDelta.dy.toDecimal() / decimal1000).toDecimal(scaleOnInfinitePrecision:60) : -(event.scrollDelta
+              .dy.toDecimal() / decimal1000).toDecimal(scaleOnInfinitePrecision:60));
       //region 限制最小和最大放大倍数
-      if (newScale < 0.1) {
-        ref.read(viewStateProvider.notifier).currentScale = 0.1;
+      if (newScale < decimalDot1) {
+        ref.read(viewStateProvider.notifier).currentScale = decimalDot1;
       }
-      else if (newScale > 10000) {
-        ref.read(viewStateProvider.notifier).currentScale = 10000;
+      else if (newScale > decimal10000) {
+        ref.read(viewStateProvider.notifier).currentScale = decimal10000;
       }
       else {
         ref.read(viewStateProvider.notifier).currentScale = newScale;
@@ -187,13 +192,13 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     //     .currentScale;
 
     //在上一次放大倍数的基础上缩放
-    var newScale = panScaleStart! * event.scale;
+    var newScale = panScaleStart! * event.scale.toDecimal();
     //region 限制最小和最大放大倍数
-    if (newScale < 0.1) {
-      ref.read(viewStateProvider.notifier).currentScale = 0.1;
+    if (newScale < decimalDot1) {
+      ref.read(viewStateProvider.notifier).currentScale = decimalDot1;
     }
-    else if (newScale > 10000) {
-      ref.read(viewStateProvider.notifier).currentScale = 10000;
+    else if (newScale > decimal10000) {
+      ref.read(viewStateProvider.notifier).currentScale = decimal10000;
     }
     else {
       ref.read(viewStateProvider.notifier).currentScale = newScale;

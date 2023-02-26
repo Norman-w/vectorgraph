@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
 
@@ -157,7 +159,7 @@ class NumUtil {
 
   /// 除
   static Decimal divideDecStr(String a, String b) {
-    return (Decimal.parse(a) / Decimal.parse(b)).toDecimal();
+    return (Decimal.parse(a) / Decimal.parse(b)).toDecimal(scaleOnInfinitePrecision:60);
   }
 
   /// 余数
@@ -196,15 +198,34 @@ class NumUtil {
   }
 }
 
+// Decimal decimalSqrt(Decimal decimal) {
+//   // Decimal x = decimal;
+//   // Decimal y = ((x + Decimal.one) / Decimal.fromInt(2)).toDecimal(scaleOnInfinitePrecision:60);
+//   // while (x - y > Decimal.zero) {
+//   //   x = y;
+//   //   y = ((x + (decimal / x).toDecimal(scaleOnInfinitePrecision:60)) / Decimal.fromInt(2)).toDecimal(scaleOnInfinitePrecision:60);
+//   // }
+//   // return x;
+//   return sqrt(decimal.toDouble()).toDecimal();
+// }
 Decimal decimalSqrt(Decimal decimal) {
-  Decimal x = decimal;
-  Decimal y = ((x + Decimal.one) / Decimal.fromInt(2)).toDecimal();
-  while (x - y > Decimal.zero) {
-    x = y;
-    y = ((x + (decimal / x).toDecimal()) / Decimal.fromInt(2)).toDecimal();
+  if (decimal == Decimal.zero) return Decimal.zero;
+  if (decimal == Decimal.one) return Decimal.one;
+
+  Decimal z = (decimal / decimal2).toDecimal(scaleOnInfinitePrecision:100);
+  Decimal x = (decimal / z).toDecimal(scaleOnInfinitePrecision:100);
+
+  while (z < x) {
+    x = z;
+    z = (((decimal / x).toDecimal(scaleOnInfinitePrecision:100) + x) / decimal2).toDecimal(scaleOnInfinitePrecision:100);
   }
+
   return x;
 }
+
+
+
+
 Decimal decimalPow(Decimal decimal, int exponent) {
   Decimal result = Decimal.one;
   for (int i = 0; i < exponent; i++) {
@@ -212,3 +233,111 @@ Decimal decimalPow(Decimal decimal, int exponent) {
   }
   return result;
 }
+
+extension DoubleExFunctions on double{
+  Decimal toDecimal(){
+    return Decimal.parse(toString());
+  }
+}
+extension DecimalExFunctions on Decimal {
+  Decimal abs() {
+    if (this<Decimal.zero) {
+      return -this;
+    }
+    return this;
+  }
+}
+
+Decimal decimal2 = Decimal.fromInt(2);
+
+// 计算弧度制角度的正弦值
+Decimal decimalSin(Decimal radians) {
+  Decimal sinValue = Decimal.zero;
+  Decimal term = radians;
+  Decimal power = radians;
+  Decimal factorial = Decimal.one;
+
+  for (int i = 1; i <= 20; i++) {
+    sinValue += term;
+    power *= radians * radians;
+    factorial *= Decimal.fromInt((2 * i) * (2 * i + 1));
+    term = (power / factorial).toDecimal(scaleOnInfinitePrecision:60);
+    if (i % 2 == 0) {
+      term = -term;
+    }
+  }
+
+  return sinValue;
+}
+
+// 计算弧度制角度的余弦值
+Decimal decimalCos(Decimal radians) {
+  Decimal cosValue = Decimal.one;
+  Decimal term = Decimal.one;
+  Decimal power = radians;
+  Decimal factorial = Decimal.one;
+
+  for (int i = 1; i <= 20; i++) {
+    power *= radians * radians;
+    factorial *= Decimal.fromInt((2 * i - 1) * (2 * i));
+    term = (power / factorial).toDecimal(scaleOnInfinitePrecision:60);
+    if (i % 2 == 0) {
+      cosValue += term;
+    } else {
+      cosValue -= term;
+    }
+  }
+
+  return cosValue;
+}
+
+
+var decimalPi = Decimal.parse('3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679');
+var decimalPiHalf = (decimalPi/decimal2).toDecimal(scaleOnInfinitePrecision:60);
+
+Decimal decimalAtan2(Decimal y, Decimal x) {
+  if (x > Decimal.zero) {
+    return decimalAtan((y / x).toDecimal(scaleOnInfinitePrecision:60));
+  } else if (x < Decimal.zero) {
+    if (y >= Decimal.zero) {
+      return decimalAtan((y / x).toDecimal(scaleOnInfinitePrecision:60)) + decimalPi;
+    } else {
+      return decimalAtan((y / x).toDecimal(scaleOnInfinitePrecision:60)) - decimalPi;
+    }
+  } else {
+    if (y > Decimal.zero) {
+      return decimalPiHalf;
+    } else if (y < Decimal.zero) {
+      return -decimalPiHalf;
+    } else {
+      return Decimal.zero;
+    }
+  }
+}
+
+
+Decimal decimalAtan(Decimal x) {
+  var epsilon = Decimal.parse('0.0000000000000001');
+
+  var sum = Decimal.zero;
+  var sign = Decimal.one;
+  var term = x;
+  var n = 1;
+
+  while (term.abs() >= epsilon) {
+    sum += sign * term;
+    sign = -sign;
+    n += 2;
+    term = (decimalPow(x * x, n ~/ 2) / Decimal.fromInt(n)).toDecimal(scaleOnInfinitePrecision:60);
+  }
+
+  return sum + (x / decimalSqrt(Decimal.one + x * x)).toDecimal(scaleOnInfinitePrecision:60);
+}
+
+Decimal decimalMin(x, y){
+  return x>y? y:x;
+}
+Decimal decimalMax(x, y){
+  return x>y? x:y;
+}
+

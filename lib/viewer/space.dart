@@ -4,6 +4,12 @@
 
 import 'dart:ui';
 
+import 'package:decimal/decimal.dart';
+import 'package:vectorgraph/utils/num_utils.dart';
+
+import '../model/geometry/SizeEX.dart';
+import '../model/geometry/points/point_ex.dart';
+import '../model/geometry/rect/RectEX.dart';
 import '../objects/space_object.dart';
 import 'paper.dart';
 import 'space_layer.dart';
@@ -23,15 +29,15 @@ class Space {
     papers.add(paper);
   }
 
-  List<SpaceObject> getInViewPortObjects(Offset viewPortCenter, Size viewPortSize){
+  List<SpaceObject> getInViewPortObjects(PointEX viewPortShowingSpaceRectCenter, SizeEX showingSpaceRectSize){
     var result = <SpaceObject>[];
     for (var layer in layers) {
       result.addAll(layer.getInBounds(
-          Rect.fromLTWH(
-              viewPortCenter.dx - viewPortSize.width / 2,
-              viewPortCenter.dy - viewPortSize.height / 2,
-              viewPortSize.width,
-              viewPortSize.height)
+          RectEX.fromLTWH(
+              viewPortShowingSpaceRectCenter.x - (showingSpaceRectSize.width / decimal2).toDecimal(scaleOnInfinitePrecision:60),
+              viewPortShowingSpaceRectCenter.y - (showingSpaceRectSize.height / decimal2).toDecimal(scaleOnInfinitePrecision:60),
+              showingSpaceRectSize.width,
+              showingSpaceRectSize.height)
       //   Rect.fromCenter(
       //       center: viewPortCenter,
       //       width: viewPortSize.width,
@@ -41,10 +47,10 @@ class Space {
     }
     return result;
   }
-  static Offset viewPortPointPos2SpacePointPos(Offset? mousePosition,Offset currentOffset, double currentScale, Size validViewPortSizeOfSpace) {
-    return mousePosition == null? Offset.zero: mousePosition! / currentScale
-        - Offset(validViewPortSizeOfSpace.width / 2, validViewPortSizeOfSpace.height / 2)
-        - currentOffset/currentScale
+  static PointEX viewPortPointPos2SpacePointPos(Offset? mousePosition,Offset currentOffset, Decimal currentScale, SizeEX validViewPortSizeOfSpace) {
+    return mousePosition == null? PointEX.zero: mousePosition!.toPointEX() / currentScale
+        - PointEX((validViewPortSizeOfSpace.width / decimal2).toDecimal(scaleOnInfinitePrecision:60), (validViewPortSizeOfSpace.height / decimal2).toDecimal(scaleOnInfinitePrecision:60))
+        - currentOffset.toPointEX()/currentScale
     ;
   }
 }

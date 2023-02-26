@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:vectorgraph/objects/point_object.dart';
 
 import '../model/geometry/points/point_ex.dart';
+import '../model/geometry/rect/RectEX.dart';
 import '../objects/rect_object.dart';
 import '../objects/space_object.dart';
 
@@ -23,12 +24,12 @@ class SpaceLayer{
   //get all rects
   // List<Rect> get rectangles => objects.whereType<Rect>().toList();
 
-  List<SpaceObject> getInBounds(Rect bounds){
-    var b = Rect.fromLTWH(bounds.left * 10000, bounds.top * 10000, bounds.width * 10000, bounds.height * 10000);
+  List<SpaceObject> getInBounds(RectEX bounds){
+    var b = RectEX.fromLTWH(bounds.left, bounds.top, bounds.width, bounds.height);
     // print(b);
     return objects.where((element) {
       // print('bound is : ${element.bounds}');
-      var eb = Rect.fromLTWH(element.bounds.left * 10000, element.bounds.top * 10000, element.bounds.width * 10000, element.bounds.height * 10000);
+      var eb = RectEX.fromLTWH(element.bounds.left, element.bounds.top, element.bounds.width, element.bounds.height);
       var contains = b.overlaps(eb);
       // print(contains );
       return contains;

@@ -1,3 +1,5 @@
+import 'package:decimal/decimal.dart';
+
 import '../points/point_ex.dart';
 import '../vectors/vector2d.dart';
 
@@ -14,7 +16,7 @@ class StraightLine{
   }
   void normalize(){
     var vector = getVector();
-    vector.setLength(1);
+    vector.setLength(Decimal.one);
     point2 = PointEX(point1.x + vector.x, point1.y + vector.y);
   }
 }

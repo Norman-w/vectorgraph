@@ -1,23 +1,26 @@
 import 'dart:ui';
 
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
+import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/utils/utils.dart';
 import 'package:vectorgraph/viewer/rect_painter.dart';
 
+import '../model/geometry/SizeEX.dart';
 import '../model/geometry/lines/line_segment.dart';
 import 'space_object.dart';
+import '../model/geometry/rect/RectEX.dart';
 
-class RectObject extends Rect with SpaceObject{
+class RectObject extends RectEX with SpaceObject{
   RectObject.fromCenter({required super.center, required super.width, required super.height}) : super.fromCenter();
-  RectObject.fromLTWH(double left, double top, double width, double height) : super.fromLTWH(left, top, width, height);
-  RectObject.fromCircle({required super.center, required super.radius}) : super.fromCircle();
-  RectObject.fromPoints(Offset a, Offset b) : super.fromPoints(a, b);
-  RectObject.fromLTRB(double left, double top, double right, double bottom) : super.fromLTRB(left, top, right, bottom);
+  RectObject.fromLTWH(Decimal left, Decimal top, Decimal width, Decimal height) : super.fromLTWH(left, top, width, height);
+  RectObject.fromPoints(PointEX a, PointEX b) : super.fromPoints(a, b);
+  RectObject.fromLTRB(Decimal left, Decimal top, Decimal right, Decimal bottom) : super.fromLTRB(left, top, right, bottom);
 
   @override
-  Rect get bounds => this;
+  RectEX get bounds => this;
   List<LineSegment> _lines = [];
   List<LineSegment> get lines {
     if(_lines.isEmpty && !isEmpty){
@@ -36,17 +39,17 @@ class RectObject extends Rect with SpaceObject{
     return _lines;
   }
   ///检测点是否在矩形的边缘上.
-  bool isPointOnSides(PointEX point, {double deviation = 2}){
+  bool isPointOnSides(PointEX point, {Decimal? deviation}){
     var list = lines;
     for(var l in list){
-      if(l.isPointOnLine(point,deviation : deviation)) {
+      if(l.isPointOnLine(point,deviation : deviation?? decimal2)) {
         return true;
       }
     }
     return false;
   }
   @override
-  RectObject copyWith({Offset? center, double? width, double? height, double? radius, double? left, double? top, double? right, double? bottom}){
+  RectObject copyWith({PointEX? center, Decimal? width, Decimal? height, Decimal? radius, Decimal? left, Decimal? top, Decimal? right, Decimal? bottom}){
     return RectObject.fromLTWH(left ?? this.left, top ?? this.top, width ?? this.width, height ?? this.height);
   }
 }
@@ -67,9 +70,9 @@ StateNotifierProvider.family<RectObjectNotifier, RectObject, RectObject>(
 
 class RectObjectWidget extends ConsumerWidget{
   final RectObject rectObject;
-  final double viewPortScale;
+  final Decimal viewPortScale;
   final Offset viewPortOffset;
-  final Size viewPortSize;
+  final SizeEX viewPortSize;
   const RectObjectWidget({super.key,
     required this.rectObject,
     required this.viewPortScale,
@@ -88,18 +91,18 @@ class RectObjectWidget extends ConsumerWidget{
     var newHeight = height * viewPortScale;
     var oldWidth = width;
     var oldHeight = height;
-    var xAdded = (newWidth - oldWidth) / 2;
-    var yAdded = (newHeight - oldHeight) / 2;
-    var newLeft = left + viewPortOffset.dx + viewPortSize.width/2 - xAdded;
-    var newTop = top + viewPortOffset.dy + viewPortSize.height/2  -yAdded;
-    var realViewRect = Rect.fromLTWH(
+    Decimal xAdded = ((newWidth - oldWidth) / decimal2).toDecimal(scaleOnInfinitePrecision:60);
+    Decimal yAdded = ((newHeight - oldHeight) / decimal2).toDecimal(scaleOnInfinitePrecision:60);
+    var newLeft = left + viewPortOffset.dx.toDecimal() + (viewPortSize.width/decimal2).toDecimal(scaleOnInfinitePrecision:60) - xAdded;
+    var newTop = top + viewPortOffset.dy.toDecimal() + (viewPortSize.height/decimal2).toDecimal(scaleOnInfinitePrecision:60)  -yAdded;
+    var realViewRect = RectEX.fromLTWH(
         newLeft,
         newTop,
         newWidth,
         newHeight
     );
     return CustomPaint(
-      painter: RectPainter(realViewRect, ref.watch(rectObjectsProvider(rectObject)).isInteractive?
+      painter: RectPainter(realViewRect.toRect(), ref.watch(rectObjectsProvider(rectObject)).isInteractive?
           Colors.white: getRandomColor()
       ),
     );
