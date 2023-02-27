@@ -1,4 +1,3 @@
-import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
@@ -6,7 +5,6 @@ import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
 import '../model/geometry/SizeEX.dart';
-import '../model/geometry/Rect/RectEX.dart';
 import '../objects/point_object.dart';
 import '../objects/rect_object.dart';
 import 'space.dart';
@@ -101,7 +99,7 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
   PointEX worldPoint = PointEX.zero;
   void updateInteractiveObjects(Offset mousePosition){
     worldPoint = mousePosition.toPointEX() / state.currentScale
-        - PointEX((state.validViewPortSizeOfSpace.width / decimal2).toDecimal(scaleOnInfinitePrecision:60), (state.validViewPortSizeOfSpace.height / decimal2).toDecimal(scaleOnInfinitePrecision:60))
+        - PointEX(state.validViewPortSizeOfSpace.width / decimal2, state.validViewPortSizeOfSpace.height / decimal2)
         - state.currentOffset.toPointEX()/state.currentScale;
 
     bool needUpdate = false;

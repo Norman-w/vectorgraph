@@ -1,7 +1,5 @@
-import 'dart:math';
 import 'dart:ui';
 
-import 'package:decimal/decimal.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 
 class PointEX {
@@ -36,12 +34,10 @@ class PointEX {
   }
   PointEX operator /(Decimal value){
     var rx = x/value;
-    var px = Decimal.parse(rx.toDecimal(scaleOnInfinitePrecision:60).toString());
 
     var ry = y/value;
-    var py = Decimal.parse(ry.toDecimal(scaleOnInfinitePrecision:60).toString());
 
-    return PointEX(px,py);
+    return PointEX(rx,ry);
   }
   Decimal CrossProduct(PointEX other){
     return x * other.y - y * other.x;

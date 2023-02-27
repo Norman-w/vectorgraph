@@ -39,7 +39,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   window_manager: ^0.3.0
   flutter_riverpod: ^2.2.0
-  decimal: ^2.3.2
   intl: ^0.18.0
 
 dev_dependencies:

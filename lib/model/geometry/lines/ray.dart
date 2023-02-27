@@ -1,5 +1,4 @@
-import 'package:decimal/decimal.dart';
-
+import '../../../utils/num_utils.dart';
 import '../points/point_ex.dart';
 import '../vectors/vector2d.dart';
 import 'line_segment.dart';
@@ -34,7 +33,7 @@ class Ray{
     if(cross1 == 0){
       return false;
     }
-    var r = (cross2 / cross1).toDecimal(scaleOnInfinitePrecision:60);
+    var r = cross2 / cross1;
     if(r < Decimal.zero){
       return false;
     }
@@ -49,7 +48,7 @@ class Ray{
     if(cross1 == 0){
       return false;
     }
-    var r = (cross2 / cross1).toDecimal(scaleOnInfinitePrecision:60);
+    var r = cross2 / cross1;
     if(r < Decimal.zero){
       return false;
     }
@@ -64,7 +63,7 @@ class Ray{
     if(cross1 == 0){
       return false;
     }
-    var r = (cross2 / cross1).toDecimal(scaleOnInfinitePrecision:60);
+    var r = cross2 / cross1;
     if(r < Decimal.zero || r > Decimal.one){
       return false;
     }

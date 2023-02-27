@@ -1,6 +1,3 @@
-import 'dart:ui';
-
-import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
@@ -91,10 +88,10 @@ class RectObjectWidget extends ConsumerWidget{
     var newHeight = height * viewPortScale;
     var oldWidth = width;
     var oldHeight = height;
-    Decimal xAdded = ((newWidth - oldWidth) / decimal2).toDecimal(scaleOnInfinitePrecision:60);
-    Decimal yAdded = ((newHeight - oldHeight) / decimal2).toDecimal(scaleOnInfinitePrecision:60);
-    var newLeft = left + viewPortOffset.dx.toDecimal() + (viewPortSize.width/decimal2).toDecimal(scaleOnInfinitePrecision:60) - xAdded;
-    var newTop = top + viewPortOffset.dy.toDecimal() + (viewPortSize.height/decimal2).toDecimal(scaleOnInfinitePrecision:60)  -yAdded;
+    Decimal xAdded = (newWidth - oldWidth) / decimal2;
+    Decimal yAdded = (newHeight - oldHeight) / decimal2;
+    var newLeft = left + viewPortOffset.dx.toDecimal() + viewPortSize.width/decimal2 - xAdded;
+    var newTop = top + viewPortOffset.dy.toDecimal() + viewPortSize.height/decimal2 -yAdded;
     var realViewRect = RectEX.fromLTWH(
         newLeft,
         newTop,

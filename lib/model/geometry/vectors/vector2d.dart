@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 

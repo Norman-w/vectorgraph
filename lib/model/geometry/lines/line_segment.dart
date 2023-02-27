@@ -1,7 +1,3 @@
-import 'dart:ui';
-
-import 'package:decimal/decimal.dart';
-
 import '../../../utils/num_utils.dart';
 import '../points/point_ex.dart';
 import '../rect/RectEX.dart';
@@ -35,13 +31,13 @@ class LineSegment{
     var vector1 = getVector();
     var vector2 = point - start;
     var cross = vector1.x * vector2.y - vector1.y * vector2.x;
-    return (cross.abs() / vector1.distance(Vector2D(Decimal.zero, Decimal.zero))).toDecimal(scaleOnInfinitePrecision:60);
+    return cross.abs() / vector1.distance(Vector2D(Decimal.zero, Decimal.zero));
   }
   Decimal getEndPointToDistance(PointEX point){
     var vector1 = getVector();
     var vector2 = point - end;
     var cross = vector1.x * vector2.y - vector1.y * vector2.x;
-    return (cross.abs() / vector1.distance(Vector2D(Decimal.zero, Decimal.zero))).toDecimal(scaleOnInfinitePrecision:60);
+    return cross.abs() / vector1.distance(Vector2D(Decimal.zero, Decimal.zero));
   }
 
   get length{
@@ -56,7 +52,7 @@ class LineSegment{
     if(cross1 == 0){
       return false;
     }
-    var r = (cross2 / cross1).toDecimal(scaleOnInfinitePrecision:60);
+    var r = cross2 / cross1;
     if(r < Decimal.zero || r > Decimal.one){
       return false;
     }
@@ -71,7 +67,7 @@ class LineSegment{
     if(cross1 == 0){
       return false;
     }
-    var r = (cross2 / cross1).toDecimal(scaleOnInfinitePrecision:60);
+    var r = cross2 / cross1;
     if(r < Decimal.zero){
       return false;
     }
@@ -86,7 +82,7 @@ class LineSegment{
     if(cross1 == 0){
       return false;
     }
-    var r = (cross2 / cross1).toDecimal(scaleOnInfinitePrecision:60);
+    var r = cross2 / cross1;
     if(r < Decimal.zero || r > Decimal.one){
       return false;
     }
@@ -98,7 +94,7 @@ class LineSegment{
     if(cross1 == 0){
       return false;
     }
-    r = (cross2 / cross1).toDecimal(scaleOnInfinitePrecision:60);
+    r = cross2 / cross1;
     if(r < Decimal.zero || r > Decimal.one){
       return false;
     }
@@ -118,7 +114,7 @@ extension LineSegmentMethods on LineSegment{
     Vector2D vector1 = getVector();
     PointEX vector2 = point - start;
     Decimal cross = vector1.x * vector2.y - vector1.y * vector2.x;
-    return (cross.abs() / vector1.distance(Vector2D(Decimal.zero, Decimal.zero))).toDecimal(scaleOnInfinitePrecision:60) < (deviation ?? Decimal.one);
+    return cross.abs() / vector1.distance(Vector2D(Decimal.zero, Decimal.zero)) < (deviation ?? Decimal.one);
   }
   // 判断线段相交 老方法
   bool intersect(LineSegment L1, LineSegment L2)

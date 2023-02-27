@@ -12,7 +12,6 @@
  * 相较于视口(显示器,显示区域),绘图板(绘画板,触摸屏,绘图屏)是距离用户更近的一层.但他是透明的.
  */
 
-import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -54,7 +53,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
     var state = ref.watch(viewStateProvider);
     PointEX worldPoint = event.position.toPointEX() / state.currentScale
-        - PointEX((state.validViewPortSizeOfSpace.width / decimal2).toDecimal(scaleOnInfinitePrecision:60), (state.validViewPortSizeOfSpace.height / decimal2).toDecimal(scaleOnInfinitePrecision:60))
+        - PointEX(state.validViewPortSizeOfSpace.width / decimal2, state.validViewPortSizeOfSpace.height / decimal2)
         - state.currentOffset.toPointEX()/state.currentScale;
 
     
@@ -151,8 +150,8 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
           .currentScale;
 
       Decimal newScale = oldScale +
-          (reverseMouseWheel ? (event.scrollDelta.dy.toDecimal() / decimal1000).toDecimal(scaleOnInfinitePrecision:60) : -(event.scrollDelta
-              .dy.toDecimal() / decimal1000).toDecimal(scaleOnInfinitePrecision:60));
+          (reverseMouseWheel ? event.scrollDelta.dy.toDecimal() / decimal1000 : -event.scrollDelta
+              .dy.toDecimal() / decimal1000);
       //region 限制最小和最大放大倍数
       if (newScale < decimalDot1) {
         ref.read(viewStateProvider.notifier).currentScale = decimalDot1;
@@ -194,15 +193,15 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     //在上一次放大倍数的基础上缩放
     var newScale = panScaleStart! * event.scale.toDecimal();
     //region 限制最小和最大放大倍数
-    if (newScale < decimalDot1) {
-      ref.read(viewStateProvider.notifier).currentScale = decimalDot1;
-    }
-    else if (newScale > decimal10000) {
-      ref.read(viewStateProvider.notifier).currentScale = decimal10000;
-    }
-    else {
+    // if (newScale < decimalDot1) {
+    //   ref.read(viewStateProvider.notifier).currentScale = decimalDot1;
+    // }
+    // else if (newScale > decimal10000) {
+    //   ref.read(viewStateProvider.notifier).currentScale = decimal10000;
+    // }
+    // else {
       ref.read(viewStateProvider.notifier).currentScale = newScale;
-    }
+    // }
     //endregion
 
     //更新尺寸检测鼠标焦点上的物件

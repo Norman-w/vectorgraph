@@ -3,8 +3,6 @@
 //在视口外的内容不进行渲染,视口内的内容根据缩放比例进行渲染.
 
 import 'dart:ui';
-
-import 'package:decimal/decimal.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 
 import '../model/geometry/SizeEX.dart';
@@ -34,8 +32,8 @@ class Space {
     for (var layer in layers) {
       result.addAll(layer.getInBounds(
           RectEX.fromLTWH(
-              viewPortShowingSpaceRectCenter.x - (showingSpaceRectSize.width / decimal2).toDecimal(scaleOnInfinitePrecision:60),
-              viewPortShowingSpaceRectCenter.y - (showingSpaceRectSize.height / decimal2).toDecimal(scaleOnInfinitePrecision:60),
+              viewPortShowingSpaceRectCenter.x - showingSpaceRectSize.width / decimal2,
+              viewPortShowingSpaceRectCenter.y - showingSpaceRectSize.height / decimal2,
               showingSpaceRectSize.width,
               showingSpaceRectSize.height)
       //   Rect.fromCenter(
@@ -49,7 +47,7 @@ class Space {
   }
   static PointEX viewPortPointPos2SpacePointPos(Offset? mousePosition,Offset currentOffset, Decimal currentScale, SizeEX validViewPortSizeOfSpace) {
     return mousePosition == null? PointEX.zero: mousePosition!.toPointEX() / currentScale
-        - PointEX((validViewPortSizeOfSpace.width / decimal2).toDecimal(scaleOnInfinitePrecision:60), (validViewPortSizeOfSpace.height / decimal2).toDecimal(scaleOnInfinitePrecision:60))
+        - PointEX(validViewPortSizeOfSpace.width / decimal2, validViewPortSizeOfSpace.height / decimal2)
         - currentOffset.toPointEX()/currentScale
     ;
   }

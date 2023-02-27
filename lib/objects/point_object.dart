@@ -1,12 +1,7 @@
-import 'dart:ui';
-
-import 'package:decimal/decimal.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/geometry/rect/RectEX.dart';
-import '../viewer/points_painter.dart';
-
 import '../model/geometry/points/point_ex.dart';
+import '../utils/num_utils.dart';
 import 'space_object.dart';
 
 class PointObject extends PointEX with SpaceObject{

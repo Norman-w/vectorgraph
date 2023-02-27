@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:decimal/decimal.dart';
 import '../../../utils/num_utils.dart';
 import '../points/point_ex.dart';
 
@@ -17,9 +16,9 @@ class RectEX {
 
 
   RectEX.fromCenter({required PointEX center, required Decimal width, required Decimal height})
-      : left = center.x - (width / decimal2).toDecimal(scaleOnInfinitePrecision:60),
-        top = center.y - (height / decimal2).toDecimal(scaleOnInfinitePrecision:60), bottom = center.y + (height / decimal2).toDecimal(scaleOnInfinitePrecision:60),
-        right = center.x + (width / decimal2).toDecimal(scaleOnInfinitePrecision:60)
+      : left = center.x - width / decimal2,
+        top = center.y - height / decimal2, bottom = center.y + height / decimal2,
+        right = center.x + width / decimal2
   ;
   RectEX.fromCircle({required PointEX center, required Decimal radius})
       : left = center.x - radius,
@@ -28,8 +27,8 @@ class RectEX {
         bottom = center.y + radius;
 
 
-  Decimal get centerX => left + ((right - left) / decimal2).toDecimal(scaleOnInfinitePrecision:60);
-  Decimal get centerY => top + ((bottom - top) / decimal2).toDecimal(scaleOnInfinitePrecision:60);
+  Decimal get centerX => left + (right - left) / decimal2;
+  Decimal get centerY => top + (bottom - top) / decimal2;
 
   PointEX get center => PointEX(centerX, centerY);
 

@@ -1,230 +1,86 @@
-import 'dart:math';
-
-import 'package:decimal/decimal.dart';
-import 'package:intl/intl.dart';
-
-/// Num Util.
-class NumUtil {
-  /// The parameter [fractionDigits] must be an integer satisfying: `0 <= fractionDigits <= 20`.
-  static num? getNumByValueStr(String valueStr, {int? fractionDigits}) {
-    double? value = double.tryParse(valueStr);
-    return fractionDigits == null
-        ? value
-        : getNumByValueDouble(value, fractionDigits);
+const int decimalScale = 100;
+class Decimal{
+  double _ = 0;
+  Decimal();
+  @override
+  String toString(){
+    return toStringAsFixed(2);
   }
-
-  /// The parameter [fractionDigits] must be an integer satisfying: `0 <= fractionDigits <= 20`.
-  static num? getNumByValueDouble(double? value, int fractionDigits) {
-    if (value == null) return null;
-    String valueStr = value.toStringAsFixed(fractionDigits);
-    return fractionDigits == 0
-        ? int.tryParse(valueStr)
-        : double.tryParse(valueStr);
+  factory Decimal.parse(String value){
+    double d = double.parse(value);
+    return Decimal().._=d*decimalScale;
   }
-
-  /// get int by value str.
-  static int getIntByValueStr(String valueStr, {int defValue = 0}) {
-    return int.tryParse(valueStr) ?? defValue;
+  factory Decimal.fromInt(int value){
+    return Decimal().._=value * 1.0 * decimalScale;
   }
-
-  /// get double by value str.
-  static double getDoubleByValueStr(String valueStr, {double defValue = 0}) {
-    return double.tryParse(valueStr) ?? defValue;
+  double toDouble(){
+    return _/decimalScale;
   }
-
-  ///isZero
-  static bool isZero(num value) {
-    return value == null || value == 0;
+  double get doubleValue {
+    return _/decimalScale;
   }
-
-  /// 加 (精确相加,防止精度丢失).
-  /// add (without loosing precision).
-  static double add(num a, num b) {
-    return addDec(a, b).toDouble();
+  String toStringAsFixed(int dotCount){
+    return toDouble().toStringAsFixed(dotCount);
   }
-
-  /// 减 (精确相减,防止精度丢失).
-  /// subtract (without loosing precision).
-  static double subtract(num a, num b) {
-    return subtractDec(a, b).toDouble();
+  static Decimal get zero{
+    return Decimal();
   }
-
-  /// 乘 (精确相乘,防止精度丢失).
-  /// multiply (without loosing precision).
-  static double multiply(num a, num b) {
-    return multiplyDec(a, b).toDouble();
+  static Decimal get one{
+    return Decimal().._=1.0*decimalScale;
   }
-
-  /// 除 (精确相除,防止精度丢失).
-  /// divide (without loosing precision).
-  static double divide(num a, num b) {
-    return divideDec(a, b).toDouble();
+  static Decimal get two{
+    return Decimal().._=2.0*decimalScale;
   }
-
-  /// 加 (精确相加,防止精度丢失).
-  /// add (without loosing precision).
-  static Decimal addDec(num a, num b) {
-    return addDecStr(a.toString(), b.toString());
+  static Decimal get ten{
+    return Decimal().._=10.0*decimalScale;
   }
-
-  /// 减 (精确相减,防止精度丢失).
-  /// subtract (without loosing precision).
-  static Decimal subtractDec(num a, num b) {
-    return subtractDecStr(a.toString(), b.toString());
+  Decimal operator /(Decimal other){
+    return Decimal().._=_/other._;
   }
-
-  /// 乘 (精确相乘,防止精度丢失).
-  /// multiply (without loosing precision).
-  static Decimal multiplyDec(num a, num b) {
-    return multiplyDecStr(a.toString(), b.toString());
+  Decimal operator *(Decimal other){
+    var v1 = _;
+    var v2 = other._;
+    var v3 = v1*v2;
+    var v5 = v3/ decimalScale;
+    return Decimal().._=v5;
   }
-
-  /// 除 (精确相除,防止精度丢失).
-  /// divide (without loosing precision).
-  static Decimal divideDec(num a, num b) {
-    return divideDecStr(a.toString(), b.toString());
+  Decimal operator +(Decimal other){
+    return Decimal().._=_+other._;
   }
-
-  /// 除 (精确相除,防止精度丢失).保留几位小数，返回String
-  /// divide (without loosing precision).
-  static String divideStrNum(num a, num b, int digits) {
-    return divideDecStr((a ?? 0).toString(), (b ?? 0).toString())
-        .toStringAsFixed(digits);
+  Decimal operator -(Decimal other){
+    return Decimal().._=_-other._;
   }
-
-  /// 除 (精确相除,防止精度丢失).保留几位小数，返回String
-  /// divide (without loosing precision).
-  static String divideStrStr(String a, String b, int digits) {
-    return divideDecStr(a ?? '0', b ?? '0').toStringAsFixed(digits);
+  bool operator < (Decimal other){
+    return _<other._;
   }
-
-  /// 四舍五入(精确相除,防止精度丢失).保留几位小数，返回String
-  /// (without loosing precision).
-  static String toStringAsFixed(num a, int digits) {
-    return Decimal.parse((a ?? 0).toString()).toStringAsFixed(digits);
+  bool operator >(Decimal other){
+    return _>other._;
   }
-
-  /// 四舍五入(精确相除,防止精度丢失).保留几位小数，返回Double
-  /// (without loosing precision).
-  static num toDoubleAsFixed(num a, int digits) {
-    return num.parse(
-        Decimal.parse((a ?? 0).toString()).toStringAsFixed(digits));
+  operator -(){
+    return Decimal().._=0.0-_;
   }
-
-  /// 四舍五入(精确相除,防止精度丢失).保留几位小数，返回String
-  /// (without loosing precision).
-  static String toStringAsFixedStr(String a, int digits) {
-    return Decimal.parse(a).toStringAsFixed(digits);
+  bool operator >=(Decimal other){
+    return _>=other._;
   }
-
-  /// 余数
-  static Decimal remainder(num a, num b) {
-    return remainderDecStr(a.toString(), b.toString());
-  }
-
-  /// Relational less than operator.
-  static bool lessThan(num a, num b) {
-    return lessThanDecStr(a.toString(), b.toString());
-  }
-
-  /// Relational less than or equal operator.
-  static bool thanOrEqual(num a, num b) {
-    return thanOrEqualDecStr(a.toString(), b.toString());
-  }
-
-  /// Relational greater than operator.
-  static bool greaterThan(num a, num b) {
-    return greaterThanDecStr(a.toString(), b.toString());
-  }
-
-  /// Relational greater than or equal operator.
-  static bool greaterOrEqual(num a, num b) {
-    return greaterOrEqualDecStr(a.toString(), b.toString());
-  }
-
-  /// 加
-  static Decimal addDecStr(String a, String b) {
-    return Decimal.parse(a) + Decimal.parse(b);
-  }
-
-  /// 减
-  static Decimal subtractDecStr(String a, String b) {
-    return Decimal.parse(a) - Decimal.parse(b);
-  }
-
-  /// 乘
-  static Decimal multiplyDecStr(String a, String b) {
-    return Decimal.parse(a) * Decimal.parse(b);
-  }
-
-  /// 除
-  static Decimal divideDecStr(String a, String b) {
-    return (Decimal.parse(a) / Decimal.parse(b)).toDecimal(scaleOnInfinitePrecision:60);
-  }
-
-  /// 余数
-  static Decimal remainderDecStr(String a, String b) {
-    return Decimal.parse(a) % Decimal.parse(b);
-  }
-
-  /// Relational less than operator.
-  static bool lessThanDecStr(String a, String b) {
-    return Decimal.parse(a) < Decimal.parse(b);
-  }
-
-  /// Relational less than or equal operator.
-  static bool thanOrEqualDecStr(String a, String b) {
-    return Decimal.parse(a) <= Decimal.parse(b);
-  }
-
-  /// Relational greater than operator.
-  static bool greaterThanDecStr(String a, String b) {
-    return Decimal.parse(a) > Decimal.parse(b);
-  }
-
-  /// Relational greater than or equal operator.
-  static bool greaterOrEqualDecStr(String a, String b) {
-    return Decimal.parse(a) >= Decimal.parse(b);
-  }
-
-  static String parseFeeNumber(num fee) {
-    if (fee == null) {
-      return "0";
-    }
-    //数字格式化
-    NumberFormat format = NumberFormat.currency(
-        locale: 'id_ID', name: 'IDR', symbol: 'Rp', decimalDigits: 0);
-    return format.format(fee);
+  bool operator <=(Decimal other){
+    return _<=other._;
   }
 }
 
-// Decimal decimalSqrt(Decimal decimal) {
-//   // Decimal x = decimal;
-//   // Decimal y = ((x + Decimal.one) / Decimal.fromInt(2)).toDecimal(scaleOnInfinitePrecision:60);
-//   // while (x - y > Decimal.zero) {
-//   //   x = y;
-//   //   y = ((x + (decimal / x).toDecimal(scaleOnInfinitePrecision:60)) / Decimal.fromInt(2)).toDecimal(scaleOnInfinitePrecision:60);
-//   // }
-//   // return x;
-//   return sqrt(decimal.toDouble()).toDecimal();
-// }
 Decimal decimalSqrt(Decimal decimal) {
   if (decimal == Decimal.zero) return Decimal.zero;
   if (decimal == Decimal.one) return Decimal.one;
 
-  Decimal z = (decimal / decimal2).toDecimal(scaleOnInfinitePrecision:100);
-  Decimal x = (decimal / z).toDecimal(scaleOnInfinitePrecision:100);
+  Decimal z = decimal / decimal2;
+  Decimal x = decimal / z;
 
   while (z < x) {
     x = z;
-    z = (((decimal / x).toDecimal(scaleOnInfinitePrecision:100) + x) / decimal2).toDecimal(scaleOnInfinitePrecision:100);
+    z = (decimal / x + x) / decimal2;
   }
 
   return x;
 }
-
-
-
 
 Decimal decimalPow(Decimal decimal, int exponent) {
   Decimal result = Decimal.one;
@@ -236,7 +92,7 @@ Decimal decimalPow(Decimal decimal, int exponent) {
 
 extension DoubleExFunctions on double{
   Decimal toDecimal(){
-    return Decimal.parse(toString());
+    return Decimal().._=this*decimalScale;
   }
 }
 extension DecimalExFunctions on Decimal {
@@ -261,7 +117,7 @@ Decimal decimalSin(Decimal radians) {
     sinValue += term;
     power *= radians * radians;
     factorial *= Decimal.fromInt((2 * i) * (2 * i + 1));
-    term = (power / factorial).toDecimal(scaleOnInfinitePrecision:60);
+    term = power / factorial;
     if (i % 2 == 0) {
       term = -term;
     }
@@ -280,7 +136,7 @@ Decimal decimalCos(Decimal radians) {
   for (int i = 1; i <= 20; i++) {
     power *= radians * radians;
     factorial *= Decimal.fromInt((2 * i - 1) * (2 * i));
-    term = (power / factorial).toDecimal(scaleOnInfinitePrecision:60);
+    term = power / factorial;
     if (i % 2 == 0) {
       cosValue += term;
     } else {
@@ -293,16 +149,16 @@ Decimal decimalCos(Decimal radians) {
 
 
 var decimalPi = Decimal.parse('3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679');
-var decimalPiHalf = (decimalPi/decimal2).toDecimal(scaleOnInfinitePrecision:60);
+var decimalPiHalf = decimalPi/decimal2;
 
 Decimal decimalAtan2(Decimal y, Decimal x) {
   if (x > Decimal.zero) {
-    return decimalAtan((y / x).toDecimal(scaleOnInfinitePrecision:60));
+    return decimalAtan(y / x);
   } else if (x < Decimal.zero) {
     if (y >= Decimal.zero) {
-      return decimalAtan((y / x).toDecimal(scaleOnInfinitePrecision:60)) + decimalPi;
+      return decimalAtan(y / x) + decimalPi;
     } else {
-      return decimalAtan((y / x).toDecimal(scaleOnInfinitePrecision:60)) - decimalPi;
+      return decimalAtan(y / x) - decimalPi;
     }
   } else {
     if (y > Decimal.zero) {
@@ -328,10 +184,10 @@ Decimal decimalAtan(Decimal x) {
     sum += sign * term;
     sign = -sign;
     n += 2;
-    term = (decimalPow(x * x, n ~/ 2) / Decimal.fromInt(n)).toDecimal(scaleOnInfinitePrecision:60);
+    term = decimalPow(x * x, n ~/ 2) / Decimal.fromInt(n);
   }
 
-  return sum + (x / decimalSqrt(Decimal.one + x * x)).toDecimal(scaleOnInfinitePrecision:60);
+  return sum + x / decimalSqrt(Decimal.one + x * x);
 }
 
 Decimal decimalMin(x, y){

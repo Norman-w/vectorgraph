@@ -1,10 +1,5 @@
-import 'dart:math';
-
-import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
-
-import '../../../utils/utils.dart';
 import '../lines/line_segment.dart';
 import '../points/point_ex.dart';
 
@@ -83,7 +78,7 @@ class Polygon{
           } else {
             //cross point on the left side
             //cross point of y
-            Decimal xinters = ((p.x - p1.x) * (p2.y - p1.y) / (p2.x - p1.x)).toDecimal(scaleOnInfinitePrecision:60) + p1.y;
+            Decimal xinters = (p.x - p1.x) * (p2.y - p1.y) / (p2.x - p1.x) + p1.y;
             //overlies on a ray
             if ((p.y - xinters).abs() < precision) {
               return boundOrVertex;

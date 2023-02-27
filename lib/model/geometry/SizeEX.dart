@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:decimal/decimal.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 class SizeEX {
   final Decimal width;
@@ -33,7 +32,7 @@ class SizeEX {
   }
 
   SizeEX operator /(Decimal value){
-    return SizeEX((width/value).toDecimal(scaleOnInfinitePrecision:60), (height/value).toDecimal(scaleOnInfinitePrecision:60));
+    return SizeEX(width/value, height/value);
   }
 }
 

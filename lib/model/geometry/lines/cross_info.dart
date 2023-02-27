@@ -1,5 +1,4 @@
-import 'package:decimal/decimal.dart';
-
+import '../../../utils/num_utils.dart';
 import '../points/point_ex.dart';
 import 'line_segment.dart';
 
@@ -116,7 +115,7 @@ CrossInfo getTwoLineSegmentsCrossInfo(LineSegment lineA, LineSegment lineB) {
   }
 
   // 计算交点坐标
-  final t = (area_cda / (area_abd - area_abc)).toDecimal(scaleOnInfinitePrecision:60);
+  final t = area_cda / (area_abd - area_abc);
   // eslint-disable-next-line one-var
   final dx = t * (b.x - a.x);
   final dy = t * (b.y - a.y);

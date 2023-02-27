@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:decimal/decimal.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 
 import '../points/point_ex.dart';
@@ -27,16 +24,16 @@ class EquilateralPolygon extends Polygon {
     }
     //endregion
 
-    Decimal r = (this.size / decimal2).toDecimal(scaleOnInfinitePrecision:60);
+    Decimal r = this.size / decimal2;
     // 将圆等分,开始第一个点
-    start(r * decimalCos((decimalPi / Decimal.fromInt(count)).toDecimal(scaleOnInfinitePrecision:60))+r,
-        r * decimalSin((decimalPi / Decimal.fromInt(count)).toDecimal(scaleOnInfinitePrecision:60))+r);
+    start(r * decimalCos(decimalPi / Decimal.fromInt(count))+r,
+        r * decimalSin(decimalPi / Decimal.fromInt(count))+r);
 
     //创建边
     // start(r * cos(pi / count), r * sin(pi / count));
     for (int i = 2; i <= count * 2; i++) {
       if (i.isOdd) {
-        lineTo(r * decimalCos((decimalPi / Decimal.fromInt(count*i)).toDecimal(scaleOnInfinitePrecision:60))+r, r * decimalSin((decimalPi / Decimal.fromInt(count*i)).toDecimal(scaleOnInfinitePrecision:60))+r);
+        lineTo(r * decimalCos(decimalPi / Decimal.fromInt(count*i))+r, r * decimalSin(decimalPi / Decimal.fromInt(count*i))+r);
       }
     }
   }

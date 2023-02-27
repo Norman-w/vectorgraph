@@ -1,11 +1,6 @@
 /// 在视口上有标尺,可以根据用户选择是否开启
-
-
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-
-import 'dash_line_painter.dart';
 class Ruler extends StatelessWidget {
   final Rect rect;
   Ruler(this.rect);

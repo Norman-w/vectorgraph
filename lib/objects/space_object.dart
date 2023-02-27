@@ -1,10 +1,7 @@
-import 'dart:ui';
-
-import 'package:decimal/decimal.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/geometry/rect/RectEX.dart';
+import '../utils/num_utils.dart';
 
 mixin SpaceObject{
   Decimal x = Decimal.zero;

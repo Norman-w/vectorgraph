@@ -1,5 +1,4 @@
-import 'package:decimal/decimal.dart';
-
+import '../../../utils/num_utils.dart';
 import '../points/point_ex.dart';
 import '../vectors/vector2d.dart';
 
