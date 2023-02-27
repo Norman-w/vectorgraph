@@ -6,6 +6,10 @@ class Decimal{
   String toString(){
     return toStringAsFixed(2);
   }
+  ///乘以放大倍数以后的值.用于赋值给point的x,y或者其他时候使用.提高运算精度.
+  double get accurateValue{
+    return _;
+  }
   factory Decimal.parse(String value){
     double d = double.parse(value);
     return Decimal().._=d*decimalScale;
@@ -35,7 +39,10 @@ class Decimal{
     return Decimal().._=10.0*decimalScale;
   }
   Decimal operator /(Decimal other){
-    return Decimal().._=_/other._;
+    //方案B,先把被除数放大,防止丢失精度,但是容易被除数过大导致崩溃.
+    return Decimal().._=_ * decimalScale /other._;
+    //方案A,更好理解,先算出来两个数的"比",然后再把得数放大以防丢失精度.不过除完以后再放大的系数是没有提高精度的.
+    // return Decimal().._=_/other._ * decimalScale;
   }
   Decimal operator *(Decimal other){
     var v1 = _;
