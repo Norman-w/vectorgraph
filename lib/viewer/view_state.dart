@@ -99,7 +99,7 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
   PointEX worldPoint = PointEX.zero;
   void updateInteractiveObjects(Offset mousePosition){
     worldPoint = mousePosition.toPointEX() / state.currentScale
-        - PointEX(state.validViewPortSizeOfSpace.width / decimal2, state.validViewPortSizeOfSpace.height / decimal2)
+        - PointEX(state.validViewPortSizeOfSpace.width / Decimal.two, state.validViewPortSizeOfSpace.height / Decimal.two)
         - state.currentOffset.toPointEX()/state.currentScale;
 
     bool needUpdate = false;

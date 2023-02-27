@@ -39,7 +39,7 @@ class RectObject extends RectEX with SpaceObject{
   bool isPointOnSides(PointEX point, {Decimal? deviation}){
     var list = lines;
     for(var l in list){
-      if(l.isPointOnLine(point,deviation : deviation?? decimal2)) {
+      if(l.isPointOnLine(point,deviation : deviation?? Decimal.two)) {
         return true;
       }
     }
@@ -88,10 +88,10 @@ class RectObjectWidget extends ConsumerWidget{
     var newHeight = height * viewPortScale;
     var oldWidth = width;
     var oldHeight = height;
-    Decimal xAdded = (newWidth - oldWidth) / decimal2;
-    Decimal yAdded = (newHeight - oldHeight) / decimal2;
-    var newLeft = left + viewPortOffset.dx.toDecimal() + viewPortSize.width/decimal2 - xAdded;
-    var newTop = top + viewPortOffset.dy.toDecimal() + viewPortSize.height/decimal2 -yAdded;
+    Decimal xAdded = (newWidth - oldWidth) / Decimal.two;
+    Decimal yAdded = (newHeight - oldHeight) / Decimal.two;
+    var newLeft = left + viewPortOffset.dx.toDecimal() + viewPortSize.width/Decimal.two - xAdded;
+    var newTop = top + viewPortOffset.dy.toDecimal() + viewPortSize.height/Decimal.two -yAdded;
     var realViewRect = RectEX.fromLTWH(
         newLeft,
         newTop,

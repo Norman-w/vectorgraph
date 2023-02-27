@@ -16,9 +16,9 @@ class RectEX {
 
 
   RectEX.fromCenter({required PointEX center, required Decimal width, required Decimal height})
-      : left = center.x - width / decimal2,
-        top = center.y - height / decimal2, bottom = center.y + height / decimal2,
-        right = center.x + width / decimal2
+      : left = center.x - width / Decimal.two,
+        top = center.y - height / Decimal.two, bottom = center.y + height / Decimal.two,
+        right = center.x + width / Decimal.two
   ;
   RectEX.fromCircle({required PointEX center, required Decimal radius})
       : left = center.x - radius,
@@ -27,8 +27,8 @@ class RectEX {
         bottom = center.y + radius;
 
 
-  Decimal get centerX => left + (right - left) / decimal2;
-  Decimal get centerY => top + (bottom - top) / decimal2;
+  Decimal get centerX => left + (right - left) / Decimal.two;
+  Decimal get centerY => top + (bottom - top) / Decimal.two;
 
   PointEX get center => PointEX(centerX, centerY);
 

@@ -53,7 +53,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
     var state = ref.watch(viewStateProvider);
     PointEX worldPoint = event.position.toPointEX() / state.currentScale
-        - PointEX(state.validViewPortSizeOfSpace.width / decimal2, state.validViewPortSizeOfSpace.height / decimal2)
+        - PointEX(state.validViewPortSizeOfSpace.width / Decimal.two, state.validViewPortSizeOfSpace.height / Decimal.two)
         - state.currentOffset.toPointEX()/state.currentScale;
 
     

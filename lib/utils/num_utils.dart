@@ -78,12 +78,12 @@ Decimal decimalSqrt(Decimal decimal) {
   if (decimal == Decimal.zero) return Decimal.zero;
   if (decimal == Decimal.one) return Decimal.one;
 
-  Decimal z = decimal / decimal2;
+  Decimal z = decimal / Decimal.two;
   Decimal x = decimal / z;
 
   while (z < x) {
     x = z;
-    z = (decimal / x + x) / decimal2;
+    z = (decimal / x + x) / Decimal.two;
   }
 
   return x;
@@ -110,9 +110,6 @@ extension DecimalExFunctions on Decimal {
     return this;
   }
 }
-
-Decimal decimal2 = Decimal.fromInt(2);
-
 // 计算弧度制角度的正弦值
 Decimal decimalSin(Decimal radians) {
   Decimal sinValue = Decimal.zero;
@@ -156,7 +153,7 @@ Decimal decimalCos(Decimal radians) {
 
 
 var decimalPi = Decimal.parse('3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679');
-var decimalPiHalf = decimalPi/decimal2;
+var decimalPiHalf = decimalPi/Decimal.two;
 
 Decimal decimalAtan2(Decimal y, Decimal x) {
   if (x > Decimal.zero) {
