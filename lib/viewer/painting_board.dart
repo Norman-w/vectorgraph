@@ -15,10 +15,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vectorgraph/model/geometry/lines/line_segment.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/utils/widget.dart';
 
 import '../model/geometry/points/point_ex.dart';
+import '../model/geometry/rect/RectEX.dart';
+import '../model/geometry/vectors/vector2d.dart';
 import '../objects/rect_object.dart';
 import 'size_listener.dart';
 import 'space.dart';
@@ -56,32 +59,84 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         - PointEX(state.validViewPortSizeOfSpace.width / Decimal.two, state.validViewPortSizeOfSpace.height / Decimal.two)
         - state.currentOffset.toPointEX()/state.currentScale;
 
-    
+    bool isPointOnLine(LineSegment line, PointEX point, {Decimal? deviation})
+    {
+      Vector2D vector1 = line.getVector();
+      PointEX vector2 = point - line.start;
+      Decimal cross = vector1.x * vector2.y - vector1.y * vector2.x;
+      var cd = cross.abs() / vector1.distance(Vector2D.zero);
+      var de = deviation ?? Decimal.one;
+      setState(() {
+        logText2 = 'cd $cd deviation $deviation';
+      });
+      // return cd.abs() < de;
+      return cd < de;
+    }
+
+
+    // 使用向量运算判断点是否在直线上
+    bool isPointOnLineByVector(LineSegment line, PointEX point, {Decimal? deviation}) {
+      Vector2D vector1 = line.getVector();
+      var point2 = point - line.start;
+      Vector2D vector2 = point2.toVector2D();
+      Decimal cross = vector1.cross(vector2);
+      Decimal cd = cross.abs() / vector1.length;
+      return cd < (deviation ?? Decimal.ten);
+    }
+
+    // 使用代数方法判断点是否在直线上
+    bool isPointOnLineByAlgebra(LineSegment line, PointEX point, {double deviation = 5, Decimal? view2spaceScroll}) {
+      view2spaceScroll ??= Decimal.one;
+      Decimal a = line.end.y - line.start.y;
+      Decimal b = line.start.x - line.end.x;
+      Decimal c = line.end.x * line.start.y - line.start.x * line.end.y;
+      Decimal cd = (a * point.x + b * point.y + c).abs() / decimalSqrt(a * a + b * b);
+      return cd < deviation.toDecimal() / view2spaceScroll;
+    }
+
+
+
+
     for (var element in state.allObjectInViewPort) {
-      if(element.bounds.contains(worldPoint)){
+      if(element is! RectObject) continue;
+      var deviation = Decimal.fromInt(5);
+      var rectObject = element as RectObject;
+      // var mousePointOnRectObjectWidget =
+      //  RectObjectWidget.getViewRect(rectObject, state.currentScale, state.currentOffset, state.viewPortPixelSize);
+      //
+      var viewRectEX = RectEX.zero;
+
         switch(element.runtimeType){
           case RectObject:
             var oldIsInteractive = element.isInteractive;
-            var newIsInteractive = (element as RectObject).isPointOnSides(worldPoint,deviation: Decimal.fromInt(5));
-            if(oldIsInteractive!= newIsInteractive){
-              element.isInteractive = newIsInteractive;
-              ref.read(rectObjectsProvider(element as RectObject).notifier).updateIsInteractive(newIsInteractive);
-            }
-        }
-      }
-      else
-        {
-          if(element.isInteractive){
-            element.isInteractive = false;
-            ref.read(rectObjectsProvider(element as RectObject).notifier).updateIsInteractive(false);
-          }
+            // var newIsInteractive = isPointOnLineByAlgebra(element.lines[0], worldPoint,deviation: 5, view2spaceScroll:
+            // state.currentScale);
+            var viewRect = RectObjectWidget.getViewRect(rectObject, state.currentScale, state.currentOffset, state.viewPortPixelSize);
+            viewRectEX = RectEX.fromLTWH(viewRect.left.toDecimal(),
+                viewRect.top.toDecimal(), viewRect.width.toDecimal(), viewRect.height.toDecimal());
+            var newIsInteractive =// viewRect.contains(event.position);
+            isPointOnLineByVector(
+                LineSegment(viewRectEX.topLeft, viewRectEX.topRight),
+                event.position.toPointEX(), deviation: deviation);
+
+            if(oldIsInteractive != newIsInteractive)
+              {
+                element.isInteractive = newIsInteractive;
+                ref.read(rectObjectsProvider(element).notifier).updateIsInteractive(newIsInteractive);
+                if(newIsInteractive)
+                  {
+                    // print('zai shangmian la ');
+                  }
+              }
+            break;
         }
       setState(() {
-        logText = '世界坐标$worldPoint';
+        logText = '世界坐标$worldPoint   视图坐标${event.position}';
+        logText2 = '视图坐标${event.position}  视图矩形$viewRectEX';
       });
     }
-
   }
+
 
   onPointerDown(event) {
     if (event.buttons == 2) {
@@ -102,7 +157,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     if (event.buttons == 2) {
       setState(() {
         mouseDownPosition = event.position;
-        // logText = '鼠标移动 ${event.position}';
+        logText = '右键按下,鼠标所在位置 ${event.position}';
       });
       var oldOffset = ref.watch(viewStateProvider).currentOffset;
       ref.read(viewStateProvider.notifier).currentOffset = oldOffset.translate(event.delta.dx, event.delta.dy);
@@ -122,8 +177,6 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
             viewState.currentScale,
             viewState.validViewPortSizeOfSpace
         );
-
-        logText2 = '鼠标在世界中的坐标 $mousePositionInSpace';
       });
     }
   }

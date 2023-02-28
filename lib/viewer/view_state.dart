@@ -13,17 +13,25 @@ import 'space_layer.dart';
 
 
 class ViewState{
+  ///当前视口到世界空间的缩放比例
   Decimal currentScale = Decimal.one;
+  ///当前视口的偏移量,不是世界空间的偏移量
   Offset currentOffset = Offset.zero;
+  ///当前视口的边界
   Rect bound = Rect.zero;
+  ///当前视口的像素大小
   Size viewPortPixelSize = Size.zero;
+  ///当前视口在世界空间中的有效大小
   SizeEX validViewPortSizeOfSpace = SizeEX.zero;
+  ///当前视口中能看到的所有物件
   List<SpaceObject> allObjectInViewPort = [];
-  Rect get rulerRectFromCenter => Rect.fromCenter(
-      center: (-PointEX.fromOffset(currentOffset) / currentScale).toOffset(),
-      width: validViewPortSizeOfSpace.width.toDouble(),
-      height: validViewPortSizeOfSpace.height.toDouble());
+  // ///标尺需要的矩形,从中心点开始
+  // Rect get rulerRectFromCenter => Rect.fromCenter(
+  //     center: (-PointEX.fromOffset(currentOffset) / currentScale).toOffset(),
+  //     width: validViewPortSizeOfSpace.width.toDouble(),
+  //     height: validViewPortSizeOfSpace.height.toDouble());
   // Space _space = initSpace();
+  ///拷贝当前视图状态
   ViewState copyWith(){
     return ViewState()
       ..currentScale = currentScale
@@ -35,20 +43,10 @@ class ViewState{
     ;
   }
 }
-//
-// class ViewStateNotifier extends StateNotifier<ViewState>{
-//   ViewStateNotifier(super.state);
-//   void updateScale(Decimal newScale){
-//     state.currentScale = newScale;
-//   }
-// }
 
 final viewStateProvider = StateNotifierProvider<ViewStateNotifier, ViewState>((ref) {
   return ViewStateNotifier(ViewState());
 });
-//
-// var viewStateControllerProvider =
-// ChangeNotifierProvider<ViewStateController>((ref) => ViewStateController());
 
 class ViewStateNotifier extends StateNotifier<ViewState> {
   Rect? _bound;
@@ -97,36 +95,6 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
     state.viewPortPixelSize = const Size(800,600);
   }
   PointEX worldPoint = PointEX.zero;
-  void updateInteractiveObjects(Offset mousePosition){
-    worldPoint = mousePosition.toPointEX() / state.currentScale
-        - PointEX(state.validViewPortSizeOfSpace.width / Decimal.two, state.validViewPortSizeOfSpace.height / Decimal.two)
-        - state.currentOffset.toPointEX()/state.currentScale;
-
-    bool needUpdate = false;
-    for (var element in state.allObjectInViewPort) {
-      if(element.bounds.contains(worldPoint)){
-        switch(element.runtimeType){
-          case RectObject:
-            var oldIsInteractive = element.isInteractive;
-            var newIsInteractive = (element as RectObject).isPointOnSides(worldPoint);
-            if(oldIsInteractive!= newIsInteractive){
-              print('有交集');
-              needUpdate = true;
-              element.isInteractive = newIsInteractive;
-              // }
-            }
-        }
-      }
-    }
-    if(!needUpdate)
-    {
-      return;
-    }
-    state = state.copyWith()
-      ..allObjectInViewPort = state.allObjectInViewPort;
-    // if(needUpdate) {
-    // }
-  }
 }
 
 Space initSpace(){
@@ -159,9 +127,9 @@ Space initSpace(){
   layer.addRect(
       rectObject
   );
-  layer.addRect(
-      RectObject.fromCenter(center: PointEX(Decimal.zero,Decimal.zero), width: Decimal.fromInt(400), height: Decimal.fromInt(300))
-  );
+  // layer.addRect(
+  //     RectObject.fromCenter(center: PointEX(Decimal.zero,Decimal.zero), width: Decimal.fromInt(400), height: Decimal.fromInt(300))
+  // );
 
   layer.addPoint(
       PointObject(Decimal.zero, Decimal.zero)

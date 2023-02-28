@@ -9,6 +9,10 @@ class Vector2D{
 
   Vector2D(this.x, this.y);
 
+  static Vector2D get zero{
+    return Vector2D(Decimal.zero,Decimal.zero);
+  }
+
 
   translate(Vector2D vector) {
     return Vector2D(x + vector.x, y + vector.y);
@@ -66,6 +70,10 @@ class Vector2D{
 
   factory Vector2D.fromAngle(Decimal angle, Decimal length) {
     return Vector2D(length * decimalCos(angle), length * decimalSin(angle));
+  }
+
+  Decimal cross(Vector2D vector) {
+    return x * vector.y - y * vector.x;
   }
 
   Decimal get length => decimalSqrt(x * x + y * y);

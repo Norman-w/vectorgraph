@@ -102,12 +102,97 @@ extension DoubleExFunctions on double{
     return Decimal().._=this*decimalScale;
   }
 }
+///实例对象的拓展方法
 extension DecimalExFunctions on Decimal {
+  //绝对值
   Decimal abs() {
     if (this<Decimal.zero) {
       return -this;
     }
     return this;
+  }
+  //取整
+  Decimal round(){
+    var d = (_/decimalScale).round()*decimalScale;
+    var i = d.toInt();
+    return Decimal().._= i.toDouble();
+  }
+  //向上取整
+  Decimal ceil(){
+    var d = (_/decimalScale).ceil()*decimalScale;
+    var i = d.toInt();
+    return Decimal().._= i.toDouble();
+  }
+  //向下取整
+  Decimal floor(){
+    var d = (_/decimalScale).floor()*decimalScale;
+    var i = d.toInt();
+    return Decimal().._= i.toDouble();
+  }
+  //取余
+  Decimal remainder(Decimal other){
+    return mod(other);
+  }
+  //取余
+  Decimal mod(Decimal other){
+    return Decimal().._=_%other._;
+  }
+
+  //幂次方
+  Decimal pow(int exponent){
+    return decimalPow(this, exponent);
+  }
+  //开平方
+  Decimal sqrt(){
+    return decimalSqrt(this);
+  }
+  //立方
+  Decimal cube(){
+    return this*this*this;
+  }
+  //平方
+  Decimal square(){
+    return this*this;
+  }
+  //万倍
+  Decimal tenThousandTimes(){
+    return this*Decimal.ten*Decimal.ten*Decimal.ten*Decimal.ten;
+  }
+  //千倍
+  Decimal thousandTimes(){
+    return this*Decimal.ten*Decimal.ten*Decimal.ten;
+  }
+  //百倍
+  Decimal hundredTimes(){
+    return this*Decimal.ten*Decimal.ten;
+  }
+  //十倍
+  Decimal tenTimes(){
+    return this*Decimal.ten;
+  }
+  //两倍
+  Decimal doubleValue(){
+    return this*Decimal.two;
+  }
+  //一半
+  Decimal half(){
+    return this/Decimal.two;
+  }
+  //十分之一
+  Decimal tenth(){
+    return this/Decimal.ten;
+  }
+  //百分之一
+  Decimal hundredth(){
+    return this/Decimal.ten/Decimal.ten;
+  }
+  //千分之一
+  Decimal thousandth(){
+    return this/Decimal.ten/Decimal.ten/Decimal.ten;
+  }
+  //万分之一
+  Decimal tenThousandth(){
+    return this/Decimal.ten/Decimal.ten/Decimal.ten/Decimal.ten;
   }
 }
 // 计算弧度制角度的正弦值
