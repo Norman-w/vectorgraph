@@ -1,48 +1,66 @@
-const int decimalScale = 100;
+import 'package:decimal/decimal.dart' as sdk;
+import 'package:rational/rational.dart';
+
+// const int decimalScale = 100;
+const int scaleOnInfinitePrecision = 100;
+BigInt toBigInt(Rational value){
+  return value.round();
+}
 class Decimal{
-  double _ = 0;
+  // double _ = 0;
+  late sdk.Decimal _;
   Decimal();
   @override
   String toString(){
     return toStringAsFixed(2);
   }
   factory Decimal.parse(String value){
-    double d = double.parse(value);
-    return Decimal().._=d*decimalScale;
+    return Decimal().._= sdk.Decimal.parse(value);
+    // double d = double.parse(value);
+    // return Decimal().._=d*decimalScale;
   }
   factory Decimal.fromInt(int value){
-    return Decimal().._=value * 1.0 * decimalScale;
+    return Decimal().._ = sdk.Decimal.fromInt(value);
+    // return Decimal().._=value * 1.0 * decimalScale;
   }
   double toDouble(){
-    return _/decimalScale;
+    return _.toDouble();
+    // return _/decimalScale;
   }
   double get doubleValue {
-    return _/decimalScale;
+    return _.toDouble();
+    // return _/decimalScale;
   }
   String toStringAsFixed(int dotCount){
-    return toDouble().toStringAsFixed(dotCount);
+    return _.toStringAsFixed(dotCount);
+    // return toDouble().toStringAsFixed(dotCount);
   }
   static Decimal get zero{
     return Decimal();
   }
   static Decimal get one{
-    return Decimal().._=1.0*decimalScale;
+    return Decimal().._=sdk.Decimal.one;
+    // return Decimal().._=1.0*decimalScale;
   }
   static Decimal get two{
-    return Decimal().._=2.0*decimalScale;
+    return Decimal().._=sdk.Decimal.parse("2");
+    // return Decimal().._=2.0*decimalScale;
   }
   static Decimal get ten{
-    return Decimal().._=10.0*decimalScale;
+    return Decimal().._=sdk.Decimal.ten;
+    // return Decimal().._=10.0*decimalScale;
   }
   Decimal operator /(Decimal other){
-    return Decimal().._=_/other._;
+    return Decimal().._=(_/other._).toDecimal(scaleOnInfinitePrecision: scaleOnInfinitePrecision, toBigInt: toBigInt);
+    // return Decimal().._=_/other._;
   }
   Decimal operator *(Decimal other){
-    var v1 = _;
-    var v2 = other._;
-    var v3 = v1*v2;
-    var v5 = v3/ decimalScale;
-    return Decimal().._=v5;
+    return Decimal().._=_*other._;
+    // var v1 = _;
+    // var v2 = other._;
+    // var v3 = v1*v2;
+    // var v5 = v3/ decimalScale;
+    // return Decimal().._=v5;
   }
   Decimal operator +(Decimal other){
     return Decimal().._=_+other._;
@@ -57,7 +75,8 @@ class Decimal{
     return _>other._;
   }
   operator -(){
-    return Decimal().._=0.0-_;
+    return Decimal().._=sdk.Decimal.zero - _;
+    // return Decimal().._=0.0-_;
   }
   bool operator >=(Decimal other){
     return _>=other._;
@@ -92,7 +111,8 @@ Decimal decimalPow(Decimal decimal, int exponent) {
 
 extension DoubleExFunctions on double{
   Decimal toDecimal(){
-    return Decimal().._=this*decimalScale;
+    // return Decimal().._=this*decimalScale;
+    return Decimal().._=sdk.Decimal.parse(toString());
   }
 }
 extension DecimalExFunctions on Decimal {
