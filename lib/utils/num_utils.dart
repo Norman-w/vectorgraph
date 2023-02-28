@@ -2,7 +2,7 @@ import 'package:decimal/decimal.dart' as sdk;
 import 'package:rational/rational.dart';
 
 // const int decimalScale = 100;
-const int scaleOnInfinitePrecision = 100;
+const int scaleOnInfinitePrecision = 40;
 BigInt toBigInt(Rational value){
   return value.round();
 }
@@ -131,24 +131,6 @@ extension DecimalExFunctions on Decimal {
       return -this;
     }
     return this;
-  }
-  //取整
-  Decimal round(){
-    var d = (_/decimalScale).round()*decimalScale;
-    var i = d.toInt();
-    return Decimal().._= i.toDouble();
-  }
-  //向上取整
-  Decimal ceil(){
-    var d = (_/decimalScale).ceil()*decimalScale;
-    var i = d.toInt();
-    return Decimal().._= i.toDouble();
-  }
-  //向下取整
-  Decimal floor(){
-    var d = (_/decimalScale).floor()*decimalScale;
-    var i = d.toInt();
-    return Decimal().._= i.toDouble();
   }
   //取余
   Decimal remainder(Decimal other){
