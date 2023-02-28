@@ -4,36 +4,75 @@ import '../../../utils/num_utils.dart';
 import '../points/point_ex.dart';
 
 class RectEX {
+  //region 字段
   Decimal left;
   Decimal top;
   Decimal right;
   Decimal bottom;
-  Rect toRect() {
-    return Rect.fromLTRB(left.toDouble(), top.toDouble(), right.toDouble(), bottom.toDouble());
+  //endregion
+
+  //region 属性
+  Decimal get width => right - left;
+  Decimal get height => bottom - top;
+  PointEX get rightBottom => PointEX(right, bottom);
+  Decimal get centerX => left + (right - left) / Decimal.two;
+  Decimal get centerY => top + (bottom - top) / Decimal.two;
+  PointEX get center => PointEX(centerX, centerY);
+  PointEX get topRight => PointEX(right, top);
+  PointEX get leftTop => PointEX(left, top);
+  PointEX get topLeft => PointEX(left, top);
+  PointEX get bottomRight => PointEX(right, bottom);
+  PointEX get bottomLeft => PointEX(left, bottom);
+
+
+
+
+  set width(Decimal value) => right = left + value;
+  set height(Decimal value) => bottom = top + value;
+  set leftTop(PointEX value) {
+    left = value.x;
+    top = value.y;
   }
 
-  static final zero = RectEX.fromLTWH(Decimal.zero, Decimal.zero, Decimal.zero, Decimal.zero);
+  set rightBottom(PointEX value) {
+    right = value.x;
+    bottom = value.y;
+  }
+  set topRight(PointEX value) {
+    right = value.x;
+    top = value.y;
+  }
+  set topLeft(PointEX value) {
+    left = value.x;
+    top = value.y;
+  }
+  set bottomRight(PointEX value) {
+    right = value.x;
+    bottom = value.y;
+  }
+  set bottomLeft(PointEX value) {
+    left = value.x;
+    bottom = value.y;
+  }
+  //endregion
 
-
+  //region 工厂函数
+  RectEX.fromLTRB(
+      Decimal left,
+      Decimal top,
+      Decimal right,
+      Decimal bottom,
+      ) : this(left, top, right, bottom);
   RectEX.fromCenter({required PointEX center, required Decimal width, required Decimal height})
-      : left = center.x - width / decimal2,
-        top = center.y - height / decimal2, bottom = center.y + height / decimal2,
-        right = center.x + width / decimal2
+      : left = center.x - width / Decimal.two,
+        top = center.y - height / Decimal.two, bottom = center.y + height / Decimal.two,
+        right = center.x + width / Decimal.two
   ;
   RectEX.fromCircle({required PointEX center, required Decimal radius})
       : left = center.x - radius,
         top = center.y - radius,
         right = center.x + radius,
         bottom = center.y + radius;
-
-
-  Decimal get centerX => left + (right - left) / decimal2;
-  Decimal get centerY => top + (bottom - top) / decimal2;
-
-  PointEX get center => PointEX(centerX, centerY);
-
-  RectEX(this.left, this.top, this.right, this.bottom);
-
   RectEX.fromLTWH(Decimal left, Decimal top, Decimal width, Decimal height)
       : this(
     left,
@@ -50,26 +89,38 @@ class RectEX {
     decimalMax(a.x, b.x),
     decimalMax(a.y, b.y),
   );
+  //endregion
 
-  Decimal get width => right - left;
-  Decimal get height => bottom - top;
+  //region 构造函数
+  RectEX(this.left, this.top, this.right, this.bottom);
+  //endregion
 
-  set width(Decimal value) => right = left + value;
-  set height(Decimal value) => bottom = top + value;
-
-  set leftTop(PointEX value) {
-    left = value.x;
-    top = value.y;
+  //region 导出
+  Rect toRect() {
+    return Rect.fromLTRB(left.toDouble(), top.toDouble(), right.toDouble(), bottom.toDouble());
   }
+  //endregion
 
-  PointEX get leftTop => PointEX(left, top);
-
-  set rightBottom(PointEX value) {
-    right = value.x;
-    bottom = value.y;
+  //region 重载
+  @override
+  String toString() {
+    return 'RectEX{left: $left, top: $top, right: $right, bottom: $bottom}';
   }
+  //endregion
 
-  PointEX get rightBottom => PointEX(right, bottom);
+  //region static
+  static final zero = RectEX.fromLTWH(Decimal.zero, Decimal.zero, Decimal.zero, Decimal.zero);
+  //endregion
+}
+extension RectEXFunctions on RectEX {
+  RectEX expand (Decimal delta) {
+    return RectEX(
+      left - delta,
+      top - delta,
+      right + delta,
+      bottom + delta,
+    );
+  }
 
   RectEX shift(Decimal dx, Decimal dy) {
     return RectEX(
@@ -136,14 +187,7 @@ class RectEX {
         top < other.bottom &&
         bottom > other.top;
   }
-  RectEX.fromLTRB(
-      Decimal left,
-      Decimal top,
-      Decimal right,
-      Decimal bottom,
-      ) : this(left, top, right, bottom);
-}
-extension RectEXFunctions on RectEX {
+
   bool overlaps(RectEX other) {
     final thisLeft = left;
     final thisRight = right;

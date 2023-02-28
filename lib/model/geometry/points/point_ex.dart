@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:vectorgraph/model/geometry/vectors/vector2d.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 
 class PointEX {
@@ -12,6 +13,10 @@ class PointEX {
 
   PointEX operator -() {
     return PointEX(-x, -y);
+  }
+
+  Vector2D toVector2D(){
+    return Vector2D(x,y);
   }
 
   static final zero = PointEX(Decimal.zero, Decimal.zero);

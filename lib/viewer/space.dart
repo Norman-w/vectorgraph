@@ -32,8 +32,8 @@ class Space {
     for (var layer in layers) {
       result.addAll(layer.getInBounds(
           RectEX.fromLTWH(
-              viewPortShowingSpaceRectCenter.x - showingSpaceRectSize.width / decimal2,
-              viewPortShowingSpaceRectCenter.y - showingSpaceRectSize.height / decimal2,
+              viewPortShowingSpaceRectCenter.x - showingSpaceRectSize.width / Decimal.two,
+              viewPortShowingSpaceRectCenter.y - showingSpaceRectSize.height / Decimal.two,
               showingSpaceRectSize.width,
               showingSpaceRectSize.height)
       //   Rect.fromCenter(
@@ -47,7 +47,7 @@ class Space {
   }
   static PointEX viewPortPointPos2SpacePointPos(Offset? mousePosition,Offset currentOffset, Decimal currentScale, SizeEX validViewPortSizeOfSpace) {
     return mousePosition == null? PointEX.zero: mousePosition!.toPointEX() / currentScale
-        - PointEX(validViewPortSizeOfSpace.width / decimal2, validViewPortSizeOfSpace.height / decimal2)
+        - PointEX(validViewPortSizeOfSpace.width / Decimal.two, validViewPortSizeOfSpace.height / Decimal.two)
         - currentOffset.toPointEX()/currentScale
     ;
   }

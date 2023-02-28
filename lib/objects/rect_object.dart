@@ -36,10 +36,16 @@ class RectObject extends RectEX with SpaceObject{
     return _lines;
   }
   ///检测点是否在矩形的边缘上.
-  bool isPointOnSides(PointEX point, {Decimal? deviation}){
+  bool isPointOnEdgeLines(PointEX point, {Decimal? deviation}){
+    // var realDeviation = deviation?? Decimal.two;
+    // var onTopLine = top - realDeviation <= point.y && point.y <= top + realDeviation;
+    // var onBottomLine = bottom - realDeviation <= point.y && point.y <= bottom + realDeviation;
+    // var onLeftLine = left - realDeviation <= point.x && point.x <= left + realDeviation;
+    // var onRightLine = right - realDeviation <= point.x && point.x <= right + realDeviation;
+    // return onTopLine || onBottomLine || onLeftLine || onRightLine;
     var list = lines;
     for(var l in list){
-      if(l.isPointOnLine(point,deviation : deviation?? decimal2)) {
+      if(l.isPointOnLine(point,deviation : deviation?? Decimal.two)) {
         return true;
       }
     }
@@ -49,6 +55,9 @@ class RectObject extends RectEX with SpaceObject{
   RectObject copyWith({PointEX? center, Decimal? width, Decimal? height, Decimal? radius, Decimal? left, Decimal? top, Decimal? right, Decimal? bottom}){
     return RectObject.fromLTWH(left ?? this.left, top ?? this.top, width ?? this.width, height ?? this.height);
   }
+
+  @override
+  toString() => 'RectObject{left: $left, top: $top, width: $width, height: $height}';
 }
 class RectObjectNotifier extends StateNotifier<RectObject>{
   bool _isInteractive = false;
@@ -69,39 +78,47 @@ class RectObjectWidget extends ConsumerWidget{
   final RectObject rectObject;
   final Decimal viewPortScale;
   final Offset viewPortOffset;
-  final SizeEX viewPortSize;
+  final Size viewPortPixelSize;
   const RectObjectWidget({super.key,
     required this.rectObject,
     required this.viewPortScale,
     required this.viewPortOffset,
-    required this.viewPortSize,
+    required this.viewPortPixelSize,
   });
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var realViewRect = getViewRect(rectObject, viewPortScale, viewPortOffset, viewPortPixelSize);
+    return CustomPaint(
+      painter: RectPainter(realViewRect, ref.watch(rectObjectsProvider(rectObject)).isInteractive?
+          Colors.white: getRandomColor()
+      ),
+    );
+  }
+  ///获取真实的视图矩形
+  ///[rectObject] 矩形对象
+  ///[viewPortScale] 视图缩放比例(视图到世界空间的缩放比例)
+  ///[viewPortOffset] 视图偏移量
+  ///[viewPortSize] 视图大小
+  static Rect getViewRect(RectObject rectObject, Decimal viewPortScale, Offset viewPortOffset, Size viewPortSize){
     var width = rectObject.width;
     var height = rectObject.height;
     var top = rectObject.top;
     var left = rectObject.left;
-
-
     var newWidth = width * viewPortScale;
     var newHeight = height * viewPortScale;
     var oldWidth = width;
     var oldHeight = height;
-    Decimal xAdded = (newWidth - oldWidth) / decimal2;
-    Decimal yAdded = (newHeight - oldHeight) / decimal2;
-    var newLeft = left + viewPortOffset.dx.toDecimal() + viewPortSize.width/decimal2 - xAdded;
-    var newTop = top + viewPortOffset.dy.toDecimal() + viewPortSize.height/decimal2 -yAdded;
+    Decimal xAdded = (newWidth - oldWidth) / Decimal.two;
+    Decimal yAdded = (newHeight - oldHeight) / Decimal.two;
+    var viewPortSizeEX = SizeEX(viewPortSize.width.toDecimal(), viewPortSize.height.toDecimal());
+    var newLeft = left + viewPortOffset.dx.toDecimal() + viewPortSizeEX.width/Decimal.two - xAdded;
+    var newTop = top + viewPortOffset.dy.toDecimal() + viewPortSizeEX.height/Decimal.two -yAdded;
     var realViewRect = RectEX.fromLTWH(
         newLeft,
         newTop,
         newWidth,
         newHeight
     );
-    return CustomPaint(
-      painter: RectPainter(realViewRect.toRect(), ref.watch(rectObjectsProvider(rectObject)).isInteractive?
-          Colors.white: getRandomColor()
-      ),
-    );
+    return realViewRect.toRect();
   }
 }

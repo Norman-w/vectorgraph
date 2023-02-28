@@ -24,7 +24,7 @@ class EquilateralPolygon extends Polygon {
     }
     //endregion
 
-    Decimal r = this.size / decimal2;
+    Decimal r = this.size / Decimal.two;
     // 将圆等分,开始第一个点
     start(r * decimalCos(decimalPi / Decimal.fromInt(count))+r,
         r * decimalSin(decimalPi / Decimal.fromInt(count))+r);

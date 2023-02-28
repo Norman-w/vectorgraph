@@ -24,7 +24,7 @@ class LineSegment{
   }
   bool isInBoundingBox(PointEX point,{Decimal? deviation}){
     var RectEX = getBoundingBox();
-    RectEX = RectEX.inflate(deviation?? decimal2);
+    RectEX = RectEX.inflate(deviation?? Decimal.two);
     return RectEX.contains(point.toOffset());
   }
   Decimal getStartPointToDistance(PointEX point){
@@ -114,7 +114,10 @@ extension LineSegmentMethods on LineSegment{
     Vector2D vector1 = getVector();
     PointEX vector2 = point - start;
     Decimal cross = vector1.x * vector2.y - vector1.y * vector2.x;
-    return cross.abs() / vector1.distance(Vector2D(Decimal.zero, Decimal.zero)) < (deviation ?? Decimal.one);
+    // print('叉乘：$cross');
+    var cd = cross.abs() / vector1.distance(Vector2D.zero);
+    var de = deviation ?? Decimal.one;
+    return cd.abs() < de;
   }
   // 判断线段相交 老方法
   bool intersect(LineSegment L1, LineSegment L2)
