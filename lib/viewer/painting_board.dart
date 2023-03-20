@@ -12,8 +12,6 @@
  * 相较于视口(显示器,显示区域),绘图板(绘画板,触摸屏,绘图屏)是距离用户更近的一层.但他是透明的.
  */
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,15 +74,32 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     }
 
 
+    // 使用向量运算判断点是否在直线上
+    bool isPointOnLineByVector(LineSegment line, PointEX point, {Decimal? deviation}) {
+      Vector2D vector1 = line.getVector();
+      var point2 = point - line.start;
+      Vector2D vector2 = point2.toVector2D();
+      Decimal cross = vector1.cross(vector2);
+      Decimal cd = cross.abs() / vector1.length;
+      return cd < (deviation ?? Decimal.ten);
+    }
 
+    // 使用代数方法判断点是否在直线上
+    bool isPointOnLineByAlgebra(LineSegment line, PointEX point, {double deviation = 5, Decimal? view2spaceScroll}) {
+      view2spaceScroll ??= Decimal.one;
+      Decimal a = line.end.y - line.start.y;
+      Decimal b = line.start.x - line.end.x;
+      Decimal c = line.end.x * line.start.y - line.start.x * line.end.y;
+      Decimal cd = (a * point.x + b * point.y + c).abs() / decimalSqrt(a * a + b * b);
+      return cd < deviation.toDecimal() / view2spaceScroll;
+    }
 
 
 
 
     for (var element in state.allObjectInViewPort) {
       if(element is! RectObject) continue;
-      var deviation = Decimal.fromInt(5);
-      var rectObject = element as RectObject;
+      var deviation = Decimal.fromInt(2)/state.currentScale;
       // var mousePointOnRectObjectWidget =
       //  RectObjectWidget.getViewRect(rectObject, state.currentScale, state.currentOffset, state.viewPortPixelSize);
       //
@@ -93,9 +108,11 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         switch(element.runtimeType){
           case RectObject:
             var oldIsInteractive = element.isInteractive;
-            var newIsInteractive = element.isPointOnEdgeLines(worldPoint, Decimal.two / state.currentScale);
-            // var newIsInteractive = isPointOnLineByAlgebra(element.lines[0], worldPoint,deviation: 2, view2spaceScroll:
-
+            // var newIsInteractive =
+            //     element.isPointOnEdgeLines(worldPoint, deviation: deviation);
+            // var newIsInteractive = element.lines.any((element) => isPointOnLineByAlgebra(element, worldPoint, deviation: 5, view2spaceScroll: state.currentScale));
+    var newIsInteractive = element.isPointOnEdgeLines(worldPoint, deviation: deviation);
+            // var newIsInteractive = isPointOnLineByAlgebra(element.lines[0], worldPoint,deviation: 5, view2spaceScroll:
             // state.currentScale);
             // var viewRect = RectObjectWidget.getViewRect(rectObject, state.currentScale, state.currentOffset, state.viewPortPixelSize);
             // viewRectEX = RectEX.fromLTWH(viewRect.left.toDecimal(),
@@ -118,7 +135,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         }
       setState(() {
         logText = '世界坐标$worldPoint   视图坐标${event.position}';
-        logText2 = '视图坐标\r\n${event.position.dx}\r\n${event.position.dy} \r\n 视图矩形$viewRectEX';
+        logText2 = '视图坐标${event.position}  视图矩形$viewRectEX';
       });
     }
   }
@@ -265,44 +282,10 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
   //endregion
 
 
-  // mySqrt (Decimal x) {
-  //   if(x==Decimal.zero || x==Decimal.one) return x;
-  //
-  //   var low=Decimal.zero,high=x, pivot=(low+high)/Decimal.two, lastPivot;
-  //   do {
-  //     if(decimalPow(pivot,2)>x) {
-  //       high = pivot;
-  //     } else if(decimalPow(pivot,2)<x) {
-  //       low = pivot;
-  //     } else {
-  //       return pivot;
-  //     }
-  //     lastPivot = pivot;
-  //     pivot = (low+high)/Decimal.two;
-  //   }
-  //   // 使用Number.EPSILON表示能够接受的最小误差范围
-  //   while((pivot-lastPivot).abs() >= Decimal.parse('0.000000000000000000000000000001'));
-  //   return pivot;
-  // }
-
-  mySqrt (x) {
-    if(x == Decimal.zero || x == Decimal.one) return x;
-
-    Decimal val=x,last;
-    do{
-      last = val;
-      val = (val+x/val)/Decimal.two;
-    }while((val- last).abs() >=Decimal.parse('2.220446049250313e-16'));
-    return val;
-  }
 
 
   @override
   Widget build(BuildContext context) {
-    // print(sqrt(2));
-    // var sq = mySqrt(Decimal.parse('10'));
-    // print(sq);
-    // print(sq * sq);
     return
       MouseRegion(
         onHover: onHoverMouseRegion,

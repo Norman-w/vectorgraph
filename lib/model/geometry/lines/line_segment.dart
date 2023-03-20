@@ -109,6 +109,7 @@ class LineSegment{
 
 
 extension LineSegmentMethods on LineSegment{
+  /// 判断点是否在线段上
   bool isPointOnLine(PointEX point, {Decimal? deviation})
   {
     Vector2D vector1 = getVector();
@@ -117,7 +118,21 @@ extension LineSegmentMethods on LineSegment{
     // print('叉乘：$cross');
     var cd = cross.abs() / vector1.distance(Vector2D.zero);
     var de = deviation ?? Decimal.one;
-    return cd.abs() < de;
+    var isOnStraightLine = cd  < de;
+    //region 检测到点在直线上以后还应该检测点是否在线段上
+    if(isOnStraightLine){
+      var dot = vector1.x * vector2.x + vector1.y * vector2.y;
+      if(dot < Decimal.zero){
+        return false;
+      }
+      var squaredLength = vector1.x * vector1.x + vector1.y * vector1.y;
+      if(dot > squaredLength){
+        return false;
+      }
+      return true;
+    }
+    //endregion
+    return false;
   }
   // 使用向量运算判断点是否在直线上
   bool isPointOnLineByVector(PointEX point, Decimal deviation) {

@@ -1,75 +1,59 @@
-import 'package:decimal/decimal.dart' as sdk;
-import 'package:rational/rational.dart';
-
-// const int decimalScale = 100;
-const int scaleOnInfinitePrecision = 40;
-BigInt toBigInt(Rational value){
-  return value.round();
-}
+const int decimalScale = 100;
 class Decimal{
-  // double _ = 0;
-  late sdk.Decimal _;
+  double _ = 0;
   Decimal();
   @override
   String toString(){
-    return _.toString();
     return toStringAsFixed(2);
   }
   ///乘以放大倍数以后的值.用于赋值给point的x,y或者其他时候使用.提高运算精度.
   double get accurateValue{
-    return _.toDouble();
+    return _;
   }
   factory Decimal.parse(String value){
-    return Decimal().._= sdk.Decimal.parse(value);
-    // double d = double.parse(value);
-    // return Decimal().._=d*decimalScale;
+    double d = double.parse(value);
+    return Decimal().._=d*decimalScale;
   }
   factory Decimal.fromInt(int value){
-    return Decimal().._ = sdk.Decimal.fromInt(value);
-    // return Decimal().._=value * 1.0 * decimalScale;
+    return Decimal().._=value * 1.0 * decimalScale;
   }
   double toDouble(){
-    return _.toDouble();
-    // return _/decimalScale;
+    return _/decimalScale;
   }
   double get doubleValue {
-    return _.toDouble();
-    // return _/decimalScale;
+    return _/decimalScale;
   }
   String toStringAsFixed(int dotCount){
-    return _.toStringAsFixed(dotCount);
-    // return toDouble().toStringAsFixed(dotCount);
+    return toDouble().toStringAsFixed(dotCount);
   }
   static Decimal get zero{
-    return Decimal().._=sdk.Decimal.zero;
+    return Decimal();
   }
   static Decimal get one{
-    return Decimal().._=sdk.Decimal.one;
-    // return Decimal().._=1.0*decimalScale;
+    return Decimal().._=1.0*decimalScale;
   }
   static Decimal get two{
-    return Decimal().._=sdk.Decimal.parse("2");
-    // return Decimal().._=2.0*decimalScale;
+    return Decimal().._=2.0*decimalScale;
   }
   static Decimal get ten{
-    return Decimal().._=sdk.Decimal.ten;
-    // return Decimal().._=10.0*decimalScale;
+    return Decimal().._=10.0*decimalScale;
+  }
+  ///精度,double类型的最小值 乘以 放大倍数
+  static Decimal get epsilon{
+    return Decimal().._= double.minPositive*decimalScale;
   }
   Decimal operator /(Decimal other){
-    // //方案B,先把被除数放大,防止丢失精度,但是容易被除数过大导致崩溃.
-    // return Decimal().._=_ * decimalScale /other._;
-    // //方案A,更好理解,先算出来两个数的"比",然后再把得数放大以防丢失精度.不过除完以后再放大的系数是没有提高精度的.
-    // // return Decimal().._=_/other._ * decimalScale;
-    return Decimal().._=(_/other._).toDecimal(scaleOnInfinitePrecision: scaleOnInfinitePrecision, toBigInt: toBigInt);
-    // return Decimal().._=_/other._;
+    //方案B,先把被除数放大,防止丢失精度,但是容易被除数过大导致崩溃.
+    return Decimal().._=_ * decimalScale /other._;
+    //方案A,更好理解,先算出来两个数的"比",然后再把得数放大以防丢失精度.不过除完以后再放大的系数是没有提高精度的.
+    // return Decimal().._=_/other._ * decimalScale;
   }
   Decimal operator *(Decimal other){
-    return Decimal().._=_*other._;
-    // var v1 = _;
-    // var v2 = other._;
-    // var v3 = v1*v2;
-    // var v5 = v3/ decimalScale;
-    // return Decimal().._=v5;
+    var v1 = _;
+    var v2 = other._;
+    var v3 = v1*v2;
+    var v5 = v3/ decimalScale;
+    return Decimal().._=v5;
   }
   Decimal operator +(Decimal other){
     return Decimal().._=_+other._;
@@ -84,8 +68,7 @@ class Decimal{
     return _>other._;
   }
   operator -(){
-    return Decimal().._=sdk.Decimal.zero - _;
-    // return Decimal().._=0.0-_;
+    return Decimal().._=0.0-_;
   }
   bool operator >=(Decimal other){
     return _>=other._;
@@ -102,19 +85,8 @@ Decimal decimalSqrt(Decimal decimal) {
   do{
     last = val;
     val = (val+decimal/val)/Decimal.two;
-  }while((val- last).abs() >=Decimal.parse('2.220446049250313e-16'));
+  }while((val- last).abs() >= Decimal.epsilon);
   return val;
-  // if (decimal == Decimal.zero) return Decimal.zero;
-  // if (decimal == Decimal.one) return Decimal.one;
-  //
-  // Decimal z = decimal / Decimal.two;
-  // Decimal x = decimal / z;
-  //
-  // while (z < x) {
-  //   x = z;
-  //   z = (decimal / x + x) / Decimal.two;
-  // }
-  // return x;
 }
 
 Decimal decimalPow(Decimal decimal, int exponent) {
@@ -127,8 +99,7 @@ Decimal decimalPow(Decimal decimal, int exponent) {
 
 extension DoubleExFunctions on double{
   Decimal toDecimal(){
-    // return Decimal().._=this*decimalScale;
-    return Decimal().._=sdk.Decimal.parse(toString());
+    return Decimal().._=this*decimalScale;
   }
 }
 ///实例对象的拓展方法
@@ -139,6 +110,24 @@ extension DecimalExFunctions on Decimal {
       return -this;
     }
     return this;
+  }
+  //取整
+  Decimal round(){
+    var d = (_/decimalScale).round()*decimalScale;
+    var i = d.toInt();
+    return Decimal().._= i.toDouble();
+  }
+  //向上取整
+  Decimal ceil(){
+    var d = (_/decimalScale).ceil()*decimalScale;
+    var i = d.toInt();
+    return Decimal().._= i.toDouble();
+  }
+  //向下取整
+  Decimal floor(){
+    var d = (_/decimalScale).floor()*decimalScale;
+    var i = d.toInt();
+    return Decimal().._= i.toDouble();
   }
   //取余
   Decimal remainder(Decimal other){
