@@ -5,7 +5,6 @@ import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
 import '../model/geometry/SizeEX.dart';
-import '../model/geometry/rect/RectEX.dart';
 import '../objects/point_object.dart';
 import '../objects/rect_object.dart';
 import 'space.dart';
@@ -61,7 +60,7 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
     }
     state = state.copyWith()
     ..bound = value
-    ..viewPortPixelSize = value!.size
+    ..viewPortPixelSize = value.size
     ..validViewPortSizeOfSpace = SizeEX.fromSize(state.viewPortPixelSize) / state.currentScale
     ..allObjectInViewPort = _space.getInViewPortObjects(
         PointEX.fromOffset(state.currentOffset)/state.currentScale,
@@ -115,17 +114,15 @@ Space initSpace(){
       rectObject
   );
 
-  PointObject pointObject = PointObject(Decimal.parse('100'), Decimal.parse("100"))
-  ..radius = Decimal.fromInt(5)
+  layer.addRect(
+      RectObject.fromCenter(center: PointEX(Decimal.zero,Decimal.zero), width: Decimal.fromInt(400), height: Decimal.fromInt(300))
+  );
+
+  PointObject pointObject = PointObject(Decimal.parse('50'), Decimal.parse("50"))
+    ..radius = Decimal.fromInt(20)
   ;
   layer.addPoint(
       pointObject
-  );
-  print('添加新的点: ${pointObject}');
-
-
-  layer.addRect(
-      RectObject.fromCenter(center: PointEX(Decimal.zero,Decimal.zero), width: Decimal.fromInt(400), height: Decimal.fromInt(300))
   );
 
   layer.addPoint(

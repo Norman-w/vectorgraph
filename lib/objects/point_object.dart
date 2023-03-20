@@ -32,7 +32,7 @@ class PointObjectNotifier extends StateNotifier<PointObject>{
   }
 }
 
-final pointObjectProvider =
+final pointObjectsProvider =
 StateNotifierProvider.family<PointObjectNotifier, PointObject, PointObject>(
         (ref, point) => PointObjectNotifier(point, false));
 
@@ -53,7 +53,7 @@ class PointObjectWidget extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Color color = ref.watch(pointObjectProvider(pointObject)).isInteractive?
+    Color color = ref.watch(pointObjectsProvider(pointObject)).isInteractive?
         Colors.white: getRandomColor();
     Offset point = Space.spacePointPos2ViewPortPointPos(
         pointObject, viewPortOffset,viewPortScale, viewPortPixelSize);

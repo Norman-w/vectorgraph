@@ -17,7 +17,7 @@ import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/utils/widget.dart';
 
 import '../model/geometry/points/point_ex.dart';
-import '../model/geometry/rect/RectEX.dart';
+import '../objects/point_object.dart';
 import '../objects/rect_object.dart';
 import 'size_listener.dart';
 import 'space.dart';
@@ -56,21 +56,31 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         - state.currentOffset.toPointEX()/state.currentScale;
 
     for (var element in state.allObjectInViewPort) {
-      if(element is! RectObject) continue;
-      var deviation = Decimal.fromInt(1)/state.currentScale;
-      // var mousePointOnRectObjectWidget =
-      //  RectObjectWidget.getViewRect(rectObject, state.currentScale, state.currentOffset, state.viewPortPixelSize);
-      //
-      var viewRectEX = RectEX.zero;
-
+      var deviation = Decimal.fromInt(2)/state.currentScale.abs();
         switch(element.runtimeType){
           case RectObject:
-            var oldIsInteractive = element.isInteractive;
-            var newIsInteractive = element.isPointOnEdgeLines(worldPoint, deviation);
+            var rect = element as RectObject;
+            var oldIsInteractive = rect.isInteractive;
+            var newIsInteractive = rect.isPointOnEdgeLines(worldPoint, deviation);
             if(oldIsInteractive != newIsInteractive)
               {
-                element.isInteractive = newIsInteractive;
-                ref.read(rectObjectsProvider(element).notifier).updateIsInteractive(newIsInteractive);
+                rect.isInteractive = newIsInteractive;
+                ref.read(rectObjectsProvider(rect).notifier).updateIsInteractive(newIsInteractive);
+                if(newIsInteractive)
+                  {
+                    // print('on it');
+                  }
+              }
+            break;
+          case PointObject:
+            var point = element as PointObject;
+            var oldIsInteractive = point.isInteractive;
+            var distanceToCursor = point.distanceTo(worldPoint);
+            bool newIsInteractive = distanceToCursor < point.radius/Decimal.two + deviation;
+            if(oldIsInteractive != newIsInteractive)
+              {
+                point.isInteractive = newIsInteractive;
+                ref.read(pointObjectsProvider(point).notifier).updateIsInteractive(newIsInteractive);
                 if(newIsInteractive)
                   {
                     // print('on it');
@@ -78,11 +88,11 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
               }
             break;
         }
-      setState(() {
-        logText = '世界坐标$worldPoint   视图坐标${event.position}';
-        logText2 = '视图坐标${event.position}  视图矩形$viewRectEX';
-      });
     }
+    setState(() {
+      logText = '世界坐标$worldPoint   视图坐标${event.position}';
+      logText2 = '视图坐标${event.position}';
+    });
   }
 
 
