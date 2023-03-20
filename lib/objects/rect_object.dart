@@ -73,18 +73,23 @@ class RectObjectWidget extends ConsumerWidget{
   final Decimal viewPortScale;
   final Offset viewPortOffset;
   final Size viewPortPixelSize;
-  const RectObjectWidget({super.key,
+  Color normalColor;// = Colors.white60;
+  Color hoverColor;// = Colors.white;
+  Color focusColor;// = Colors.blue;
+  RectObjectWidget({super.key,
     required this.rectObject,
     required this.viewPortScale,
     required this.viewPortOffset,
     required this.viewPortPixelSize,
+    this.normalColor = Colors.black, this.hoverColor = Colors.white, this.focusColor = Colors.lightGreen,
   });
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var realViewRect = getViewRect(rectObject, viewPortScale, viewPortOffset, viewPortPixelSize);
     return CustomPaint(
       painter: RectPainter(realViewRect, ref.watch(rectObjectsProvider(rectObject)).isInteractive?
-          Colors.white: getRandomColor()
+          // Colors.white: getRandomColor()
+        hoverColor:normalColor
       ),
     );
   }

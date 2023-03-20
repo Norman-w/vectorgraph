@@ -42,6 +42,7 @@ class ViewPort extends ConsumerWidget {
               viewPortPixelSize: ref.watch(viewStateProvider).viewPortPixelSize,
               viewPortOffset: ref.watch(viewStateProvider).currentOffset,
               viewPortScale: ref.watch(viewStateProvider).currentScale,
+              // normalColor: Colors.deepOrange,
             );
           }
           return Container();

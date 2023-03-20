@@ -43,18 +43,24 @@ class PointObjectWidget extends ConsumerWidget{
   final Decimal viewPortScale;
   final Offset viewPortOffset;
   final Size viewPortPixelSize;
-  const PointObjectWidget(
+  Color normalColor;// = Colors.white60;
+  Color hoverColor;// = Colors.white;
+  Color focusColor;// = Colors.blue;
+  PointObjectWidget(
   {
     required this.pointObject,
     required this.viewPortScale,
     required this.viewPortOffset,
-    required this.viewPortPixelSize, Key? key
+    required this.viewPortPixelSize,
+    this.normalColor = Colors.black, this.hoverColor = Colors.white, this.focusColor = Colors.lightGreen,
+    Key? key
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Color color = ref.watch(pointObjectsProvider(pointObject)).isInteractive?
-        Colors.white: getRandomColor();
+        // Colors.white: getRandomColor();
+    hoverColor:normalColor;
     Offset point = Space.spacePointPos2ViewPortPointPos(
         pointObject, viewPortOffset,viewPortScale, viewPortPixelSize);
     var newRadius = pointObject.radius * viewPortScale;
