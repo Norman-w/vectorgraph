@@ -49,7 +49,7 @@ class LineSegment{
     var vector3 = start - straightLine.point1;
     var cross1 = vector1.x * vector2.y - vector1.y * vector2.x;
     var cross2 = vector1.x * vector3.y - vector1.y * vector3.x;
-    if(cross1 == 0){
+    if(cross1 == Decimal.zero){
       return false;
     }
     var r = cross2 / cross1;
@@ -64,7 +64,7 @@ class LineSegment{
     var vector3 = start - raysLine.start;
     var cross1 = vector1.x * vector2.y - vector1.y * vector2.x;
     var cross2 = vector1.x * vector3.y - vector1.y * vector3.x;
-    if(cross1 == 0){
+    if(cross1 == Decimal.zero){
       return false;
     }
     var r = cross2 / cross1;
@@ -79,7 +79,7 @@ class LineSegment{
     var vector3 = start - lineSegment.start;
     var cross1 = vector1.x * vector2.y - vector1.y * vector2.x;
     var cross2 = vector1.x * vector3.y - vector1.y * vector3.x;
-    if(cross1 == 0){
+    if(cross1 == Decimal.zero){
       return false;
     }
     var r = cross2 / cross1;
@@ -91,7 +91,7 @@ class LineSegment{
     vector3 = lineSegment.start - start;
     cross1 = vector1.x * vector2.y - vector1.y * vector2.x;
     cross2 = vector1.x * vector3.y - vector1.y * vector3.x;
-    if(cross1 == 0){
+    if(cross1 == Decimal.zero){
       return false;
     }
     r = cross2 / cross1;
@@ -134,33 +134,15 @@ extension LineSegmentMethods on LineSegment{
     //endregion
     return false;
   }
-  // 使用向量运算判断点是否在直线上
-  bool isPointOnLineByVector(PointEX point, Decimal deviation) {
-    Vector2D vector1 = getVector();
-    var point2 = point - start;
-    Vector2D vector2 = point2.toVector2D();
-    Decimal cross = vector1.cross(vector2);
-    Decimal cd = cross.abs() / vector1.length;
-    return cd < (deviation ?? Decimal.ten);
-  }
-
-  // 使用代数方法判断点是否在直线上
-  bool isPointOnLineByAlgebra(PointEX point, Decimal deviation) {
-    Decimal a = end.y - start.y;
-    Decimal b = start.x - end.x;
-    Decimal c = end.x * start.y - start.x * end.y;
-    Decimal cd = (a * point.x + b * point.y + c).abs() / decimalSqrt(a * a + b * b);
-    return cd < deviation;
-  }
-  // 判断线段相交 老方法
-  bool intersect(LineSegment L1, LineSegment L2)
-  {
-    return( (decimalMax(L1.start.x, L1.end.x) >= decimalMin(L2.start.x, L2.end.x)) &&
-        (decimalMax(L2.start.x, L2.end.x) >= decimalMin(L1.start.x, L1.end.x)) &&
-        (decimalMax(L1.start.y, L1.end.y) >= decimalMin(L2.start.y, L2.end.y)) &&
-        (decimalMax(L2.start.y, L2.end.y) >= decimalMin(L1.start.y, L1.end.y)) &&
-        (pointMultiply(L2.start, L1.end, L1.start) * pointMultiply(L1.end, L2.end, L1.start) >= Decimal.zero) &&
-        (pointMultiply(L1.start, L2.end, L2.start) * pointMultiply(L2.end, L1.end, L2.start) >= Decimal.zero)
-    );
-  }
+  // // 判断线段相交 老方法 管用不管用忘记了.
+  // bool intersect(LineSegment L1, LineSegment L2)
+  // {
+  //   return( (decimalMax(L1.start.x, L1.end.x) >= decimalMin(L2.start.x, L2.end.x)) &&
+  //       (decimalMax(L2.start.x, L2.end.x) >= decimalMin(L1.start.x, L1.end.x)) &&
+  //       (decimalMax(L1.start.y, L1.end.y) >= decimalMin(L2.start.y, L2.end.y)) &&
+  //       (decimalMax(L2.start.y, L2.end.y) >= decimalMin(L1.start.y, L1.end.y)) &&
+  //       (pointMultiply(L2.start, L1.end, L1.start) * pointMultiply(L1.end, L2.end, L1.start) >= Decimal.zero) &&
+  //       (pointMultiply(L1.start, L2.end, L2.start) * pointMultiply(L2.end, L1.end, L2.start) >= Decimal.zero)
+  //   );
+  // }
 }

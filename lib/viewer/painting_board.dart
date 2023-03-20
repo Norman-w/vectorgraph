@@ -108,20 +108,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         switch(element.runtimeType){
           case RectObject:
             var oldIsInteractive = element.isInteractive;
-            // var newIsInteractive =
-            //     element.isPointOnEdgeLines(worldPoint, deviation: deviation);
-            // var newIsInteractive = element.lines.any((element) => isPointOnLineByAlgebra(element, worldPoint, deviation: 5, view2spaceScroll: state.currentScale));
-    var newIsInteractive = element.isPointOnEdgeLines(worldPoint, deviation: deviation);
-            // var newIsInteractive = isPointOnLineByAlgebra(element.lines[0], worldPoint,deviation: 5, view2spaceScroll:
-            // state.currentScale);
-            // var viewRect = RectObjectWidget.getViewRect(rectObject, state.currentScale, state.currentOffset, state.viewPortPixelSize);
-            // viewRectEX = RectEX.fromLTWH(viewRect.left.toDecimal(),
-            //     viewRect.top.toDecimal(), viewRect.width.toDecimal(), viewRect.height.toDecimal());
-            // var newIsInteractive =// viewRect.contains(event.position);
-            // isPointOnLineByVector(
-            //     LineSegment(viewRectEX.topLeft, viewRectEX.topRight),
-            //     event.position.toPointEX(), deviation: deviation);
-
+            var newIsInteractive = element.isPointOnEdgeLines(worldPoint, deviation);
             if(oldIsInteractive != newIsInteractive)
               {
                 element.isInteractive = newIsInteractive;

@@ -37,18 +37,9 @@ class RectObject extends RectEX with SpaceObject{
   }
   ///检测点是否在矩形的边缘上.
   bool isPointOnEdgeLines(PointEX point, Decimal deviation){
-    // var realDeviation = deviation?? Decimal.two;
-    // var onTopLine = top - realDeviation <= point.y && point.y <= top + realDeviation;
-    // var onBottomLine = bottom - realDeviation <= point.y && point.y <= bottom + realDeviation;
-    // var onLeftLine = left - realDeviation <= point.x && point.x <= left + realDeviation;
-    // var onRightLine = right - realDeviation <= point.x && point.x <= right + realDeviation;
-    // return onTopLine || onBottomLine || onLeftLine || onRightLine;
     var list = lines;
     for(var l in list){
-      // if(l.isPointOnLine(point,deviation : deviation?? Decimal.two)) {
-      //   return true;
-      // }
-      if(l.isPointOnLineByAlgebra(point,deviation)) {
+      if(l.isPointOnLine(point,deviation: deviation)) {
         return true;
       }
     }
