@@ -38,6 +38,10 @@ class Decimal{
   static Decimal get ten{
     return Decimal().._=10.0*decimalScale;
   }
+  ///精度,double类型的最小值 乘以 放大倍数
+  static Decimal get epsilon{
+    return Decimal().._= double.minPositive*decimalScale;
+  }
   Decimal operator /(Decimal other){
     //方案B,先把被除数放大,防止丢失精度,但是容易被除数过大导致崩溃.
     return Decimal().._=_ * decimalScale /other._;
@@ -75,18 +79,14 @@ class Decimal{
 }
 
 Decimal decimalSqrt(Decimal decimal) {
-  if (decimal == Decimal.zero) return Decimal.zero;
-  if (decimal == Decimal.one) return Decimal.one;
+  if(decimal == Decimal.zero || decimal == Decimal.one) return decimal;
 
-  Decimal z = decimal / Decimal.two;
-  Decimal x = decimal / z;
-
-  while (z < x) {
-    x = z;
-    z = (decimal / x + x) / Decimal.two;
-  }
-
-  return x;
+  Decimal val=decimal,last;
+  do{
+    last = val;
+    val = (val+decimal/val)/Decimal.two;
+  }while((val- last).abs() >= Decimal.epsilon);
+  return val;
 }
 
 Decimal decimalPow(Decimal decimal, int exponent) {

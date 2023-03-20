@@ -99,8 +99,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
 
     for (var element in state.allObjectInViewPort) {
       if(element is! RectObject) continue;
-      var deviation = Decimal.fromInt(5);
-      var rectObject = element as RectObject;
+      var deviation = Decimal.fromInt(2)/state.currentScale;
       // var mousePointOnRectObjectWidget =
       //  RectObjectWidget.getViewRect(rectObject, state.currentScale, state.currentOffset, state.viewPortPixelSize);
       //
@@ -109,15 +108,19 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         switch(element.runtimeType){
           case RectObject:
             var oldIsInteractive = element.isInteractive;
+            // var newIsInteractive =
+            //     element.isPointOnEdgeLines(worldPoint, deviation: deviation);
+            // var newIsInteractive = element.lines.any((element) => isPointOnLineByAlgebra(element, worldPoint, deviation: 5, view2spaceScroll: state.currentScale));
+    var newIsInteractive = element.isPointOnEdgeLines(worldPoint, deviation: deviation);
             // var newIsInteractive = isPointOnLineByAlgebra(element.lines[0], worldPoint,deviation: 5, view2spaceScroll:
             // state.currentScale);
-            var viewRect = RectObjectWidget.getViewRect(rectObject, state.currentScale, state.currentOffset, state.viewPortPixelSize);
-            viewRectEX = RectEX.fromLTWH(viewRect.left.toDecimal(),
-                viewRect.top.toDecimal(), viewRect.width.toDecimal(), viewRect.height.toDecimal());
-            var newIsInteractive =// viewRect.contains(event.position);
-            isPointOnLineByVector(
-                LineSegment(viewRectEX.topLeft, viewRectEX.topRight),
-                event.position.toPointEX(), deviation: deviation);
+            // var viewRect = RectObjectWidget.getViewRect(rectObject, state.currentScale, state.currentOffset, state.viewPortPixelSize);
+            // viewRectEX = RectEX.fromLTWH(viewRect.left.toDecimal(),
+            //     viewRect.top.toDecimal(), viewRect.width.toDecimal(), viewRect.height.toDecimal());
+            // var newIsInteractive =// viewRect.contains(event.position);
+            // isPointOnLineByVector(
+            //     LineSegment(viewRectEX.topLeft, viewRectEX.topRight),
+            //     event.position.toPointEX(), deviation: deviation);
 
             if(oldIsInteractive != newIsInteractive)
               {
