@@ -57,7 +57,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
 
     for (var element in state.allObjectInViewPort) {
       if(element is! RectObject) continue;
-      var deviation = Decimal.fromInt(2)/state.currentScale;
+      var deviation = Decimal.fromInt(1)/state.currentScale;
       // var mousePointOnRectObjectWidget =
       //  RectObjectWidget.getViewRect(rectObject, state.currentScale, state.currentOffset, state.viewPortPixelSize);
       //
