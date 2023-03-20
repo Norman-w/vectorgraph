@@ -5,6 +5,7 @@ import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
 import '../model/geometry/SizeEX.dart';
+import '../model/geometry/rect/RectEX.dart';
 import '../objects/point_object.dart';
 import '../objects/rect_object.dart';
 import 'space.dart';
@@ -106,16 +107,6 @@ Space initSpace(){
     color: Colors.lightGreen,
   )..left = 180..top = 150;
 
-
-  // var RectEX1 = RectEX.fromLTWH(20, 30, 20, 20);
-  // var RectEX2 = RectEX.fromLTWH(50, 60, 15, 20);
-  // var RectEX3 = RectEX.fromLTWH(70, 80, 20, 12);
-  // var RectEX4 = RectEX.fromLTWH(85, 105, 30, 25);
-
-  // layer.addRectEX(RectEX1);
-  // layer.addRectEX(RectEX2);
-  // layer.addRectEX(RectEX3);
-  // layer.addRectEX(RectEX4);
   RectObject rectObject = RectObject.fromCenter(
       center: PointEX(Decimal.zero,Decimal.zero),
       width: Decimal.fromInt(100),
@@ -123,9 +114,11 @@ Space initSpace(){
   layer.addRect(
       rectObject
   );
-  // layer.addRect(
-  //     RectObject.fromCenter(center: PointEX(Decimal.zero,Decimal.zero), width: Decimal.fromInt(400), height: Decimal.fromInt(300))
-  // );
+
+
+  layer.addRect(
+      RectObject.fromCenter(center: PointEX(Decimal.zero,Decimal.zero), width: Decimal.fromInt(400), height: Decimal.fromInt(300))
+  );
 
   layer.addPoint(
       PointObject(Decimal.zero, Decimal.zero)
