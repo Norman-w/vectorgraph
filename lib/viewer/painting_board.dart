@@ -1,27 +1,23 @@
-/**
- * view port 相当于是显示器，显示器的大小是固定的，但是显示器上的内容是可以变化的。
- * 例如，显示器的大小是 800*600，但是显示器上的内容可以是 400*300，也可以是 800*600，也可以是 1600*1200。
- *
- * painting board 相当于是画板，画板的大小也是可以变化的.这个大小和view port是一样的.
- *
- * 可以理解为，view port是显示器，painting board是显示器上的一层支持笔和鼠标以及触摸的绘图板,在这个绘图板上作画会实时显示在显示器上。
- *
- * 如果当前的缩放倍数是2,显示器和绘图板的大小都是800x600, 那么绘图板上的内容就是400x300.
- * 在绘图板上绘制一个100x100像素的矩形,那么实际上在世界空间中,这个矩形的大小就是50x50像素.
- *
- * 相较于视口(显示器,显示区域),绘图板(绘画板,触摸屏,绘图屏)是距离用户更近的一层.但他是透明的.
- */
+/// view port 相当于是显示器，显示器的大小是固定的，但是显示器上的内容是可以变化的。
+/// 例如，显示器的大小是 800*600，但是显示器上的内容可以是 400*300，也可以是 800*600，也可以是 1600*1200。
+///
+/// painting board 相当于是画板，画板的大小也是可以变化的.这个大小和view port是一样的.
+///
+/// 可以理解为，view port是显示器，painting board是显示器上的一层支持笔和鼠标以及触摸的绘图板,在这个绘图板上作画会实时显示在显示器上。
+///
+/// 如果当前的缩放倍数是2,显示器和绘图板的大小都是800x600, 那么绘图板上的内容就是400x300.
+/// 在绘图板上绘制一个100x100像素的矩形,那么实际上在世界空间中,这个矩形的大小就是50x50像素.
+///
+/// 相较于视口(显示器,显示区域),绘图板(绘画板,触摸屏,绘图屏)是距离用户更近的一层.但他是透明的.
 
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vectorgraph/model/geometry/lines/line_segment.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/utils/widget.dart';
 
 import '../model/geometry/points/point_ex.dart';
 import '../model/geometry/rect/RectEX.dart';
-import '../model/geometry/vectors/vector2d.dart';
 import '../objects/rect_object.dart';
 import 'size_listener.dart';
 import 'space.dart';
@@ -59,44 +55,6 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         - PointEX(state.validViewPortSizeOfSpace.width / Decimal.two, state.validViewPortSizeOfSpace.height / Decimal.two)
         - state.currentOffset.toPointEX()/state.currentScale;
 
-    bool isPointOnLine(LineSegment line, PointEX point, {Decimal? deviation})
-    {
-      Vector2D vector1 = line.getVector();
-      PointEX vector2 = point - line.start;
-      Decimal cross = vector1.x * vector2.y - vector1.y * vector2.x;
-      var cd = cross.abs() / vector1.distance(Vector2D.zero);
-      var de = deviation ?? Decimal.one;
-      setState(() {
-        logText2 = 'cd $cd deviation $deviation';
-      });
-      // return cd.abs() < de;
-      return cd < de;
-    }
-
-
-    // 使用向量运算判断点是否在直线上
-    bool isPointOnLineByVector(LineSegment line, PointEX point, {Decimal? deviation}) {
-      Vector2D vector1 = line.getVector();
-      var point2 = point - line.start;
-      Vector2D vector2 = point2.toVector2D();
-      Decimal cross = vector1.cross(vector2);
-      Decimal cd = cross.abs() / vector1.length;
-      return cd < (deviation ?? Decimal.ten);
-    }
-
-    // 使用代数方法判断点是否在直线上
-    bool isPointOnLineByAlgebra(LineSegment line, PointEX point, {double deviation = 5, Decimal? view2spaceScroll}) {
-      view2spaceScroll ??= Decimal.one;
-      Decimal a = line.end.y - line.start.y;
-      Decimal b = line.start.x - line.end.x;
-      Decimal c = line.end.x * line.start.y - line.start.x * line.end.y;
-      Decimal cd = (a * point.x + b * point.y + c).abs() / decimalSqrt(a * a + b * b);
-      return cd < deviation.toDecimal() / view2spaceScroll;
-    }
-
-
-
-
     for (var element in state.allObjectInViewPort) {
       if(element is! RectObject) continue;
       var deviation = Decimal.fromInt(2)/state.currentScale;
@@ -115,7 +73,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
                 ref.read(rectObjectsProvider(element).notifier).updateIsInteractive(newIsInteractive);
                 if(newIsInteractive)
                   {
-                    // print('zai shangmian la ');
+                    // print('on it');
                   }
               }
             break;
@@ -167,6 +125,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
             viewState.currentScale,
             viewState.validViewPortSizeOfSpace
         );
+        debugPrint('鼠标在世界中的坐标 $mousePositionInSpace');
       });
     }
   }
