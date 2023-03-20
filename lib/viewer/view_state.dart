@@ -89,11 +89,7 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
           PointEX.fromOffset(state.currentOffset)/state.currentScale,
           state.validViewPortSizeOfSpace);
   }
-  Space _space = initSpace();
-  init(){
-    _space = initSpace();
-    state.viewPortPixelSize = const Size(800,600);
-  }
+  final Space _space = initSpace();
   PointEX worldPoint = PointEX.zero;
 }
 
