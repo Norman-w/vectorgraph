@@ -51,7 +51,7 @@ class PointEX {
     return decimalSqrt(decimalPow(x - other.x, 2) + decimalPow(y - other.y, 2));
   }
 
-  toOffset(){
+  Offset toOffset(){
     return Offset(x.toDouble(), y.toDouble());
   }
   static PointEX fromOffset(Offset value){

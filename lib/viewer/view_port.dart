@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
 import 'package:vectorgraph/model/geometry/rect/RectEX.dart';
+import 'package:vectorgraph/objects/point_object.dart';
 import 'package:vectorgraph/objects/rect_object.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/utils/utils.dart';
@@ -30,6 +31,14 @@ class ViewPort extends ConsumerWidget {
           if(e.runtimeType == RectObject){
             var rect = e as RectObject;
             return RectObjectWidget(rectObject: rect,
+              viewPortPixelSize: ref.watch(viewStateProvider).viewPortPixelSize,
+              viewPortOffset: ref.watch(viewStateProvider).currentOffset,
+              viewPortScale: ref.watch(viewStateProvider).currentScale,
+            );
+          }
+          else if(e.runtimeType == PointObject){
+            PointObject point = e as PointObject;
+            return PointObjectWidget(pointObject: point,
               viewPortPixelSize: ref.watch(viewStateProvider).viewPortPixelSize,
               viewPortOffset: ref.watch(viewStateProvider).currentOffset,
               viewPortScale: ref.watch(viewStateProvider).currentScale,

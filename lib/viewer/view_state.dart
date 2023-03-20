@@ -115,13 +115,21 @@ Space initSpace(){
       rectObject
   );
 
+  PointObject pointObject = PointObject(Decimal.parse('100'), Decimal.parse("100"))
+  ..radius = Decimal.fromInt(5)
+  ;
+  layer.addPoint(
+      pointObject
+  );
+  print('添加新的点: ${pointObject}');
+
 
   layer.addRect(
       RectObject.fromCenter(center: PointEX(Decimal.zero,Decimal.zero), width: Decimal.fromInt(400), height: Decimal.fromInt(300))
   );
 
   layer.addPoint(
-      PointObject(Decimal.zero, Decimal.zero)
+      PointObject(Decimal.zero, Decimal.ten)..radius = Decimal.fromInt(2)
   );
 
   space.addPaper(paper);

@@ -45,10 +45,25 @@ class Space {
     }
     return result;
   }
-  static PointEX viewPortPointPos2SpacePointPos(Offset? mousePosition,Offset currentOffset, Decimal currentScale, SizeEX validViewPortSizeOfSpace) {
+  static PointEX viewPortPointPos2SpacePointPos(
+      Offset? mousePosition,
+      Offset currentOffset,
+      Decimal currentScale,
+      SizeEX validViewPortSizeOfSpace) {
     return mousePosition == null? PointEX.zero: mousePosition!.toPointEX() / currentScale
         - PointEX(validViewPortSizeOfSpace.width / Decimal.two, validViewPortSizeOfSpace.height / Decimal.two)
         - currentOffset.toPointEX()/currentScale
     ;
+  }
+  static Offset spacePointPos2ViewPortPointPos(
+      PointEX spacePointPos,
+      Offset currentViewPortOffset,
+      Decimal currentScale,
+      Size currentViewPortSize) {
+    var zoomedSpacePointPos = spacePointPos * currentScale;
+    var afterOffset = zoomedSpacePointPos.toOffset() + currentViewPortOffset
+    + Offset(currentViewPortSize.width / 2, currentViewPortSize.height / 2)
+    ;
+    return afterOffset;
   }
 }

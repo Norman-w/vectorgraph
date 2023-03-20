@@ -25,7 +25,7 @@ class LineSegment{
   bool isInBoundingBox(PointEX point,{Decimal? deviation}){
     var RectEX = getBoundingBox();
     RectEX = RectEX.inflate(deviation?? Decimal.two);
-    return RectEX.contains(point.toOffset());
+    return RectEX.contains(point);
   }
   Decimal getStartPointToDistance(PointEX point){
     var vector1 = getVector();
