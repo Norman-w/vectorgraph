@@ -12,6 +12,7 @@ class Decimal{
   Decimal();
   @override
   String toString(){
+    return _.toString();
     return toStringAsFixed(2);
   }
   ///乘以放大倍数以后的值.用于赋值给point的x,y或者其他时候使用.提高运算精度.
@@ -40,7 +41,7 @@ class Decimal{
     // return toDouble().toStringAsFixed(dotCount);
   }
   static Decimal get zero{
-    return Decimal();
+    return Decimal().._=sdk.Decimal.zero;
   }
   static Decimal get one{
     return Decimal().._=sdk.Decimal.one;
@@ -95,18 +96,25 @@ class Decimal{
 }
 
 Decimal decimalSqrt(Decimal decimal) {
-  if (decimal == Decimal.zero) return Decimal.zero;
-  if (decimal == Decimal.one) return Decimal.one;
+  if(decimal == Decimal.zero || decimal == Decimal.one) return decimal;
 
-  Decimal z = decimal / Decimal.two;
-  Decimal x = decimal / z;
-
-  while (z < x) {
-    x = z;
-    z = (decimal / x + x) / Decimal.two;
-  }
-
-  return x;
+  Decimal val=decimal,last;
+  do{
+    last = val;
+    val = (val+decimal/val)/Decimal.two;
+  }while((val- last).abs() >=Decimal.parse('2.220446049250313e-16'));
+  return val;
+  // if (decimal == Decimal.zero) return Decimal.zero;
+  // if (decimal == Decimal.one) return Decimal.one;
+  //
+  // Decimal z = decimal / Decimal.two;
+  // Decimal x = decimal / z;
+  //
+  // while (z < x) {
+  //   x = z;
+  //   z = (decimal / x + x) / Decimal.two;
+  // }
+  // return x;
 }
 
 Decimal decimalPow(Decimal decimal, int exponent) {

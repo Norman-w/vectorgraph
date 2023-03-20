@@ -119,6 +119,24 @@ extension LineSegmentMethods on LineSegment{
     var de = deviation ?? Decimal.one;
     return cd.abs() < de;
   }
+  // 使用向量运算判断点是否在直线上
+  bool isPointOnLineByVector(PointEX point, Decimal deviation) {
+    Vector2D vector1 = getVector();
+    var point2 = point - start;
+    Vector2D vector2 = point2.toVector2D();
+    Decimal cross = vector1.cross(vector2);
+    Decimal cd = cross.abs() / vector1.length;
+    return cd < (deviation ?? Decimal.ten);
+  }
+
+  // 使用代数方法判断点是否在直线上
+  bool isPointOnLineByAlgebra(PointEX point, Decimal deviation) {
+    Decimal a = end.y - start.y;
+    Decimal b = start.x - end.x;
+    Decimal c = end.x * start.y - start.x * end.y;
+    Decimal cd = (a * point.x + b * point.y + c).abs() / decimalSqrt(a * a + b * b);
+    return cd < deviation;
+  }
   // 判断线段相交 老方法
   bool intersect(LineSegment L1, LineSegment L2)
   {
