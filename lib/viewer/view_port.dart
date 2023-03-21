@@ -1,17 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
-import 'package:vectorgraph/model/geometry/rect/RectEX.dart';
 import 'package:vectorgraph/objects/point_object.dart';
 import 'package:vectorgraph/objects/rect_object.dart';
-import 'package:vectorgraph/utils/num_utils.dart';
-import 'package:vectorgraph/utils/utils.dart';
 
 
-import '../model/geometry/SizeEX.dart';
 import '../model/geometry/points/point_ex.dart';
 import '../objects/line_object.dart';
-import 'rect_painter.dart';
 import 'ruler.dart';
 import 'view_state.dart';
 
