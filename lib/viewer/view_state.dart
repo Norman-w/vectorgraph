@@ -72,7 +72,7 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
   set currentScale(Decimal value) {
     state = state.copyWith()
     ..currentScale = value
-      ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX() / state.currentScale
+      ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX() / value
       ..allObjectInViewPort = _space.getInViewPortObjects(
           PointEX.fromOffset(state.currentOffset)/state.currentScale,
           state.validViewPortSizeOfSpace);
