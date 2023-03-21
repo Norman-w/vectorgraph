@@ -5,6 +5,7 @@ import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
 import '../model/geometry/SizeEX.dart';
+import '../objects/bezier_object.dart';
 import '../objects/line_object.dart';
 import '../objects/point_object.dart';
 import '../objects/rect_object.dart';
@@ -100,6 +101,7 @@ Space initSpace(){
   var space = Space();
   var layer1 = SpaceLayer(0);
   var layer2 = SpaceLayer(1);
+  var layer3 = SpaceLayer(2);
 
 
 
@@ -143,10 +145,35 @@ Space initSpace(){
     PointEX(Decimal.fromInt(50), Decimal.fromInt(-50)),
   ));
 
+
+  //region 第三层
+  try {
+    var start = PointEX(Decimal.fromInt(0), Decimal.fromInt(0));
+    var end = PointEX(Decimal.fromInt(200), Decimal.fromInt(150));
+    var bezier = BezierObject(start, end);
+    // print(bezier);
+    layer3.addBezier(bezier);
+
+    layer3.addBezier(BezierObject(
+      PointEX(Decimal.fromInt(0), Decimal.fromInt(0)),
+      PointEX(Decimal.fromInt(-200), Decimal.fromInt(150)),
+    ));
+
+    layer3.addBezier(BezierObject(
+      PointEX(Decimal.fromInt(100), Decimal.fromInt(0)),
+      PointEX(Decimal.fromInt(300), Decimal.fromInt(-150)),
+    ));
+  } catch (e) {
+    print('添加贝塞尔曲线发生错误');
+    print(e);
+  }
+  //endregion
+
   space.addPaper(paper);
 
   space.layers.add(layer1);
   space.layers.add(layer2);
+  space.layers.add(layer3);
 
   return space;
 }

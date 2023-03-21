@@ -199,6 +199,11 @@ class RulerPainter extends CustomPainter {
 
 
     var subDividesStart = subDivideList.length - 1;
+    if(subDividesStart < 1)
+      {
+        // print("subDividesStart < 1");
+        return;
+      }
     //最长的线的间隔
     var subDivideLongest10000 = subDivideList[subDividesStart] * 10000;
     //次长的线的间隔

@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vectorgraph/objects/line_object.dart';
-import 'package:vectorgraph/objects/rect_object.dart';
 class LinesPaint extends StatelessWidget {
   final List<Offset> linesPoints;
   final Color color;
@@ -26,7 +23,7 @@ class LinesPainter extends CustomPainter {
     if(linesPoints.length%2!=0){
       debugPrint("点数应该是双数");
     }
-    for(var i=0;i<linesPoints.length; i+=2){
+    for(var i=0;i<linesPoints.length-1; i+=1){
       var start = linesPoints[i];
       var end = linesPoints[i+1];
       canvas.drawLine(start, end, paint);

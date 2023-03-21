@@ -6,6 +6,7 @@ import 'package:vectorgraph/objects/rect_object.dart';
 
 
 import '../model/geometry/points/point_ex.dart';
+import '../objects/bezier_object.dart';
 import '../objects/line_object.dart';
 import 'ruler.dart';
 import 'view_state.dart';
@@ -44,6 +45,15 @@ class ViewPort extends ConsumerWidget {
       else if(e.runtimeType == LineObject){
         LineObject line = e as LineObject;
         return LineObjectWidget(lineObject: line,
+          viewPortPixelSize: state.viewPortPixelSize,
+          viewPortOffset: state.currentOffset,
+          viewPortScale: state.currentScale,
+          // normalColor: Colors.deepOrange,
+        );
+      }
+      else if(e.runtimeType == BezierObject){
+        BezierObject bezier = e as BezierObject;
+        return BezierObjectWidget(bezierObject: bezier,
           viewPortPixelSize: state.viewPortPixelSize,
           viewPortOffset: state.currentOffset,
           viewPortScale: state.currentScale,

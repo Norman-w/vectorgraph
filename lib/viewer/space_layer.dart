@@ -3,6 +3,7 @@
 import 'package:vectorgraph/objects/line_object.dart';
 import 'package:vectorgraph/objects/point_object.dart';
 import '../model/geometry/rect/RectEX.dart';
+import '../objects/bezier_object.dart';
 import '../objects/rect_object.dart';
 import '../objects/space_object.dart';
 
@@ -17,6 +18,9 @@ class SpaceLayer{
   }
   void addLine(LineObject line){
     objects.add(line);
+  }
+  void addBezier(BezierObject bezier){
+    objects.add(bezier);
   }
   void addPoint(PointObject point){
     objects.add(point);

@@ -19,6 +19,7 @@ import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/utils/widget.dart';
 
 import '../model/geometry/points/point_ex.dart';
+import '../objects/bezier_object.dart';
 import '../objects/point_object.dart';
 import '../objects/rect_object.dart';
 import 'size_listener.dart';
@@ -82,6 +83,20 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
             {
               line.isInteractive = newIsInteractive;
               ref.read(lineObjectsProvider(line).notifier).updateIsInteractive(newIsInteractive);
+              if(newIsInteractive)
+              {
+                // print('on it');
+              }
+            }
+            break;
+          case BezierObject:
+            var bezier = element as BezierObject;
+            var oldIsInteractive = bezier.isInteractive;
+            var newIsInteractive = bezier.isPointOnLine(worldPoint, deviation:deviation);
+            if(oldIsInteractive != newIsInteractive)
+            {
+              bezier.isInteractive = newIsInteractive;
+              ref.read(bezierObjectsProvider(bezier).notifier).updateIsInteractive(newIsInteractive);
               if(newIsInteractive)
               {
                 // print('on it');
