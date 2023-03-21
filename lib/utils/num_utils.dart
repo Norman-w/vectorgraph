@@ -39,6 +39,12 @@ class Decimal{
   static Decimal get ten{
     return Decimal().._=10.0*decimalScale;
   }
+  static Decimal get infinite{
+    return Decimal().._=double.infinity * decimalScale;
+  }
+  static Decimal get negativeInfinity{
+    return Decimal().._=double.negativeInfinity * decimalScale;
+  }
   ///精度,double类型的最小值 乘以 放大倍数
   static Decimal get epsilon{
     return Decimal().._= double.minPositive*decimalScale;

@@ -15,6 +15,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/lines/line_segment.dart';
 import 'package:vectorgraph/objects/line_object.dart';
+import 'package:vectorgraph/objects/polygon_object.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/utils/widget.dart';
 
@@ -97,6 +98,20 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
             {
               bezier.isInteractive = newIsInteractive;
               ref.read(bezierObjectsProvider(bezier).notifier).updateIsInteractive(newIsInteractive);
+              if(newIsInteractive)
+              {
+                // print('on it');
+              }
+            }
+            break;
+          case PolygonObject:
+            var polygon = element as PolygonObject;
+            var oldIsInteractive = polygon.isInteractive;
+            var newIsInteractive = polygon.isPointOnEdgeLines(worldPoint, deviation:deviation);
+            if(oldIsInteractive != newIsInteractive)
+            {
+              polygon.isInteractive = newIsInteractive;
+              ref.read(polygonObjectsProvider(polygon).notifier).updateIsInteractive(newIsInteractive);
               if(newIsInteractive)
               {
                 // print('on it');

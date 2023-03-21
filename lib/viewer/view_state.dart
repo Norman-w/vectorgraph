@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
+import 'package:vectorgraph/objects/polygon_object.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
@@ -102,6 +103,7 @@ Space initSpace(){
   var layer1 = SpaceLayer(0);
   var layer2 = SpaceLayer(1);
   var layer3 = SpaceLayer(2);
+  var layer4 = SpaceLayer(3);
 
 
 
@@ -111,6 +113,8 @@ Space initSpace(){
     height: 300,
     color: Colors.lightGreen,
   )..left = 180..top = 150;
+
+  //region 第一层矩形和点
 
   RectObject rectObject = RectObject.fromCenter(
       center: PointEX(Decimal.zero,Decimal.zero),
@@ -135,7 +139,9 @@ Space initSpace(){
       PointObject(Decimal.zero, Decimal.ten)..radius = Decimal.fromInt(2)
   );
 
+  //endregion
 
+  //region 第二层 线段
   layer2.addLine(LineObject(
     PointEX(Decimal.fromInt(-200), Decimal.fromInt(-150)),
     PointEX(Decimal.fromInt(-50), Decimal.fromInt(-50)),
@@ -145,8 +151,9 @@ Space initSpace(){
     PointEX(Decimal.fromInt(50), Decimal.fromInt(-50)),
   ));
 
+  //endregion
 
-  //region 第三层
+  //region 第三层 贝塞尔曲线
   try {
     var start = PointEX(Decimal.fromInt(0), Decimal.fromInt(0));
     var end = PointEX(Decimal.fromInt(200), Decimal.fromInt(150));
@@ -169,11 +176,25 @@ Space initSpace(){
   }
   //endregion
 
+  //region 第四层 多边形
+  PolygonObject polygonObject = PolygonObject(
+    [
+      PointEX(Decimal.fromInt(-80), Decimal.fromInt(-80)),
+      PointEX(Decimal.fromInt(0), Decimal.fromInt(-100)),
+      PointEX(Decimal.fromInt(80), Decimal.fromInt(-80)),
+      PointEX(Decimal.fromInt(100), Decimal.fromInt(80)),
+      PointEX(Decimal.fromInt(-100), Decimal.fromInt(80)),
+    ]
+  );
+  layer4.addPolygon(polygonObject);
+  //endregion
+
   space.addPaper(paper);
 
   space.layers.add(layer1);
   space.layers.add(layer2);
   space.layers.add(layer3);
+  space.layers.add(layer4);
 
   return space;
 }

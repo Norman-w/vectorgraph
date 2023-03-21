@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import '../lines/line_segment.dart';
 import '../points/point_ex.dart';
+import '../rect/RectEX.dart';
 
 class Polygon{
   ///构造函数,由点集合创建一个多边形
@@ -147,5 +148,25 @@ class Polygon{
       list.add(LineSegment(p1,p2));
     }
     return list;
+  }
+
+  RectEX get bounds {
+    Decimal top = Decimal.infinite,left = Decimal.infinite,right = Decimal.negativeInfinity,bottom = Decimal.negativeInfinity;
+    for(var i=0;i<points.length;i++){
+      var current = points[i];
+      if(current.y<top){
+        top = current.y;
+      }
+      if(current.y>bottom){
+        bottom = current.y;
+      }
+      if(current.x<left){
+        left = current.x;
+      }
+      if(current.x>right){
+        right = current.x;
+      }
+    }
+    return RectEX.fromLTRB(left, top, right, bottom);
   }
 }

@@ -2,6 +2,7 @@
 
 import 'package:vectorgraph/objects/line_object.dart';
 import 'package:vectorgraph/objects/point_object.dart';
+import 'package:vectorgraph/objects/polygon_object.dart';
 import '../model/geometry/rect/RectEX.dart';
 import '../objects/bezier_object.dart';
 import '../objects/rect_object.dart';
@@ -24,6 +25,9 @@ class SpaceLayer{
   }
   void addPoint(PointObject point){
     objects.add(point);
+  }
+  void addPolygon(PolygonObject polygonObject){
+    objects.add(polygonObject);
   }
   //get all rects
   // List<Rect> get rectangles => objects.whereType<Rect>().toList();
