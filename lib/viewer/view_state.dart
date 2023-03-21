@@ -66,7 +66,7 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
     // ..validViewPortSizeOfSpace = SizeEX.fromSize(state.viewPortPixelSize) / state.currentScale
     ..validViewPortSizeOfSpace = SizeEX.fromSize(value.size) / state.currentScale
     ..allObjectInViewPort = _space.getInViewPortObjects(
-        PointEX.fromOffset(state.currentOffset)/state.currentScale,
+        -PointEX.fromOffset(state.currentOffset)/state.currentScale,
         state.validViewPortSizeOfSpace);
   }
   set currentScale(Decimal value) {
@@ -74,14 +74,14 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
     ..currentScale = value
       ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX() / value
       ..allObjectInViewPort = _space.getInViewPortObjects(
-          PointEX.fromOffset(state.currentOffset)/state.currentScale,
+          -PointEX.fromOffset(state.currentOffset)/state.currentScale,
           state.validViewPortSizeOfSpace);
   }
   set currentOffset(Offset value) {
     state = state.copyWith()..currentOffset = value
     ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX()/state.currentScale
       ..allObjectInViewPort = _space.getInViewPortObjects(
-          PointEX.fromOffset(state.currentOffset)/state.currentScale,
+          -PointEX.fromOffset(state.currentOffset)/state.currentScale,
           state.validViewPortSizeOfSpace);
   }
   set viewPortPixelSize(Size value) {
@@ -89,7 +89,7 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
       ..viewPortPixelSize = value
       ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX() / state.currentScale
       ..allObjectInViewPort = _space.getInViewPortObjects(
-          PointEX.fromOffset(state.currentOffset)/state.currentScale,
+          -PointEX.fromOffset(state.currentOffset)/state.currentScale,
           state.validViewPortSizeOfSpace);
   }
   final Space _space = initSpace();

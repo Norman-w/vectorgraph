@@ -36,11 +36,6 @@ class Space {
               viewPortShowingSpaceRectCenter.y - showingSpaceRectSize.height / Decimal.two,
               showingSpaceRectSize.width,
               showingSpaceRectSize.height)
-      //   Rect.fromCenter(
-      //       center: viewPortCenter,
-      //       width: viewPortSize.width,
-      //       height: viewPortSize.height
-      // )
       ));
     }
     return result;
