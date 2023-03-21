@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import 'package:vectorgraph/objects/line_object.dart';
 import 'package:vectorgraph/objects/point_object.dart';
 
 import '../model/geometry/points/point_ex.dart';
@@ -17,6 +18,9 @@ class SpaceLayer{
   SpaceLayer(this.zIndex, {this.name = ''});
   void addRect(RectObject rect){
     objects.add(rect);
+  }
+  void addLine(LineObject line){
+    objects.add(line);
   }
   void addPoint(PointObject point){
     objects.add(point);

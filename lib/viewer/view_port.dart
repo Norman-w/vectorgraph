@@ -10,6 +10,7 @@ import 'package:vectorgraph/utils/utils.dart';
 
 import '../model/geometry/SizeEX.dart';
 import '../model/geometry/points/point_ex.dart';
+import '../objects/line_object.dart';
 import 'rect_painter.dart';
 import 'ruler.dart';
 import 'view_state.dart';
@@ -39,6 +40,15 @@ class ViewPort extends ConsumerWidget {
           else if(e.runtimeType == PointObject){
             PointObject point = e as PointObject;
             return PointObjectWidget(pointObject: point,
+              viewPortPixelSize: ref.watch(viewStateProvider).viewPortPixelSize,
+              viewPortOffset: ref.watch(viewStateProvider).currentOffset,
+              viewPortScale: ref.watch(viewStateProvider).currentScale,
+              // normalColor: Colors.deepOrange,
+            );
+          }
+          else if(e.runtimeType == LineObject){
+            LineObject line = e as LineObject;
+            return LineObjectWidget(lineObject: line,
               viewPortPixelSize: ref.watch(viewStateProvider).viewPortPixelSize,
               viewPortOffset: ref.watch(viewStateProvider).currentOffset,
               viewPortScale: ref.watch(viewStateProvider).currentScale,

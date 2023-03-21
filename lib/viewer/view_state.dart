@@ -5,6 +5,7 @@ import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
 import '../model/geometry/SizeEX.dart';
+import '../objects/line_object.dart';
 import '../objects/point_object.dart';
 import '../objects/rect_object.dart';
 import 'space.dart';
@@ -128,6 +129,12 @@ Space initSpace(){
   layer.addPoint(
       PointObject(Decimal.zero, Decimal.ten)..radius = Decimal.fromInt(2)
   );
+
+
+  layer.addLine(LineObject(
+    PointEX(Decimal.fromInt(-200), Decimal.fromInt(-150)),
+    PointEX(Decimal.fromInt(-50), Decimal.fromInt(-50)),
+  ));
 
   space.addPaper(paper);
 
