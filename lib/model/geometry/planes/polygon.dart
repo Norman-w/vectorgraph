@@ -4,8 +4,10 @@ import '../lines/line_segment.dart';
 import '../points/point_ex.dart';
 
 class Polygon{
+  ///构造函数,由点集合创建一个多边形
   Polygon(this.points);
   List<PointEX> points;
+  ///判断当前多边形是否有一个顶点是所给定的入参
   bool containsEndPoint(PointEX point){
     for(var p in points){
       if(point.x == p.x && point.y == p.y) {
@@ -14,13 +16,16 @@ class Polygon{
     }
     return false;
   }
+  ///判断点是否在当前这个多边形中
   bool isPointIn(PointEX point) {
     return Polygon.isPointInPolygon(point, points);
   }
+  ///判断x,y标记的坐标是否在这个多边形中
   bool isPointXYIn(Decimal x, Decimal y)
   {
     return isPointIn(PointEX(x, y));
   }
+  ///判断当前的多边形是否包含另外一个多边形
   bool isContains(Polygon polygon){
     for(var p in polygon.points){
       if(!isPointIn(p)){
@@ -29,6 +34,7 @@ class Polygon{
     }
     return true;
   }
+  ///一个多边形由pts所指的的所有点围成,判断point是否在这个多边形中
   static bool isPointInPolygon(PointEX point, List<PointEX> pts)
   {
     int N = pts.length;
@@ -114,27 +120,23 @@ class Polygon{
       return true;
     }
   }
-  ///移动当前的对象并创建一个新实例
+  ///移动当前的对象
   void offset(Decimal x,Decimal y)
   {
-    // var newPath = PolygonalPath(size:size,count:count);
-    // for(var p in newPath.points)
-    //   {
-    //     p = p + Point(x,y);
-    //   }
     for(var i=0;i<points.length;i++){
       points[i].x += x;
       points[i].y += y;
     }
   }
 
+  ///转换成视图格式的Path(不包含变换,只是格式转换)
   Path getPath()
   {
     var path = Path();
     path.addPolygon(points.map((e) => Offset(e.x.toDouble(),e.y.toDouble())).toList(), true);
     return path;
   }
-
+  ///获取围成多边形的线段列表
   List<LineSegment> getLineSegments()
   {
     var list = <LineSegment>[];
