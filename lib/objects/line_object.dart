@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
-import 'package:vectorgraph/utils/utils.dart';
-import 'package:vectorgraph/viewer/rect_painter.dart';
-
-import '../model/geometry/SizeEX.dart';
 import '../model/geometry/lines/line_segment.dart';
 import '../viewer/line_painter.dart';
 import '../viewer/space.dart';
@@ -23,7 +19,7 @@ class LineObject extends LineSegment with SpaceObject{
     if(start == null || end == null){
       return LineObject(PointEX.zero, PointEX.zero);
     }
-    return LineObject(start!,end!);
+    return LineObject(start,end);
   }
 
   @override
@@ -49,10 +45,10 @@ class LineObjectWidget extends ConsumerWidget{
   final Decimal viewPortScale;
   final Offset viewPortOffset;
   final Size viewPortPixelSize;
-  Color normalColor;// = Colors.white60;
-  Color hoverColor;// = Colors.white;
-  Color focusColor;// = Colors.blue;
-  LineObjectWidget({super.key,
+  final Color normalColor;// = Colors.white60;
+  final Color hoverColor;// = Colors.white;
+  final Color focusColor;// = Colors.blue;
+  const LineObjectWidget({super.key,
     required this.lineObject,
     required this.viewPortScale,
     required this.viewPortOffset,

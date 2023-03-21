@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/geometry/rect/RectEX.dart';
 import '../model/geometry/points/point_ex.dart';
 import '../utils/num_utils.dart';
-import '../utils/utils.dart';
 import '../viewer/points_painter.dart';
 import '../viewer/space.dart';
 import 'space_object.dart';
@@ -43,10 +42,10 @@ class PointObjectWidget extends ConsumerWidget{
   final Decimal viewPortScale;
   final Offset viewPortOffset;
   final Size viewPortPixelSize;
-  Color normalColor;// = Colors.white60;
-  Color hoverColor;// = Colors.white;
-  Color focusColor;// = Colors.blue;
-  PointObjectWidget(
+  final Color normalColor;// = Colors.white60;
+  final Color hoverColor;// = Colors.white;
+  final Color focusColor;// = Colors.blue;
+  const PointObjectWidget(
   {
     required this.pointObject,
     required this.viewPortScale,

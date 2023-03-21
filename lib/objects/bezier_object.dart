@@ -54,10 +54,10 @@ class BezierObjectWidget extends ConsumerWidget{
   final Decimal viewPortScale;
   final Offset viewPortOffset;
   final Size viewPortPixelSize;
-  Color normalColor;// = Colors.white60;
-  Color hoverColor;// = Colors.white;
-  Color focusColor;// = Colors.blue;
-  BezierObjectWidget({super.key,
+  final Color normalColor;// = Colors.white60;
+  final Color hoverColor;// = Colors.white;
+  final Color focusColor;// = Colors.blue;
+  const BezierObjectWidget({super.key,
     required this.bezierObject,
     required this.viewPortScale,
     required this.viewPortOffset,
