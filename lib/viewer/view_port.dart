@@ -22,31 +22,31 @@ class ViewPort extends ConsumerWidget {
     Rect rulerRect = Rect.fromCenter(center: center, width: width, height: height);
 
 
-    var allObjectInViewPort = ref.watch(viewStateProvider).allObjectInViewPort;
+    var allObjectInViewPort = state.allObjectInViewPort;
     var allObjectInViewPortWidget = allObjectInViewPort.map((e) {
       if(e.runtimeType == RectObject){
         var rect = e as RectObject;
         return RectObjectWidget(rectObject: rect,
-          viewPortPixelSize: ref.watch(viewStateProvider).viewPortPixelSize,
-          viewPortOffset: ref.watch(viewStateProvider).currentOffset,
-          viewPortScale: ref.watch(viewStateProvider).currentScale,
+          viewPortPixelSize: state.viewPortPixelSize,
+          viewPortOffset: state.currentOffset,
+          viewPortScale: state.currentScale,
         );
       }
       else if(e.runtimeType == PointObject){
         PointObject point = e as PointObject;
         return PointObjectWidget(pointObject: point,
-          viewPortPixelSize: ref.watch(viewStateProvider).viewPortPixelSize,
-          viewPortOffset: ref.watch(viewStateProvider).currentOffset,
-          viewPortScale: ref.watch(viewStateProvider).currentScale,
+          viewPortPixelSize: state.viewPortPixelSize,
+          viewPortOffset: state.currentOffset,
+          viewPortScale: state.currentScale,
           // normalColor: Colors.deepOrange,
         );
       }
       else if(e.runtimeType == LineObject){
         LineObject line = e as LineObject;
         return LineObjectWidget(lineObject: line,
-          viewPortPixelSize: ref.watch(viewStateProvider).viewPortPixelSize,
-          viewPortOffset: ref.watch(viewStateProvider).currentOffset,
-          viewPortScale: ref.watch(viewStateProvider).currentScale,
+          viewPortPixelSize: state.viewPortPixelSize,
+          viewPortOffset: state.currentOffset,
+          viewPortScale: state.currentScale,
           // normalColor: Colors.deepOrange,
         );
       }
@@ -58,8 +58,8 @@ class ViewPort extends ConsumerWidget {
         //绘制所有物件(通过物件转换成widget)
         ...allObjectInViewPortWidget,
         SizedBox(
-            width: double.infinity,
-            height: double.infinity,
+            width: state.viewPortPixelSize.width,
+            height: state.viewPortPixelSize.height,
             child: Ruler(
                 rulerRect
             )
