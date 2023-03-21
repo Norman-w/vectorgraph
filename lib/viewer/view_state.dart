@@ -98,7 +98,8 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
 
 Space initSpace(){
   var space = Space();
-  var layer = SpaceLayer(0);
+  var layer1 = SpaceLayer(0);
+  var layer2 = SpaceLayer(1);
 
 
 
@@ -113,34 +114,39 @@ Space initSpace(){
       center: PointEX(Decimal.zero,Decimal.zero),
       width: Decimal.fromInt(100),
       height: Decimal.fromInt(100));
-  layer.addRect(
+  layer1.addRect(
       rectObject
   );
 
-  layer.addRect(
+  layer1.addRect(
       RectObject.fromCenter(center: PointEX(Decimal.zero,Decimal.zero), width: Decimal.fromInt(400), height: Decimal.fromInt(300))
   );
 
   PointObject pointObject = PointObject(Decimal.parse('50'), Decimal.parse("50"))
     ..radius = Decimal.fromInt(20)
   ;
-  layer.addPoint(
+  layer1.addPoint(
       pointObject
   );
 
-  layer.addPoint(
+  layer1.addPoint(
       PointObject(Decimal.zero, Decimal.ten)..radius = Decimal.fromInt(2)
   );
 
 
-  layer.addLine(LineObject(
+  layer2.addLine(LineObject(
     PointEX(Decimal.fromInt(-200), Decimal.fromInt(-150)),
     PointEX(Decimal.fromInt(-50), Decimal.fromInt(-50)),
+  ));
+  layer2.addLine(LineObject(
+    PointEX(Decimal.fromInt(200), Decimal.fromInt(-150)),
+    PointEX(Decimal.fromInt(50), Decimal.fromInt(-50)),
   ));
 
   space.addPaper(paper);
 
-  space.layers.add(layer);
+  space.layers.add(layer1);
+  space.layers.add(layer2);
 
   return space;
 }
