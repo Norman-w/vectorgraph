@@ -1,11 +1,7 @@
 //space中包含多个层,层中再包含图元和组,图元由点和线等组成.组就是图元的集合
 
-import 'dart:ui';
-
 import 'package:vectorgraph/objects/line_object.dart';
 import 'package:vectorgraph/objects/point_object.dart';
-
-import '../model/geometry/points/point_ex.dart';
 import '../model/geometry/rect/RectEX.dart';
 import '../objects/rect_object.dart';
 import '../objects/space_object.dart';
@@ -29,6 +25,7 @@ class SpaceLayer{
   // List<Rect> get rectangles => objects.whereType<Rect>().toList();
 
   List<SpaceObject> getInBounds(RectEX bounds){
+    // print('获取范围内的对象,范围是: ${bounds}');
     var b = RectEX.fromLTWH(bounds.left, bounds.top, bounds.width, bounds.height);
     // print(b);
     return objects.where((element) {

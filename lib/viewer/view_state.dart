@@ -62,7 +62,9 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
     state = state.copyWith()
     ..bound = value
     ..viewPortPixelSize = value.size
-    ..validViewPortSizeOfSpace = SizeEX.fromSize(state.viewPortPixelSize) / state.currentScale
+      //注意这里很关键,如果是使用state.viewPortPixelSize,获取到的是旧的值,而不是最新的值,所以要使用value.size
+    // ..validViewPortSizeOfSpace = SizeEX.fromSize(state.viewPortPixelSize) / state.currentScale
+    ..validViewPortSizeOfSpace = SizeEX.fromSize(value.size) / state.currentScale
     ..allObjectInViewPort = _space.getInViewPortObjects(
         PointEX.fromOffset(state.currentOffset)/state.currentScale,
         state.validViewPortSizeOfSpace);

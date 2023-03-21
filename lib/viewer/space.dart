@@ -50,7 +50,7 @@ class Space {
       Offset currentOffset,
       Decimal currentScale,
       SizeEX validViewPortSizeOfSpace) {
-    return mousePosition == null? PointEX.zero: mousePosition!.toPointEX() / currentScale
+    return mousePosition == null? PointEX.zero: mousePosition.toPointEX() / currentScale
         - PointEX(validViewPortSizeOfSpace.width / Decimal.two, validViewPortSizeOfSpace.height / Decimal.two)
         - currentOffset.toPointEX()/currentScale
     ;

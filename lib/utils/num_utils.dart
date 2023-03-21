@@ -4,7 +4,8 @@ class Decimal{
   Decimal();
   @override
   String toString(){
-    return toStringAsFixed(2);
+    // return toStringAsFixed(2);
+    return (_/decimalScale).toString();
   }
   ///乘以放大倍数以后的值.用于赋值给point的x,y或者其他时候使用.提高运算精度.
   double get accurateValue{
