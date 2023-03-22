@@ -4,6 +4,7 @@ import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
 import 'package:vectorgraph/objects/line_object.dart';
 import 'package:vectorgraph/objects/point_object.dart';
 import 'package:vectorgraph/objects/polygon_object.dart';
+import 'package:vectorgraph/objects/regular_polygonal_star.dart';
 import '../model/geometry/rect/RectEX.dart';
 import '../objects/bezier_object.dart';
 import '../objects/rect_object.dart';
@@ -32,6 +33,9 @@ class SpaceLayer{
   }
   void addEquilateralPolygon(EquilateralPolygonObject equilateralPolygonObject){
     objects.add(equilateralPolygonObject);
+  }
+  void addRegularPolygonalStart(RegularPolygonalStarObject regularPolygonalStarObject){
+    objects.add(regularPolygonalStarObject);
   }
   //get all rects
   // List<Rect> get rectangles => objects.whereType<Rect>().toList();

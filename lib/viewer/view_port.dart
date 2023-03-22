@@ -5,6 +5,7 @@ import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
 import 'package:vectorgraph/objects/point_object.dart';
 import 'package:vectorgraph/objects/polygon_object.dart';
 import 'package:vectorgraph/objects/rect_object.dart';
+import 'package:vectorgraph/objects/regular_polygonal_star.dart';
 
 
 import '../model/geometry/points/point_ex.dart';
@@ -80,6 +81,15 @@ class ViewPort extends ConsumerWidget {
       else if(e.runtimeType == EquilateralPolygonObject){
         EquilateralPolygonObject polygonObject = e as EquilateralPolygonObject;
         return EquilateralPolygonObjectWidget(equilateralPolygonObject: polygonObject,
+          viewPortPixelSize: state.viewPortPixelSize,
+          viewPortOffset: state.currentOffset,
+          viewPortScale: state.currentScale,
+          // normalColor: Colors.deepOrange,
+        );
+      }
+      else if(e.runtimeType == RegularPolygonalStarObject){
+        RegularPolygonalStarObject star = e as RegularPolygonalStarObject;
+        return RegularPolygonalStarWidget(polygonObject: star,
           viewPortPixelSize: state.viewPortPixelSize,
           viewPortOffset: state.currentOffset,
           viewPortScale: state.currentScale,

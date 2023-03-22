@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
 import 'package:vectorgraph/objects/polygon_object.dart';
+import 'package:vectorgraph/objects/regular_polygonal_star.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
@@ -108,6 +109,7 @@ Space initSpace(){
   var layer3 = SpaceLayer(2);
   var layer4 = SpaceLayer(3);
   var layer5 = SpaceLayer(4);
+  var layer6 = SpaceLayer(6);
 
 
 
@@ -233,17 +235,31 @@ Space initSpace(){
 
 
   //使用随机大小30-300, 随机边数3-10的多边形 在 x=-2000~+2000, y=-1000~+1000的范围内随机生成多边形并添加到layer5
+  // for(int i=0;i<1000;i++){
+  //   var size = Decimal.fromInt(Random().nextInt(270)+30);
+  //   var count = Random().nextInt(8)+3;
+  //   var x = Decimal.fromInt(Random().nextInt(40000)-20000);
+  //   var y = Decimal.fromInt(Random().nextInt(20000)-10000);
+  //   var point = PointEX(x,y);
+  //   EquilateralPolygonObject polygonObject = EquilateralPolygonObject(
+  //       point,
+  //       size: size,count:count
+  //   );
+  //   layer5.addEquilateralPolygon(polygonObject);
+  // }
+  //endregion
+
+  //region 第六层,正多角星
   for(int i=0;i<1000;i++){
     var size = Decimal.fromInt(Random().nextInt(270)+30);
     var count = Random().nextInt(8)+3;
     var x = Decimal.fromInt(Random().nextInt(40000)-20000);
     var y = Decimal.fromInt(Random().nextInt(20000)-10000);
     var point = PointEX(x,y);
-    EquilateralPolygonObject polygonObject = EquilateralPolygonObject(
-        point,
-        size: size,count:count
+    RegularPolygonalStarObject regularPolygonalStarObject = RegularPolygonalStarObject(
+        point,count,size,size/Decimal.two
     );
-    layer5.addEquilateralPolygon(polygonObject);
+    layer6.addRegularPolygonalStart(regularPolygonalStarObject);
   }
   //endregion
 
@@ -254,6 +270,7 @@ Space initSpace(){
   space.layers.add(layer3);
   space.layers.add(layer4);
   space.layers.add(layer5);
+  space.layers.add(layer6);
 
   return space;
 }
