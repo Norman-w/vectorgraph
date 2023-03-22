@@ -13,8 +13,8 @@ class PointObject extends PointEX with SpaceObject{
     this.radius = radius ?? Decimal.fromInt(1);
   }
   @override
-  PointObject copyWith({Decimal? x, Decimal? y, Decimal? radius}){
-    return PointObject(x ?? this.x, y ?? this.y, radius: radius ?? this.radius);
+  PointObject copyWith(){
+    return PointObject(x, y, radius:radius);
   }
 
   @override

@@ -16,8 +16,8 @@ class EquilateralPolygonObject extends EquilateralPolygon with SpaceObject {
   EquilateralPolygonObject(this._position, {super.size, super.count});
   // RectObject.fromCenter({required super.center, required super.width, required super.height}) : super.fromCenter();
   @override
-  EquilateralPolygonObject copyWith({PointEX? position, Decimal? size, int? sideCount}) {
-    return EquilateralPolygonObject(position??PointEX.zero, size:size, count:sideCount??3);
+  EquilateralPolygonObject copyWith() {
+    return EquilateralPolygonObject(_position, size:size, count:count);
   }
 
   bool isPointOnEdgeLines(PointEX point, {Decimal? deviation}) {

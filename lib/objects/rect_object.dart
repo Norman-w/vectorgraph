@@ -58,8 +58,8 @@ class RectObject extends RectEX with SpaceObject{
     return false;
   }
   @override
-  RectObject copyWith({PointEX? center, Decimal? width, Decimal? height, Decimal? radius, Decimal? left, Decimal? top, Decimal? right, Decimal? bottom}){
-    return RectObject.fromLTWH(left ?? this.left, top ?? this.top, width ?? this.width, height ?? this.height);
+  RectObject copyWith(){
+    return RectObject.fromLTWH(left, top, width, height);
   }
 
   @override

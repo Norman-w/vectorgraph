@@ -14,9 +14,8 @@ class BezierObject extends Bezier with SpaceObject{
 
   // RectObject.fromCenter({required super.center, required super.width, required super.height}) : super.fromCenter();
   @override
-  ///构造函数,给定的参数是贝塞尔曲线的所在位置 也就是起点,和终点 也就是连接的目标的位置
-  BezierObject copyWith({PointEX? position, PointEX? end}){
-    return BezierObject(position ?? this.position, end ?? this.end);
+  BezierObject copyWith(){
+    return BezierObject(position, end);
   }
 
   bool isPointOnLine(PointEX point, {Decimal? deviation}){

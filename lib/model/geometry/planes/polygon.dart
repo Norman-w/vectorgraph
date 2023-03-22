@@ -37,7 +37,7 @@ class Polygon{
     }
     _bounds = RectEX.fromLTRB(left, top, right, bottom);
     _points = value;
-    print('多边形的bounds:$_bounds');
+    // print('多边形的bounds:$_bounds');
 
     //region 计算中心点
     // try {

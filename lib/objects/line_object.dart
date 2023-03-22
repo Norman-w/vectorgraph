@@ -19,10 +19,7 @@ class LineObject extends LineSegment with SpaceObject{
     _selfBounds = RectEX.fromPoints(_position, end).shift(_position.x, _position.y);
   }
   @override
-  LineObject copyWith({PointEX? position, PointEX? end}){
-    if(position == null || end == null){
-      return LineObject(PointEX.zero, PointEX.zero);
-    }
+  LineObject copyWith(){
     return LineObject(start,end);
   }
 

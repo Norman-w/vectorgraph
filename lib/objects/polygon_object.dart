@@ -4,7 +4,6 @@ import 'package:vectorgraph/model/geometry/lines/line_segment.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/model/geometry/rect/RectEX.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
-import 'package:vectorgraph/viewer/points_painter.dart';
 import '../model/geometry/planes/polygon.dart';
 import '../viewer/line_painter.dart';
 import '../viewer/space.dart';
@@ -18,8 +17,8 @@ class PolygonObject extends Polygon with SpaceObject{
 
   // RectObject.fromCenter({required super.center, required super.width, required super.height}) : super.fromCenter();
   @override
-  PolygonObject copyWith({PointEX? position, List<PointEX>? points}){
-      return PolygonObject(position??PointEX.zero, points??[]);
+  PolygonObject copyWith(){
+      return PolygonObject(_position, points);
   }
 
   bool isPointOnEdgeLines(PointEX point, {Decimal? deviation}){
