@@ -189,19 +189,23 @@ extension RectEXFunctions on RectEX {
   }
 
   bool overlaps(RectEX other) {
-    final thisLeft = left;
-    final thisRight = right;
-    final thisTop = top;
-    final thisBottom = bottom;
-
-    final otherLeft = other.left;
-    final otherRight = other.right;
-    final otherTop = other.top;
-    final otherBottom = other.bottom;
-
-    final xOverlap = !(thisLeft >= otherRight || otherLeft >= thisRight);
-    final yOverlap = !(thisTop >= otherBottom || otherTop >= thisBottom);
-
-    return xOverlap && yOverlap;
+    return left < other.right &&
+        right > other.left &&
+        top < other.bottom &&
+        bottom > other.top;
+    // final thisLeft = left;
+    // final thisRight = right;
+    // final thisTop = top;
+    // final thisBottom = bottom;
+    //
+    // final otherLeft = other.left;
+    // final otherRight = other.right;
+    // final otherTop = other.top;
+    // final otherBottom = other.bottom;
+    //
+    // final xOverlap = !(thisLeft >= otherRight || otherLeft >= thisRight);
+    // final yOverlap = !(thisTop >= otherBottom || otherTop >= thisBottom);
+    //
+    // return xOverlap && yOverlap;
   }
 }

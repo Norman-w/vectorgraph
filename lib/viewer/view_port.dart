@@ -18,6 +18,12 @@ class ViewPort extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
+    // RectEX rect1 = RectEX(Decimal.zero,Decimal.zero, Decimal.ten, Decimal.ten);
+    // RectEX rect2 = RectEX(Decimal.fromInt(9), Decimal.fromInt(8),Decimal.fromInt(15),Decimal.fromInt(9));
+    //
+    // bool ii = rect1.overlaps(rect2);
+    // print('矩形1是否和矩形2相交? $ii');
+
     var state = ref.watch(viewStateProvider);
     var center = (-PointEX.fromOffset(state.currentOffset) / state.currentScale).toOffset();
     var width = state.validViewPortSizeOfSpace.width.toDouble();

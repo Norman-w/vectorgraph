@@ -9,16 +9,8 @@ class EquilateralPolygon extends Polygon {
   late Decimal size; // 组件大小
   final int count; // 几边形
   EquilateralPolygon({Decimal? size,this.count = 3,}){
+    var points = <PointEX>[];
     this.size = size ?? Decimal.fromInt(80);
-    //region 函数定义
-    start(Decimal x, Decimal y) {
-      // print("开始点: x:$x y:$y");
-      points.add(PointEX(x, y));
-    }
-    lineTo(Decimal x, Decimal y) {
-      // print("链接点: x:$x y:$y");
-      points.add(PointEX(x, y));
-    }
     //endregion
     Decimal r = this.size / Decimal.two;
     var perDeg = decimalPi / Decimal.fromInt(count);
@@ -32,15 +24,20 @@ class EquilateralPolygon extends Polygon {
     //所以我们要把角度再往前移动一个角度,比如3个顶点的,第一个顶点在旋转120度的地方
     var firstX = r * decimalCos(perDeg * Decimal.fromInt(1) - rotationAngle);
     var firstY = r * decimalSin(perDeg * Decimal.fromInt(1) - rotationAngle);
-    start(firstX, firstY);
-    //创建边
+    //start 开始
+    points.add(PointEX(firstX,firstY));
+    //创建每一条边
     for (int i = 2; i <= count * 2; i++) {
       if (i.isOdd) {
         var x = r * decimalCos(perDeg * Decimal.fromInt(i) - rotationAngle);
         var y = r * decimalSin(perDeg * Decimal.fromInt(i) - rotationAngle);
-        lineTo(x, y);
+        //line to /link to 链接到
+        points.add(PointEX(x,y));
       }
     }
-    lineTo(firstX, firstY);
+    //end  close 封闭
+    points.add(PointEX(firstX,firstY));
+
+    super.points = points;
   }
 }

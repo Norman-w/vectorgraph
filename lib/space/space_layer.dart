@@ -37,20 +37,19 @@ class SpaceLayer{
   // List<Rect> get rectangles => objects.whereType<Rect>().toList();
 
   List<SpaceObject> getInBounds(RectEX bounds){
-    // print('获取范围内的对象,范围是: ${bounds}');
+    if(bounds.isEmpty){return [];}
     var b = RectEX.fromLTWH(bounds.left, bounds.top, bounds.width, bounds.height);
-    // print(b);
-    return objects.where((element) {
+    var ret = objects.where((element) {
       var eb = RectEX.fromLTWH(
           element.worldBounds.left,
           element.worldBounds.top,
           element.worldBounds.width,
           element.worldBounds.height);
       var contains = b.overlaps(eb);
-      // print(contains );
       return contains;
       // return element.bounds.overlaps(bounds);
     }).toList();
+    return ret;
    //region 或许这样的精度也可以
     // return objects.where((element) {
     //   var contains = element.bounds.overlaps(bounds);
