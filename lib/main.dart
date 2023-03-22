@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vectorgraph/objects/point_object.dart';
 import 'package:vectorgraph/viewer/painting_board.dart';
 import '../utils/widget.dart';
-import 'package:vectorgraph/viewer/space_layer.dart';
-
-import 'objects/rect_object.dart';
-import 'viewer/paper.dart';
-import 'viewer/space.dart';
-import 'viewer/view_state.dart';
 import 'viewer/view_port.dart';
 import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

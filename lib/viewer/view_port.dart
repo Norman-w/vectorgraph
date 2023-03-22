@@ -11,7 +11,7 @@ import '../model/geometry/points/point_ex.dart';
 import '../objects/bezier_object.dart';
 import '../objects/line_object.dart';
 import 'ruler.dart';
-import 'view_state.dart';
+import '../view_state.dart';
 
 class ViewPort extends ConsumerWidget {
   const ViewPort({super.key});

@@ -4,7 +4,7 @@ import '../model/geometry/rect/RectEX.dart';
 import '../model/geometry/points/point_ex.dart';
 import '../utils/num_utils.dart';
 import '../viewer/points_painter.dart';
-import '../viewer/space.dart';
+import '../space/space.dart';
 import 'space_object.dart';
 
 class PointObject extends PointEX with SpaceObject{

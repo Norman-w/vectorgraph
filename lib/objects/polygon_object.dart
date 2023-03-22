@@ -6,7 +6,7 @@ import 'package:vectorgraph/model/geometry/rect/RectEX.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import '../model/geometry/planes/polygon.dart';
 import '../viewer/line_painter.dart';
-import '../viewer/space.dart';
+import '../space/space.dart';
 import 'space_object.dart';
 
 class PolygonObject extends Polygon with SpaceObject{

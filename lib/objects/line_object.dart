@@ -4,7 +4,7 @@ import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import '../model/geometry/lines/line_segment.dart';
 import '../viewer/line_painter.dart';
-import '../viewer/space.dart';
+import '../space/space.dart';
 import 'space_object.dart';
 import '../model/geometry/rect/RectEX.dart';
 

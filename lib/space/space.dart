@@ -9,7 +9,7 @@ import '../model/geometry/SizeEX.dart';
 import '../model/geometry/points/point_ex.dart';
 import '../model/geometry/rect/RectEX.dart';
 import '../objects/space_object.dart';
-import 'paper.dart';
+import '../viewer/paper.dart';
 import 'space_layer.dart';
 
 class Space {

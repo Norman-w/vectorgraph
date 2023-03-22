@@ -6,7 +6,7 @@ import 'package:vectorgraph/utils/num_utils.dart';
 import '../model/geometry/lines/bezier.dart';
 import '../model/geometry/lines/line_segment.dart';
 import '../viewer/line_painter.dart';
-import '../viewer/space.dart';
+import '../space/space.dart';
 import 'space_object.dart';
 
 class BezierObject extends Bezier with SpaceObject{

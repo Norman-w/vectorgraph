@@ -25,8 +25,8 @@ import '../objects/bezier_object.dart';
 import '../objects/point_object.dart';
 import '../objects/rect_object.dart';
 import 'size_listener.dart';
-import 'space.dart';
-import 'view_state.dart';
+import '../space/space.dart';
+import '../view_state.dart';
 class PaintingBoard extends ConsumerStatefulWidget {
   const PaintingBoard({super.key});
   @override

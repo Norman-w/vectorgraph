@@ -8,14 +8,14 @@ import 'package:vectorgraph/objects/polygon_object.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
-import '../model/geometry/SizeEX.dart';
-import '../objects/bezier_object.dart';
-import '../objects/line_object.dart';
-import '../objects/point_object.dart';
-import '../objects/rect_object.dart';
-import 'space.dart';
-import '../objects/space_object.dart';
-import 'space_layer.dart';
+import 'model/geometry/SizeEX.dart';
+import 'objects/bezier_object.dart';
+import 'objects/line_object.dart';
+import 'objects/point_object.dart';
+import 'objects/rect_object.dart';
+import 'space/space.dart';
+import 'objects/space_object.dart';
+import 'space/space_layer.dart';
 
 
 class ViewState{
