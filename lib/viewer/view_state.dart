@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
@@ -194,9 +196,53 @@ Space initSpace(){
 
   //region 第五层 规则多边形
   EquilateralPolygonObject equilateralPolygonObject = EquilateralPolygonObject(
-    size: Decimal.fromInt(30),count:4
+    PointEX(Decimal.fromInt(-300), Decimal.fromInt(0)),
+    size: Decimal.fromInt(200),count:3
   );
   layer5.addEquilateralPolygon(equilateralPolygonObject);
+
+  EquilateralPolygonObject circlePolygonObject = EquilateralPolygonObject(
+      PointEX(Decimal.fromInt(-300), Decimal.fromInt(0)),
+      size: Decimal.fromInt(200),count:15
+  );
+
+  layer5.addEquilateralPolygon(circlePolygonObject);
+
+  EquilateralPolygonObject rectPolygonObject = EquilateralPolygonObject(
+      PointEX(Decimal.fromInt(300), Decimal.fromInt(0)),
+      size: Decimal.fromInt(200),count:4
+  );
+
+  layer5.addEquilateralPolygon(rectPolygonObject);
+
+  EquilateralPolygonObject rect8PolygonObject = EquilateralPolygonObject(
+      PointEX(Decimal.fromInt(300), Decimal.fromInt(0)),
+      size: Decimal.fromInt(200),count:8
+  );
+
+  layer5.addEquilateralPolygon(rect8PolygonObject);
+
+  EquilateralPolygonObject rect5PolygonObject = EquilateralPolygonObject(
+      PointEX(Decimal.fromInt(0), Decimal.fromInt(300)),
+      size: Decimal.fromInt(200),count:5
+  );
+
+  layer5.addEquilateralPolygon(rect5PolygonObject);
+
+
+  //使用随机大小30-300, 随机边数3-10的多边形 在 x=-2000~+2000, y=-1000~+1000的范围内随机生成多边形并添加到layer5
+  for(int i=0;i<1000;i++){
+    var size = Decimal.fromInt(Random().nextInt(270)+30);
+    var count = Random().nextInt(8)+3;
+    var x = Decimal.fromInt(Random().nextInt(40000)-20000);
+    var y = Decimal.fromInt(Random().nextInt(20000)-10000);
+    var point = PointEX(x,y);
+    EquilateralPolygonObject polygonObject = EquilateralPolygonObject(
+        point,
+        size: size,count:count
+    );
+    layer5.addEquilateralPolygon(polygonObject);
+  }
   //endregion
 
   space.addPaper(paper);

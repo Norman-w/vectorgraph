@@ -12,59 +12,38 @@ class EquilateralPolygon extends Polygon {
   EquilateralPolygon(
       {
         Decimal? size,
-        this.count = 3,}) : super([]){
-    this.size = size?? Decimal.fromInt(80);
+        this.count = 3,}) : super([]) {
+    this.size = size ?? Decimal.fromInt(80);
     //region 函数定义
-    start(Decimal x, Decimal y)
-    {
+    start(Decimal x, Decimal y) {
       print("开始点: x:$x y:$y");
-      points.add(PointEX(x,y));
+      points.add(PointEX(x, y));
     }
-    lineTo(Decimal x, Decimal y)
-    {
+    lineTo(Decimal x, Decimal y) {
       print("链接点: x:$x y:$y");
-      points.add(PointEX(x,y));
+      points.add(PointEX(x, y));
     }
     //endregion
-
-
-    // // 将圆等分,开始第一个点
-    // start(r * cos(pi / count)+r, r * sin(pi / count)+r);
-    //
-    // //创建边
-    // // start(r * cos(pi / count), r * sin(pi / count));
-    // for (int i = 2; i <= count * 2; i++) {
-    //   if (i.isOdd) {
-    //     lineTo(r * cos(pi / count * i)+r, r * sin(pi / count * i)+r);
-    //   }
-    // }
-
-    //半径
     Decimal r = this.size / Decimal.two;
-    print('半径:$r');
-    Decimal perSidePi = decimalPi / Decimal.fromInt(count);
-    Decimal cosPerSidePi = decimalCos(perSidePi);
-    Decimal rX = r* cosPerSidePi;
-    Decimal rX_r = rX + r;
-    PointEX first = PointEX(Decimal.zero, -r);
-    // 将圆等分,开始第一个点
-    start(first.x,first.y);
+    var perDeg = decimalPi / Decimal.fromInt(count);
+    var perSideDeg = 360.0/ count;
+    // var deg120 = decimalPi / Decimal.fromInt(3);
+    var deg1 = decimalPi / Decimal.fromInt(180);
 
-    var xo = Decimal.zero;
-    var yo = Decimal.zero;
-    var x2 = xo + r * decimalCos(Decimal.fromInt(90) * decimalPi/ Decimal.fromInt(180));
-    var y2 = yo + r * decimalSin(Decimal.fromInt(90) * decimalPi/ Decimal.fromInt(180));
-    PointEX second = PointEX(x2, y2);
-    lineTo(x2, y2);
-
-    var x3 = xo + r * decimalCos(Decimal.fromInt(180) * decimalPi/ Decimal.fromInt(180));
-    var y3 = yo + r * decimalSin(Decimal.fromInt(180) * decimalPi/ Decimal.fromInt(180));
-
-    lineTo(x3, y3);
-
-
-    var x4 = xo + r * decimalCos(Decimal.fromInt(270) * decimalPi/ Decimal.fromInt(180));
-    var y4 = yo + r * decimalSin(Decimal.fromInt(270) * decimalPi/ Decimal.fromInt(180));
-    lineTo(x4, y4);
+    var rotationAngle = ((perSideDeg+perSideDeg).toDecimal() - Decimal.fromInt(90)) * deg1;
+    //第一个点,为了看起来更好看.我们默认让第一个点在圆的正上方,但是比如说我们要画一个三角形,那么第一个点就不是在正上方了
+    //所以我们要把角度再往前移动一个角度,比如3个顶点的,第一个顶点在旋转120度的地方
+    var firstX = r * decimalCos(perDeg * Decimal.fromInt(1) - rotationAngle);
+    var firstY = r * decimalSin(perDeg * Decimal.fromInt(1)- rotationAngle);
+    start(firstX, firstY);
+    //创建边
+    for (int i = 2; i <= count * 2; i++) {
+      if (i.isOdd) {
+        var x = r * decimalCos(perDeg * Decimal.fromInt(i) - rotationAngle);
+        var y = r * decimalSin(perDeg * Decimal.fromInt(i) - rotationAngle);
+        lineTo(x,y);
+      }
+    }
+    lineTo(firstX, firstY);
   }
 }

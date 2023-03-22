@@ -1,3 +1,5 @@
+import 'dart:math';
+
 const int decimalScale = 100;
 class Decimal{
   double _ = 0;
@@ -204,43 +206,46 @@ extension DecimalExFunctions on Decimal {
 }
 // 计算弧度制角度的正弦值
 Decimal decimalSin(Decimal radians) {
-  Decimal sinValue = Decimal.zero;
-  Decimal term = radians;
-  Decimal power = radians;
-  Decimal factorial = Decimal.one;
-
-  for (int i = 1; i <= 20; i++) {
-    sinValue += term;
-    power *= radians * radians;
-    factorial *= Decimal.fromInt((2 * i) * (2 * i + 1));
-    term = power / factorial;
-    if (i % 2 == 0) {
-      term = -term;
-    }
-  }
-
-  return sinValue;
+   // Decimal sinValue = Decimal.zero;
+   //  Decimal term = Decimal.zero;
+   //  Decimal power = Decimal.one;
+   //  Decimal factorial = Decimal.one;
+   //
+   //  for (int i = 0; i <= 20; i++) {
+   //    power *= radians;
+   //    factorial *= Decimal.fromInt(2 * i + 1);
+   //    term = power / factorial;
+   //    if (i % 2 == 0) {
+   //      sinValue += term;
+   //    } else {
+   //      sinValue -= term;
+   //    }
+   //  }
+   //
+   //  return sinValue;
+  return sin(radians.toDouble()).toDecimal();
 }
 
 // 计算弧度制角度的余弦值
 Decimal decimalCos(Decimal radians) {
-  Decimal cosValue = Decimal.one;
-  Decimal term = Decimal.one;
-  Decimal power = radians;
-  Decimal factorial = Decimal.one;
-
-  for (int i = 1; i <= 20; i++) {
-    power *= radians * radians;
-    factorial *= Decimal.fromInt((2 * i - 1) * (2 * i));
-    term = power / factorial;
-    if (i % 2 == 0) {
-      cosValue += term;
-    } else {
-      cosValue -= term;
-    }
-  }
-
-  return cosValue;
+  // Decimal cosValue = Decimal.one;
+  // Decimal term = Decimal.one;
+  // Decimal power = radians;
+  // Decimal factorial = Decimal.one;
+  //
+  // for (int i = 1; i <= 20; i++) {
+  //   power *= radians * radians;
+  //   factorial *= Decimal.fromInt((2 * i - 1) * (2 * i));
+  //   term = power / factorial;
+  //   if (i % 2 == 0) {
+  //     cosValue += term;
+  //   } else {
+  //     cosValue -= term;
+  //   }
+  // }
+  //
+  // return cosValue;
+  return cos(radians.toDouble()).toDecimal();
 }
 
 

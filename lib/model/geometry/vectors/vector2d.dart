@@ -71,6 +71,9 @@ class Vector2D{
   factory Vector2D.fromAngle(Decimal angle, Decimal length) {
     return Vector2D(length * decimalCos(angle), length * decimalSin(angle));
   }
+  factory Vector2D.fromPolar(Decimal angle, Decimal length) {
+    return Vector2D(length * decimalCos(angle), length * decimalSin(angle));
+  }
 
   Decimal cross(Vector2D vector) {
     return x * vector.y - y * vector.x;

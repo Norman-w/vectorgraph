@@ -21,7 +21,7 @@ class LinesPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
     if(linesPoints.length%2!=0){
-      debugPrint("点数应该是双数");
+      // debugPrint("点数应该是双数");
     }
     for(var i=0;i<linesPoints.length-1; i+=1){
       var start = linesPoints[i];

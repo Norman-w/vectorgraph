@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/lines/line_segment.dart';
+import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
 import 'package:vectorgraph/objects/line_object.dart';
 import 'package:vectorgraph/objects/polygon_object.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
@@ -104,6 +105,20 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
               }
             }
             break;
+          case EquilateralPolygonObject:
+            var ePolygon = element as EquilateralPolygonObject;
+            var oldIsInteractive = ePolygon.isInteractive;
+            var newIsInteractive = ePolygon.isPointOnEdgeLines(worldPoint, deviation:deviation);
+            if(oldIsInteractive != newIsInteractive)
+            {
+              ePolygon.isInteractive = newIsInteractive;
+              ref.read(equilateralPolygonObjectsProvider(ePolygon).notifier).updateIsInteractive(newIsInteractive);
+              if(newIsInteractive)
+              {
+                // print('on it');
+              }
+            }
+            break;
           case PolygonObject:
             var polygon = element as PolygonObject;
             var oldIsInteractive = polygon.isInteractive;
@@ -118,6 +133,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
               }
             }
             break;
+
           case PointObject:
             var point = element as PointObject;
             var oldIsInteractive = point.isInteractive;
