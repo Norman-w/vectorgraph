@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
+import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
 import 'package:vectorgraph/objects/polygon_object.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
@@ -104,6 +105,7 @@ Space initSpace(){
   var layer2 = SpaceLayer(1);
   var layer3 = SpaceLayer(2);
   var layer4 = SpaceLayer(3);
+  var layer5 = SpaceLayer(4);
 
 
 
@@ -189,12 +191,21 @@ Space initSpace(){
   layer4.addPolygon(polygonObject);
   //endregion
 
+
+  //region 第五层 规则多边形
+  EquilateralPolygonObject equilateralPolygonObject = EquilateralPolygonObject(
+    size: Decimal.fromInt(30),count:4
+  );
+  layer5.addEquilateralPolygon(equilateralPolygonObject);
+  //endregion
+
   space.addPaper(paper);
 
   space.layers.add(layer1);
   space.layers.add(layer2);
   space.layers.add(layer3);
   space.layers.add(layer4);
+  space.layers.add(layer5);
 
   return space;
 }

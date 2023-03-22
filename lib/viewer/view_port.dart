@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
+import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
 import 'package:vectorgraph/objects/point_object.dart';
 import 'package:vectorgraph/objects/polygon_object.dart';
 import 'package:vectorgraph/objects/rect_object.dart';
@@ -64,6 +65,15 @@ class ViewPort extends ConsumerWidget {
       else if(e.runtimeType == PolygonObject){
         PolygonObject polygonObject = e as PolygonObject;
         return PolygonObjectWidget(polygonObject: polygonObject,
+          viewPortPixelSize: state.viewPortPixelSize,
+          viewPortOffset: state.currentOffset,
+          viewPortScale: state.currentScale,
+          // normalColor: Colors.deepOrange,
+        );
+      }
+      else if(e.runtimeType == EquilateralPolygonObject){
+        EquilateralPolygonObject polygonObject = e as EquilateralPolygonObject;
+        return EquilateralPolygonObjectWidget(equilateralPolygonObject: polygonObject,
           viewPortPixelSize: state.viewPortPixelSize,
           viewPortOffset: state.currentOffset,
           viewPortScale: state.currentScale,

@@ -1,5 +1,6 @@
 //space中包含多个层,层中再包含图元和组,图元由点和线等组成.组就是图元的集合
 
+import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
 import 'package:vectorgraph/objects/line_object.dart';
 import 'package:vectorgraph/objects/point_object.dart';
 import 'package:vectorgraph/objects/polygon_object.dart';
@@ -28,6 +29,9 @@ class SpaceLayer{
   }
   void addPolygon(PolygonObject polygonObject){
     objects.add(polygonObject);
+  }
+  void addEquilateralPolygon(EquilateralPolygonObject equilateralPolygonObject){
+    objects.add(equilateralPolygonObject);
   }
   //get all rects
   // List<Rect> get rectangles => objects.whereType<Rect>().toList();
