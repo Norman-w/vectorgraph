@@ -12,7 +12,7 @@ class EquilateralPolygon extends Polygon {
   EquilateralPolygon(
       {
         Decimal? size,
-        this.count = 3,}) : super([]) {
+        this.count = 3,}){
     this.size = size ?? Decimal.fromInt(80);
     //region 函数定义
     start(Decimal x, Decimal y) {

@@ -261,42 +261,44 @@ var decimalPi = Decimal.parse('3.14159265358979323846264338327950288419716939937
 var decimalPiHalf = decimalPi/Decimal.two;
 
 Decimal decimalAtan2(Decimal y, Decimal x) {
-  if (x > Decimal.zero) {
-    return decimalAtan(y / x);
-  } else if (x < Decimal.zero) {
-    if (y >= Decimal.zero) {
-      return decimalAtan(y / x) + decimalPi;
-    } else {
-      return decimalAtan(y / x) - decimalPi;
-    }
-  } else {
-    if (y > Decimal.zero) {
-      return decimalPiHalf;
-    } else if (y < Decimal.zero) {
-      return -decimalPiHalf;
-    } else {
-      return Decimal.zero;
-    }
-  }
+  // if (x > Decimal.zero) {
+  //   return decimalAtan(y / x);
+  // } else if (x < Decimal.zero) {
+  //   if (y >= Decimal.zero) {
+  //     return decimalAtan(y / x) + decimalPi;
+  //   } else {
+  //     return decimalAtan(y / x) - decimalPi;
+  //   }
+  // } else {
+  //   if (y > Decimal.zero) {
+  //     return decimalPiHalf;
+  //   } else if (y < Decimal.zero) {
+  //     return -decimalPiHalf;
+  //   } else {
+  //     return Decimal.zero;
+  //   }
+  // }
+  return atan2(y.toDouble(), x.toDouble()).toDecimal();
 }
 
 
 Decimal decimalAtan(Decimal x) {
-  var epsilon = Decimal.parse('0.0000000000000001');
-
-  var sum = Decimal.zero;
-  var sign = Decimal.one;
-  var term = x;
-  var n = 1;
-
-  while (term.abs() >= epsilon) {
-    sum += sign * term;
-    sign = -sign;
-    n += 2;
-    term = decimalPow(x * x, n ~/ 2) / Decimal.fromInt(n);
-  }
-
-  return sum + x / decimalSqrt(Decimal.one + x * x);
+  // var epsilon = Decimal.parse('0.0000000000000001');
+  //
+  // var sum = Decimal.zero;
+  // var sign = Decimal.one;
+  // var term = x;
+  // var n = 1;
+  //
+  // while (term.abs() >= epsilon) {
+  //   sum += sign * term;
+  //   sign = -sign;
+  //   n += 2;
+  //   term = decimalPow(x * x, n ~/ 2) / Decimal.fromInt(n);
+  // }
+  //
+  // return sum + x / decimalSqrt(Decimal.one + x * x);
+  return atan(x.toDouble()).toDecimal();
 }
 
 Decimal decimalMin(x, y){

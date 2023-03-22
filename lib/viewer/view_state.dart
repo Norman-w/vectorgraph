@@ -146,106 +146,106 @@ Space initSpace(){
 
   //endregion
 
-  // //region 第二层 线段
-  // layer2.addLine(LineObject(
-  //   PointEX(Decimal.fromInt(-200), Decimal.fromInt(-150)),
-  //   PointEX(Decimal.fromInt(-50), Decimal.fromInt(-50)),
-  // ));
-  // layer2.addLine(LineObject(
-  //   PointEX(Decimal.fromInt(200), Decimal.fromInt(-150)),
-  //   PointEX(Decimal.fromInt(50), Decimal.fromInt(-50)),
-  // ));
-  //
-  // //endregion
-  //
-  // //region 第三层 贝塞尔曲线
-  // try {
-  //   var start = PointEX(Decimal.fromInt(0), Decimal.fromInt(0));
-  //   var end = PointEX(Decimal.fromInt(200), Decimal.fromInt(150));
-  //   var bezier = BezierObject(start, end);
-  //   // print(bezier);
-  //   layer3.addBezier(bezier);
-  //
-  //   layer3.addBezier(BezierObject(
-  //     PointEX(Decimal.fromInt(0), Decimal.fromInt(0)),
-  //     PointEX(Decimal.fromInt(-200), Decimal.fromInt(150)),
-  //   ));
-  //
-  //   layer3.addBezier(BezierObject(
-  //     PointEX(Decimal.fromInt(100), Decimal.fromInt(0)),
-  //     PointEX(Decimal.fromInt(300), Decimal.fromInt(-150)),
-  //   ));
-  // } catch (e) {
-  //   print('添加贝塞尔曲线发生错误');
-  //   print(e);
-  // }
-  // //endregion
-  //
-  // //region 第四层 多边形
-  // PolygonObject polygonObject = PolygonObject(
-  //   PointEX.zero,
-  //   [
-  //     PointEX(Decimal.fromInt(-80), Decimal.fromInt(-80)),
-  //     PointEX(Decimal.fromInt(0), Decimal.fromInt(-100)),
-  //     PointEX(Decimal.fromInt(80), Decimal.fromInt(-80)),
-  //     PointEX(Decimal.fromInt(100), Decimal.fromInt(80)),
-  //     PointEX(Decimal.fromInt(-100), Decimal.fromInt(80)),
-  //   ]
-  // );
-  // layer4.addPolygon(polygonObject);
-  // //endregion
-  //
-  //
-  // //region 第五层 规则多边形
-  // EquilateralPolygonObject equilateralPolygonObject = EquilateralPolygonObject(
-  //   PointEX(Decimal.fromInt(-300), Decimal.fromInt(0)),
-  //   size: Decimal.fromInt(200),count:3
-  // );
-  // layer5.addEquilateralPolygon(equilateralPolygonObject);
-  //
-  // EquilateralPolygonObject circlePolygonObject = EquilateralPolygonObject(
-  //     PointEX(Decimal.fromInt(-300), Decimal.fromInt(0)),
-  //     size: Decimal.fromInt(200),count:15
-  // );
-  //
-  // layer5.addEquilateralPolygon(circlePolygonObject);
-  //
-  // EquilateralPolygonObject rectPolygonObject = EquilateralPolygonObject(
-  //     PointEX(Decimal.fromInt(300), Decimal.fromInt(0)),
-  //     size: Decimal.fromInt(200),count:4
-  // );
-  //
-  // layer5.addEquilateralPolygon(rectPolygonObject);
-  //
-  // EquilateralPolygonObject rect8PolygonObject = EquilateralPolygonObject(
-  //     PointEX(Decimal.fromInt(300), Decimal.fromInt(0)),
-  //     size: Decimal.fromInt(200),count:8
-  // );
-  //
-  // layer5.addEquilateralPolygon(rect8PolygonObject);
-  //
-  // EquilateralPolygonObject rect5PolygonObject = EquilateralPolygonObject(
-  //     PointEX(Decimal.fromInt(0), Decimal.fromInt(300)),
-  //     size: Decimal.fromInt(200),count:5
-  // );
-  //
-  // layer5.addEquilateralPolygon(rect5PolygonObject);
-  //
-  //
-  // //使用随机大小30-300, 随机边数3-10的多边形 在 x=-2000~+2000, y=-1000~+1000的范围内随机生成多边形并添加到layer5
-  // for(int i=0;i<1000;i++){
-  //   var size = Decimal.fromInt(Random().nextInt(270)+30);
-  //   var count = Random().nextInt(8)+3;
-  //   var x = Decimal.fromInt(Random().nextInt(40000)-20000);
-  //   var y = Decimal.fromInt(Random().nextInt(20000)-10000);
-  //   var point = PointEX(x,y);
-  //   EquilateralPolygonObject polygonObject = EquilateralPolygonObject(
-  //       point,
-  //       size: size,count:count
-  //   );
-  //   layer5.addEquilateralPolygon(polygonObject);
-  // }
-  // //endregion
+  //region 第二层 线段
+  layer2.addLine(LineObject(
+    PointEX(Decimal.fromInt(-200), Decimal.fromInt(-150)),
+    PointEX(Decimal.fromInt(-50), Decimal.fromInt(-50)),
+  ));
+  layer2.addLine(LineObject(
+    PointEX(Decimal.fromInt(200), Decimal.fromInt(-150)),
+    PointEX(Decimal.fromInt(50), Decimal.fromInt(-50)),
+  ));
+
+  //endregion
+
+  //region 第三层 贝塞尔曲线
+  try {
+    var start = PointEX(Decimal.fromInt(0), Decimal.fromInt(0));
+    var end = PointEX(Decimal.fromInt(200), Decimal.fromInt(150));
+    var bezier = BezierObject(start, end);
+    // print(bezier);
+    layer3.addBezier(bezier);
+
+    layer3.addBezier(BezierObject(
+      PointEX(Decimal.fromInt(0), Decimal.fromInt(0)),
+      PointEX(Decimal.fromInt(-200), Decimal.fromInt(150)),
+    ));
+
+    layer3.addBezier(BezierObject(
+      PointEX(Decimal.fromInt(100), Decimal.fromInt(0)),
+      PointEX(Decimal.fromInt(300), Decimal.fromInt(-150)),
+    ));
+  } catch (e) {
+    print('添加贝塞尔曲线发生错误');
+    print(e);
+  }
+  //endregion
+
+  //region 第四层 多边形
+  PolygonObject polygonObject = PolygonObject(
+    PointEX(Decimal.fromInt(100), Decimal.fromInt(0)),
+    [
+      PointEX(Decimal.fromInt(-80), Decimal.fromInt(-80)),
+      PointEX(Decimal.fromInt(0), Decimal.fromInt(-100)),
+      PointEX(Decimal.fromInt(80), Decimal.fromInt(-80)),
+      PointEX(Decimal.fromInt(100), Decimal.fromInt(80)),
+      PointEX(Decimal.fromInt(-100), Decimal.fromInt(80)),
+    ]
+  );
+  layer4.addPolygon(polygonObject);
+  //endregion
+
+
+  //region 第五层 规则多边形
+  EquilateralPolygonObject equilateralPolygonObject = EquilateralPolygonObject(
+    PointEX(Decimal.fromInt(-300), Decimal.fromInt(0)),
+    size: Decimal.fromInt(200),count:3
+  );
+  layer5.addEquilateralPolygon(equilateralPolygonObject);
+
+  EquilateralPolygonObject circlePolygonObject = EquilateralPolygonObject(
+      PointEX(Decimal.fromInt(-300), Decimal.fromInt(0)),
+      size: Decimal.fromInt(200),count:15
+  );
+
+  layer5.addEquilateralPolygon(circlePolygonObject);
+
+  EquilateralPolygonObject rectPolygonObject = EquilateralPolygonObject(
+      PointEX(Decimal.fromInt(300), Decimal.fromInt(0)),
+      size: Decimal.fromInt(200),count:4
+  );
+
+  layer5.addEquilateralPolygon(rectPolygonObject);
+
+  EquilateralPolygonObject rect8PolygonObject = EquilateralPolygonObject(
+      PointEX(Decimal.fromInt(300), Decimal.fromInt(0)),
+      size: Decimal.fromInt(200),count:8
+  );
+
+  layer5.addEquilateralPolygon(rect8PolygonObject);
+
+  EquilateralPolygonObject rect5PolygonObject = EquilateralPolygonObject(
+      PointEX(Decimal.fromInt(0), Decimal.fromInt(300)),
+      size: Decimal.fromInt(200),count:5
+  );
+
+  layer5.addEquilateralPolygon(rect5PolygonObject);
+
+
+  //使用随机大小30-300, 随机边数3-10的多边形 在 x=-2000~+2000, y=-1000~+1000的范围内随机生成多边形并添加到layer5
+  for(int i=0;i<1000;i++){
+    var size = Decimal.fromInt(Random().nextInt(270)+30);
+    var count = Random().nextInt(8)+3;
+    var x = Decimal.fromInt(Random().nextInt(40000)-20000);
+    var y = Decimal.fromInt(Random().nextInt(20000)-10000);
+    var point = PointEX(x,y);
+    EquilateralPolygonObject polygonObject = EquilateralPolygonObject(
+        point,
+        size: size,count:count
+    );
+    layer5.addEquilateralPolygon(polygonObject);
+  }
+  //endregion
 
   space.addPaper(paper);
 

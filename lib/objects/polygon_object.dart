@@ -4,6 +4,7 @@ import 'package:vectorgraph/model/geometry/lines/line_segment.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/model/geometry/rect/RectEX.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
+import 'package:vectorgraph/viewer/points_painter.dart';
 import '../model/geometry/planes/polygon.dart';
 import '../viewer/line_painter.dart';
 import '../viewer/space.dart';
@@ -11,7 +12,9 @@ import 'space_object.dart';
 
 class PolygonObject extends Polygon with SpaceObject{
   final PointEX _position;
-  PolygonObject(this._position, super.points);
+  PolygonObject(this._position, List<PointEX> points){
+    super.points = points;
+  }
 
   // RectObject.fromCenter({required super.center, required super.width, required super.height}) : super.fromCenter();
   @override
@@ -26,7 +29,8 @@ class PolygonObject extends Polygon with SpaceObject{
             (element) =>
             element.isPointOnLine(
               //由于贝塞尔曲线使用的是0点+世界坐标偏移的方式,所以在检测时也要使用这种方式,(减去偏移)
-                point, deviation: deviation)
+                point - _position
+                , deviation: deviation)
     );
   }
   @override

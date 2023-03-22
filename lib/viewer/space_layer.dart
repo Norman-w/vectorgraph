@@ -41,7 +41,6 @@ class SpaceLayer{
     var b = RectEX.fromLTWH(bounds.left, bounds.top, bounds.width, bounds.height);
     // print(b);
     return objects.where((element) {
-      // print('bound is : ${element.bounds}');
       var eb = RectEX.fromLTWH(
           element.worldBounds.left,
           element.worldBounds.top,

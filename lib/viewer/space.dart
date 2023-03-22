@@ -37,6 +37,8 @@ class Space {
               showingSpaceRectSize.width,
               showingSpaceRectSize.height)
       ));
+      //测试时候直接都加进来
+      // result.addAll(layer.objects);
     }
     return result;
   }
