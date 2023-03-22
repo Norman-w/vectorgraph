@@ -5,8 +5,54 @@ import '../points/point_ex.dart';
 import '../rect/RectEX.dart';
 
 class Polygon{
+  var _center = PointEX.zero;
+  var _bounds = RectEX.zero;
   ///构造函数,由点集合创建一个多边形
-  Polygon(this.points);
+  Polygon(this.points){
+    Decimal top = Decimal.infinite,left = Decimal.infinite,right = Decimal.negativeInfinity,bottom = Decimal.negativeInfinity;
+    for(var i=0;i<points.length;i++){
+      var current = points[i];
+      if(current.y<top){
+        top = current.y;
+      }
+      if(current.y>bottom){
+        bottom = current.y;
+      }
+      if(current.x<left){
+        left = current.x;
+      }
+      if(current.x>right){
+        right = current.x;
+      }
+    }
+    _bounds = RectEX.fromLTRB(left, top, right, bottom);
+
+    //region 计算中心点
+    var total = Decimal.fromInt(points.length);
+    Decimal X = Decimal.zero, Y = Decimal.zero, Z = Decimal.zero;
+    //遍历
+    for (var p in points) {
+      Decimal lat, lon, x, y, z;
+      lat = p.y * decimalPi / Decimal.halfCircle;
+      lon = p.x * decimalPi / Decimal.halfCircle;
+      x = decimalCos(lat) * decimalCos(lon);
+      y = decimalCos(lat) * decimalSin(lon);
+      z = decimalSin(lat);
+      X += x;
+      Y += y;
+      Z += z;
+    }
+    X = X / total;
+    Y = Y / total;
+    Z = Z / total;
+    Decimal Lon = decimalAtan2(Y, X);
+    Decimal Hyp = decimalSqrt(X * X + Y * Y);
+    Decimal Lat = decimalAtan2(Z, Hyp);
+    // return PointEX(Lon * Decimal.halfCircle / decimalPi, Lat * Decimal.halfCircle / decimalPi);
+    _center = PointEX(Lon * Decimal.halfCircle / decimalPi, Lat * Decimal.halfCircle / decimalPi);
+
+    //endregion
+  }
   List<PointEX> points;
   ///判断当前多边形是否有一个顶点是所给定的入参
   bool containsEndPoint(PointEX point){
@@ -150,23 +196,11 @@ class Polygon{
     return list;
   }
 
+  PointEX get center{
+    return _center;
+  }
+
   RectEX get bounds {
-    Decimal top = Decimal.infinite,left = Decimal.infinite,right = Decimal.negativeInfinity,bottom = Decimal.negativeInfinity;
-    for(var i=0;i<points.length;i++){
-      var current = points[i];
-      if(current.y<top){
-        top = current.y;
-      }
-      if(current.y>bottom){
-        bottom = current.y;
-      }
-      if(current.x<left){
-        left = current.x;
-      }
-      if(current.x>right){
-        right = current.x;
-      }
-    }
-    return RectEX.fromLTRB(left, top, right, bottom);
+    return _bounds;
   }
 }

@@ -10,13 +10,26 @@ import 'space_object.dart';
 import '../model/geometry/rect/RectEX.dart';
 
 class RectObject extends RectEX with SpaceObject{
-  RectObject.fromCenter({required super.center, required super.width, required super.height}) : super.fromCenter();
-  RectObject.fromLTWH(Decimal left, Decimal top, Decimal width, Decimal height) : super.fromLTWH(left, top, width, height);
-  RectObject.fromPoints(PointEX a, PointEX b) : super.fromPoints(a, b);
-  RectObject.fromLTRB(Decimal left, Decimal top, Decimal right, Decimal bottom) : super.fromLTRB(left, top, right, bottom);
+  ///矩形的所在位置.使用矩形的中心点坐标
+  PointEX? _position;
+  set position(PointEX newPosition){
+    _position = newPosition;
+  }
+  RectObject.fromCenter({required super.center, required super.width, required super.height}) : super.fromCenter(){
+    _position = center;
+  }
+  RectObject.fromLTWH(Decimal left, Decimal top, Decimal width, Decimal height) : super.fromLTWH(left, top, width, height){
+    _position = PointEX(left + width/Decimal.two, top + height/Decimal.two);
+  }
+  RectObject.fromPoints(PointEX a, PointEX b) : super.fromPoints(a, b)
+  {
+    _position = PointEX((a.x + b.x)/Decimal.two, (a.y + b.y)/Decimal.two);
+  }
+  RectObject.fromLTRB(Decimal left, Decimal top, Decimal right, Decimal bottom) : super.fromLTRB(left, top, right, bottom)
+  {
+    _position = PointEX((left + right)/Decimal.two, (top + bottom)/Decimal.two);
+  }
 
-  @override
-  RectEX get bounds => this;
   List<LineSegment> _lines = [];
   List<LineSegment> get lines {
     if(_lines.isEmpty && !isEmpty){
@@ -38,7 +51,7 @@ class RectObject extends RectEX with SpaceObject{
   bool isPointOnEdgeLines(PointEX point, Decimal deviation){
     var list = lines;
     for(var l in list){
-      if(l.isPointOnLine(point,deviation: deviation)) {
+      if(l.isPointOnLine(point - position,deviation: deviation)) {
         return true;
       }
     }
@@ -51,6 +64,15 @@ class RectObject extends RectEX with SpaceObject{
 
   @override
   toString() => 'RectObject{left: $left, top: $top, width: $width, height: $height}';
+
+  @override
+  PointEX get position => _position ?? PointEX.zero;
+
+  @override
+  RectEX get selfBounds => this;
+
+  @override
+  RectEX get worldBounds => shift(position.x, position.y);
 }
 class RectObjectNotifier extends StateNotifier<RectObject>{
   bool _isInteractive = false;
@@ -100,8 +122,8 @@ class RectObjectWidget extends ConsumerWidget{
   static Rect getViewRect(RectObject rectObject, Decimal viewPortScale, Offset viewPortOffset, Size viewPortSize){
     var width = rectObject.width;
     var height = rectObject.height;
-    var top = rectObject.top;
-    var left = rectObject.left;
+    var top = rectObject.top + rectObject.position.x;
+    var left = rectObject.left + rectObject.position.y;
     var newWidth = width * viewPortScale;
     var newHeight = height * viewPortScale;
     var oldWidth = width;

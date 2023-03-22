@@ -42,7 +42,11 @@ class SpaceLayer{
     // print(b);
     return objects.where((element) {
       // print('bound is : ${element.bounds}');
-      var eb = RectEX.fromLTWH(element.bounds.left, element.bounds.top, element.bounds.width, element.bounds.height);
+      var eb = RectEX.fromLTWH(
+          element.worldBounds.left,
+          element.worldBounds.top,
+          element.worldBounds.width,
+          element.worldBounds.height);
       var contains = b.overlaps(eb);
       // print(contains );
       return contains;

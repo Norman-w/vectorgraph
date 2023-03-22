@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/lines/line_segment.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
+import 'package:vectorgraph/model/geometry/rect/RectEX.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import '../model/geometry/planes/equilateral_polygon.dart';
 import '../viewer/line_painter.dart';
@@ -9,13 +10,14 @@ import '../viewer/space.dart';
 import 'space_object.dart';
 
 class EquilateralPolygonObject extends EquilateralPolygon with SpaceObject {
-  EquilateralPolygonObject(this.position, {super.size, super.count});
-
-  PointEX position;
+  final PointEX _position;
+  @override
+  PointEX get position => _position;
+  EquilateralPolygonObject(this._position, {super.size, super.count});
   // RectObject.fromCenter({required super.center, required super.width, required super.height}) : super.fromCenter();
   @override
   EquilateralPolygonObject copyWith({PointEX? position, Decimal? size, int? sideCount}) {
-    return EquilateralPolygonObject(position?? PointEX.zero, size:size, count:sideCount??3);
+    return EquilateralPolygonObject(position??PointEX.zero, size:size, count:sideCount??3);
   }
 
   bool isPointOnEdgeLines(PointEX point, {Decimal? deviation}) {
@@ -29,6 +31,12 @@ class EquilateralPolygonObject extends EquilateralPolygon with SpaceObject {
                 , deviation: deviation)
     );
   }
+
+  @override
+  RectEX get selfBounds => bounds;
+
+  @override
+  RectEX get worldBounds => bounds.shift(_position.x, _position.y);
 }
 class EquilateralPolygonObjectNotifier extends StateNotifier<EquilateralPolygonObject>{
   bool _isInteractive = false;

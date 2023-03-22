@@ -9,21 +9,35 @@ import 'space_object.dart';
 import '../model/geometry/rect/RectEX.dart';
 
 class LineObject extends LineSegment with SpaceObject{
-  LineObject(super.start, super.end);
-
-  // RectObject.fromCenter({required super.center, required super.width, required super.height}) : super.fromCenter();
+  ///线段所在的世界坐标位置
+  final PointEX _position;
+  var _selfBounds = RectEX.zero;
+  ///构造函数,给定线段所在的世界坐标位置,并且给定线段连接到的终端是哪里
+  LineObject(this._position, PointEX end) : super(PointEX.zero, PointEX.zero){
+    super.start = _position;
+    super.end = end;
+    _selfBounds = RectEX.fromPoints(_position, end).shift(_position.x, _position.y);
+  }
   @override
-  RectEX get bounds => getBoundingBox();
-  @override
-  LineObject copyWith({PointEX? start, PointEX? end}){
-    if(start == null || end == null){
+  LineObject copyWith({PointEX? position, PointEX? end}){
+    if(position == null || end == null){
       return LineObject(PointEX.zero, PointEX.zero);
     }
     return LineObject(start,end);
   }
 
   @override
-  toString() => 'LineObject{start: $start, end: $end}';
+  toString() => 'LineObject{position: $start, end: $end}';
+
+  @override
+  PointEX get position => _position;
+
+  @override
+  //线直接使用的是世界坐标所以错误
+  RectEX get selfBounds => _selfBounds;
+
+  @override
+  RectEX get worldBounds => getBoundingBox();
 }
 class LineObjectNotifier extends StateNotifier<LineObject>{
   bool _isInteractive = false;
@@ -57,8 +71,10 @@ class LineObjectWidget extends ConsumerWidget{
   });
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var startPointInView = Space.spacePointPos2ViewPortPointPos(lineObject.start, viewPortOffset, viewPortScale, viewPortPixelSize);
-    var endPointInView = Space.spacePointPos2ViewPortPointPos(lineObject.end, viewPortOffset, viewPortScale, viewPortPixelSize);;
+    var startPointInView =
+    Space.spacePointPos2ViewPortPointPos(lineObject.start, viewPortOffset, viewPortScale, viewPortPixelSize);
+    var endPointInView =
+    Space.spacePointPos2ViewPortPointPos(lineObject.end, viewPortOffset, viewPortScale, viewPortPixelSize);
     return CustomPaint(
       painter: LinePainter(startPointInView,endPointInView, ref.watch(lineObjectsProvider(lineObject)).isInteractive?
           // Colors.white: getRandomColor()

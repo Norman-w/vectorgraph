@@ -124,6 +124,7 @@ Space initSpace(){
       center: PointEX(Decimal.zero,Decimal.zero),
       width: Decimal.fromInt(100),
       height: Decimal.fromInt(100));
+  rectObject.position = PointEX(Decimal.fromInt(100), Decimal.fromInt(100));
   layer1.addRect(
       rectObject
   );
@@ -182,6 +183,7 @@ Space initSpace(){
 
   //region 第四层 多边形
   PolygonObject polygonObject = PolygonObject(
+    PointEX.zero,
     [
       PointEX(Decimal.fromInt(-80), Decimal.fromInt(-80)),
       PointEX(Decimal.fromInt(0), Decimal.fromInt(-100)),

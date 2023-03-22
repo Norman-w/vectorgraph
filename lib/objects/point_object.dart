@@ -13,11 +13,18 @@ class PointObject extends PointEX with SpaceObject{
     this.radius = radius ?? Decimal.fromInt(1);
   }
   @override
-  RectEX get bounds => RectEX.fromCircle(center: PointEX(x, y), radius: radius);
-  @override
   PointObject copyWith({Decimal? x, Decimal? y, Decimal? radius}){
     return PointObject(x ?? this.x, y ?? this.y, radius: radius ?? this.radius);
   }
+
+  @override
+  PointEX get position => PointEX(x, y);
+
+  @override
+  RectEX get selfBounds => RectEX.fromCircle(center: PointEX.zero, radius: radius);
+
+  @override
+  RectEX get worldBounds => RectEX.fromCircle(center: PointEX(x, y), radius: radius);
 }
 
 class PointObjectNotifier extends StateNotifier<PointObject>{

@@ -23,7 +23,7 @@ class Bezier
   var line2_3Dots = <PointEX>[];
 
   final bezierPoints = <PointEX>[];
-  var bounds = RectEX.zero;
+  RectEX bounds = RectEX.zero;
 
   //开始点的控制点
   PointEX startController = PointEX.zero;

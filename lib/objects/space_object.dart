@@ -1,13 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../model/geometry/points/point_ex.dart';
 import '../model/geometry/rect/RectEX.dart';
 import '../utils/num_utils.dart';
 
 mixin SpaceObject{
-  // Decimal x = Decimal.zero;
-  // Decimal y = Decimal.zero;
-  RectEX get bounds;
+  ///获取对象的世界坐标
+  PointEX get position;
+  ///获取对象的自身坐标中的矩形
+  RectEX get selfBounds;
+  ///获取对象的世界坐标中的矩形
+  RectEX get worldBounds;
+  ///获取对象是否在交互中
   bool isInteractive = false;
+  ///拷贝对象方法
   SpaceObject copyWith();
 }
 

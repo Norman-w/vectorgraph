@@ -10,15 +10,13 @@ import '../viewer/space.dart';
 import 'space_object.dart';
 
 class PolygonObject extends Polygon with SpaceObject{
-  PolygonObject(super.points);
+  final PointEX _position;
+  PolygonObject(this._position, super.points);
 
   // RectObject.fromCenter({required super.center, required super.width, required super.height}) : super.fromCenter();
   @override
-  PolygonObject copyWith({List<PointEX>? points}){
-    if(points == null){
-      return PolygonObject([]);
-    }
-    return PolygonObject(points);
+  PolygonObject copyWith({PointEX? position, List<PointEX>? points}){
+      return PolygonObject(position??PointEX.zero, points??[]);
   }
 
   bool isPointOnEdgeLines(PointEX point, {Decimal? deviation}){
@@ -31,6 +29,14 @@ class PolygonObject extends Polygon with SpaceObject{
                 point, deviation: deviation)
     );
   }
+  @override
+  PointEX get position => _position;
+
+  @override
+  RectEX get selfBounds => bounds;
+
+  @override
+  RectEX get worldBounds => bounds.shift(_position.x, _position.y);
 }
 class PolygonObjectNotifier extends StateNotifier<PolygonObject>{
   bool _isInteractive = false;

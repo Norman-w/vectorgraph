@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
+import 'package:vectorgraph/model/geometry/rect/RectEX.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import '../model/geometry/lines/bezier.dart';
 import '../model/geometry/lines/line_segment.dart';
@@ -33,6 +34,12 @@ class BezierObject extends Bezier with SpaceObject{
 
   @override
   toString() => 'BezierObject{start: $position, end: $end}';
+
+  @override
+  RectEX get selfBounds => bounds;
+
+  @override
+  RectEX get worldBounds => bounds.shift(position.x, position.y);
 }
 class BezierObjectNotifier extends StateNotifier<BezierObject>{
   bool _isInteractive = false;

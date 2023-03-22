@@ -41,6 +41,14 @@ class Decimal{
   static Decimal get ten{
     return Decimal().._=10.0*decimalScale;
   }
+  ///180
+  static Decimal get halfCircle{
+    return Decimal().._=180.0*decimalScale;
+  }
+  ///360
+  static Decimal get fullCircle{
+    return Decimal().._=360.0*decimalScale;
+  }
   static Decimal get infinite{
     return Decimal().._=double.infinity * decimalScale;
   }
