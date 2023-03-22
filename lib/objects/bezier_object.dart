@@ -10,15 +10,13 @@ import '../viewer/space.dart';
 import 'space_object.dart';
 
 class BezierObject extends Bezier with SpaceObject{
-  BezierObject(super.start, super.end);
+  BezierObject(super.position, super.end);
 
   // RectObject.fromCenter({required super.center, required super.width, required super.height}) : super.fromCenter();
   @override
-  BezierObject copyWith({PointEX? start, PointEX? end}){
-    if(start == null || end == null){
-      return BezierObject(PointEX.zero, PointEX.zero);
-    }
-    return BezierObject(start,end);
+  ///构造函数,给定的参数是贝塞尔曲线的所在位置 也就是起点,和终点 也就是连接的目标的位置
+  BezierObject copyWith({PointEX? position, PointEX? end}){
+    return BezierObject(position ?? this.position, end ?? this.end);
   }
 
   bool isPointOnLine(PointEX point, {Decimal? deviation}){
@@ -36,10 +34,10 @@ class BezierObject extends Bezier with SpaceObject{
   toString() => 'BezierObject{start: $position, end: $end}';
 
   @override
-  RectEX get selfBounds => bounds;
+  RectEX get selfBounds => bounds.shift(-position.x, -position.y);
 
   @override
-  RectEX get worldBounds => bounds.shift(position.x, position.y);
+  RectEX get worldBounds => bounds;
 }
 class BezierObjectNotifier extends StateNotifier<BezierObject>{
   bool _isInteractive = false;

@@ -76,7 +76,8 @@ class PolygonObjectWidget extends ConsumerWidget{
             (e) =>
             Space.
             spacePointPos2ViewPortPointPos
-              (e, viewPortOffset, viewPortScale, viewPortPixelSize)
+              (e + polygonObject.position
+                , viewPortOffset, viewPortScale, viewPortPixelSize)
     ).toList();
     if(offsetList.isNotEmpty){
       offsetList.add(offsetList[0]);

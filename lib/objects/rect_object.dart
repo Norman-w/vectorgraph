@@ -122,8 +122,8 @@ class RectObjectWidget extends ConsumerWidget{
   static Rect getViewRect(RectObject rectObject, Decimal viewPortScale, Offset viewPortOffset, Size viewPortSize){
     var width = rectObject.width;
     var height = rectObject.height;
-    var top = rectObject.top + rectObject.position.x;
-    var left = rectObject.left + rectObject.position.y;
+    var top = rectObject.top + rectObject.position.x * viewPortScale;
+    var left = rectObject.left + rectObject.position.y * viewPortScale;
     var newWidth = width * viewPortScale;
     var newHeight = height * viewPortScale;
     var oldWidth = width;
