@@ -4,6 +4,7 @@ import 'package:vectorgraph/model/geometry/lines/line_segment.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/model/geometry/rect/RectEX.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
+import '../model/geometry/lines/cross_info.dart';
 import '../model/geometry/planes/polygon.dart';
 import '../viewer/line_painter.dart';
 import '../space/space.dart';
@@ -14,13 +15,19 @@ class RegularPolygonalStarObject extends Polygon with SpaceObject{
   final PointEX _position;
   final int _stabCount;
   final Decimal _outsideRadius;
-  final Decimal _insideRadius;
+  final Decimal? _insideRadius;
   ///构造函数 传入正多角星的所在位置,刺数量(尖儿),外圈直径,内圈直径
   RegularPolygonalStarObject(this._position, this._stabCount, this._outsideRadius, this._insideRadius){
     var points = <PointEX>[];
     //半径
-    Decimal outside_r = _outsideRadius / Decimal.two;
-    Decimal inside_r = _insideRadius / Decimal.two;
+    Decimal outsideR = _outsideRadius / Decimal.two;
+    //内圈半径.
+    var insideR = _insideRadius == null ? outsideR / Decimal.fromDouble(
+        _stabCount == 3?12/3
+            :_stabCount == 4?12/4
+            :3
+    ) : _insideRadius! / Decimal.two;
+
     //每一条边所分的pi值
     var perDeg = decimalPi / Decimal.fromInt(_stabCount);
     //边数平分360之后的每一条边的角度跨度
@@ -33,35 +40,46 @@ class RegularPolygonalStarObject extends Polygon with SpaceObject{
     //⭐️内圈短边的顶点所需要的回转角度
     var rotationAngleInside = ((perSideDeg + 0.5* perSideDeg).toDecimal() -
         Decimal.fromInt(90)) * deg1;
-    //第一个点,为了看起来更好看.我们默认让第一个点在圆的正上方,但是比如说我们要画一个三角形,那么第一个点就不是在正上方了
-    //所以我们要把角度再往前移动一个角度,比如3个顶点的,第一个顶点在旋转120度的地方
-    var firstOutsideX = outside_r * decimalCos(perDeg - rotationAngle);
-    var firstOutsideY = outside_r * decimalSin(perDeg - rotationAngle);
-
-    //内圈第一个点
-    var firstInsideX = inside_r * decimalCos(perDeg - rotationAngleInside);
-    var firstInsideY = inside_r * decimalSin(perDeg - rotationAngleInside);
-    //start 开始
-    points.add(PointEX(firstOutsideX,firstOutsideY));
-    //连到内层第一个点上
-    points.add(PointEX(firstInsideX, firstInsideY));
-    //创建每一个外面和里面要链接的点并链接上
-    for (int i = 2; i <= _stabCount * 2; i++) {
-      var di = Decimal.fromInt(i);
-      if (i.isOdd) {
-        var outX = outside_r * decimalCos(perDeg * di - rotationAngle);
-        var outY = outside_r * decimalSin(perDeg * di - rotationAngle);
-        //line to /link to 链接到
-        points.add(PointEX(outX,outY));
-
-        var inX = inside_r * decimalCos(perDeg * di - rotationAngleInside);
-        var inY = inside_r * decimalSin(perDeg * di - rotationAngleInside);
-        points.add(PointEX(inX, inY));
+    var outsidePoints = <PointEX>[];
+    var insidePoints = <PointEX>[];
+    //创建外围的所有点
+    for (int i = 0; i < _stabCount; i++) {
+      var di = Decimal.fromInt(i+1) * Decimal.two;
+        var outX = outsideR * decimalCos(perDeg * di - rotationAngle);
+        var outY = outsideR * decimalSin(perDeg * di - rotationAngle);
+        outsidePoints.add(PointEX(outX,outY));
+    }
+    //region 为了更好得到一个正多角星,我们需要再5个顶点及以上的图形中,计算一个新的内圈半径,让相隔一点的两个顶点之间的连线是直的
+    if(_stabCount >4){
+      //获取到相隔一点的两个顶点之间的连线
+      var line1 = LineSegment(outsidePoints[0], outsidePoints[2]);
+      var line2 = LineSegment(outsidePoints[1], outsidePoints[3]);
+      //获取相交的交点信息
+      CrossInfo crossInfo = getTwoLineSegmentsCrossInfo(line1, line2);
+      // print("crossInfo: $crossInfo, 线段1: $line1, 线段2: $line2");
+      //如果有交点,获取到交点的距离
+      if(crossInfo.isCross && crossInfo.crossPoint != null){
+        //获取到交点的距离
+        var crossDistance = crossInfo.crossPoint!.distanceTo(PointEX.zero);
+        //如果交点的距离小于内圈半径,那么就需要重新计算内圈半径
+        insideR = crossDistance;
       }
     }
+    //endregion
+    //创建内圈的所有点
+    for (int i = 0; i < _stabCount; i++) {
+      var di = Decimal.fromInt(i+1) * Decimal.two;
+      var inX = insideR * decimalCos(perDeg * di - rotationAngleInside);
+      var inY = insideR * decimalSin(perDeg * di - rotationAngleInside);
+      insidePoints.add(PointEX(inX, inY));
+    }
+    //将外圈的点和内圈的点交叉组合,得到最终的点集合
+    for (int i = 0; i < _stabCount; i++) {
+      points.add(outsidePoints[i]);
+      points.add(insidePoints[i]);
+    }
     //end  close 封闭
-    points.add(PointEX(firstOutsideX,firstOutsideY));
-
+    points.add(outsidePoints[0]);
     super.points = points;
   }
 

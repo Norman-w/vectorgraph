@@ -20,6 +20,9 @@ class Decimal{
   factory Decimal.fromInt(int value){
     return Decimal().._=value * 1.0 * decimalScale;
   }
+  factory Decimal.fromDouble(double value){
+    return Decimal().._=value * decimalScale;
+  }
   double toDouble(){
     return _/decimalScale;
   }

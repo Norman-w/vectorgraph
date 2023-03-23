@@ -17,6 +17,7 @@ import 'package:vectorgraph/model/geometry/lines/line_segment.dart';
 import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
 import 'package:vectorgraph/objects/line_object.dart';
 import 'package:vectorgraph/objects/polygon_object.dart';
+import 'package:vectorgraph/objects/regular_polygonal_star.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/utils/widget.dart';
 
@@ -133,7 +134,20 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
               }
             }
             break;
-
+          case RegularPolygonalStarObject:
+            var star = element as RegularPolygonalStarObject;
+            var oldIsInteractive = star.isInteractive;
+            var newIsInteractive = star.isPointOnEdgeLines(worldPoint, deviation:deviation);
+            if(oldIsInteractive != newIsInteractive)
+            {
+              star.isInteractive = newIsInteractive;
+              ref.read(regularPolygonalStartsProvider(star).notifier).updateIsInteractive(newIsInteractive);
+              if(newIsInteractive)
+              {
+                // print('on it');
+              }
+            }
+            break;
           case PointObject:
             var point = element as PointObject;
             var oldIsInteractive = point.isInteractive;

@@ -80,20 +80,20 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
     ..currentScale = value
       ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX() / value
       ..allObjectInViewPort = _space.getInViewPortObjects(
-          -PointEX.fromOffset(state.currentOffset)/state.currentScale,
+          -PointEX.fromOffset(state.currentOffset)/value,
           state.validViewPortSizeOfSpace);
   }
   set currentOffset(Offset value) {
     state = state.copyWith()..currentOffset = value
     ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX()/state.currentScale
       ..allObjectInViewPort = _space.getInViewPortObjects(
-          -PointEX.fromOffset(state.currentOffset)/state.currentScale,
+          -PointEX.fromOffset(value)/state.currentScale,
           state.validViewPortSizeOfSpace);
   }
   set viewPortPixelSize(Size value) {
     state = state.copyWith()
       ..viewPortPixelSize = value
-      ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX() / state.currentScale
+      ..validViewPortSizeOfSpace = value.toSizeEX() / state.currentScale
       ..allObjectInViewPort = _space.getInViewPortObjects(
           -PointEX.fromOffset(state.currentOffset)/state.currentScale,
           state.validViewPortSizeOfSpace);
@@ -235,18 +235,18 @@ Space initSpace(){
 
 
   //使用随机大小30-300, 随机边数3-10的多边形 在 x=-2000~+2000, y=-1000~+1000的范围内随机生成多边形并添加到layer5
-  // for(int i=0;i<1000;i++){
-  //   var size = Decimal.fromInt(Random().nextInt(270)+30);
-  //   var count = Random().nextInt(8)+3;
-  //   var x = Decimal.fromInt(Random().nextInt(40000)-20000);
-  //   var y = Decimal.fromInt(Random().nextInt(20000)-10000);
-  //   var point = PointEX(x,y);
-  //   EquilateralPolygonObject polygonObject = EquilateralPolygonObject(
-  //       point,
-  //       size: size,count:count
-  //   );
-  //   layer5.addEquilateralPolygon(polygonObject);
-  // }
+  for(int i=0;i<1000;i++){
+    var size = Decimal.fromInt(Random().nextInt(270)+30);
+    var count = Random().nextInt(8)+3;
+    var x = Decimal.fromInt(Random().nextInt(40000)-20000);
+    var y = Decimal.fromInt(Random().nextInt(20000)-10000);
+    var point = PointEX(x,y);
+    EquilateralPolygonObject polygonObject = EquilateralPolygonObject(
+        point,
+        size: size,count:count
+    );
+    layer5.addEquilateralPolygon(polygonObject);
+  }
   //endregion
 
   //region 第六层,正多角星
@@ -257,7 +257,7 @@ Space initSpace(){
     var y = Decimal.fromInt(Random().nextInt(20000)-10000);
     var point = PointEX(x,y);
     RegularPolygonalStarObject regularPolygonalStarObject = RegularPolygonalStarObject(
-        point,count,size,size/Decimal.two
+        point,count,size, null
     );
     layer6.addRegularPolygonalStart(regularPolygonalStarObject);
   }
