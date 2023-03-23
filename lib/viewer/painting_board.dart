@@ -240,17 +240,8 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
       Decimal newScale = oldScale +
           (reverseMouseWheel ? event.scrollDelta.dy.toDecimal() / decimal1000 : -event.scrollDelta
               .dy.toDecimal() / decimal1000);
-      //region 限制最小和最大放大倍数
-      if (newScale < decimalDot1) {
-        ref.read(viewStateProvider.notifier).currentScale = decimalDot1;
-      }
-      else if (newScale > decimal10000) {
-        ref.read(viewStateProvider.notifier).currentScale = decimal10000;
-      }
-      else {
-        ref.read(viewStateProvider.notifier).currentScale = newScale;
-      }
-      //endregion
+
+        ref.read(viewStateProvider.notifier).updateCurrentScale(newScale, event.position);
       //鼠标滚轮更新尺寸检测鼠标焦点上的物件
       // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
     }
@@ -280,17 +271,8 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
 
     //在上一次放大倍数的基础上缩放
     var newScale = panScaleStart! * event.scale.toDecimal();
-    //region 限制最小和最大放大倍数
-    // if (newScale < decimalDot1) {
-    //   ref.read(viewStateProvider.notifier).currentScale = decimalDot1;
-    // }
-    // else if (newScale > decimal10000) {
-    //   ref.read(viewStateProvider.notifier).currentScale = decimal10000;
-    // }
-    // else {
-      ref.read(viewStateProvider.notifier).currentScale = newScale;
-    // }
-    //endregion
+
+      ref.read(viewStateProvider.notifier).updateCurrentScale(newScale, event.position);
 
     //更新尺寸检测鼠标焦点上的物件
     // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);

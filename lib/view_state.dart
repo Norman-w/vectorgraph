@@ -75,12 +75,28 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
         -PointEX.fromOffset(state.currentOffset)/state.currentScale,
         state.validViewPortSizeOfSpace);
   }
-  set currentScale(Decimal value) {
+  Decimal decimal1000 = Decimal.fromInt(1000);
+  Decimal decimal10000 = Decimal.fromInt(10000);
+  Decimal decimalDot1 = Decimal.parse("0.1");
+  void updateCurrentScale(Decimal newScale, Offset cursorPosition) {
+    var boundCenter = state.bound.center;
+    //缩放时的补偿.如果没有的话显得缩放时候的中心坐标获取的不自然.在缩放后要往中心点位置移动一点距离
+    var offset = (cursorPosition - boundCenter)*0.01;
+    if (newScale < decimalDot1) {
+      newScale = decimalDot1;
+      //超限了以后不再移动
+      offset = Offset.zero;
+    }
+    else if (newScale > decimal10000) {
+      newScale = decimal10000;
+      offset = Offset.zero;
+    }
     state = state.copyWith()
-    ..currentScale = value
-      ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX() / value
+      ..currentScale = newScale
+      ..currentOffset = state.currentOffset - offset
+      ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX() / newScale
       ..allObjectInViewPort = _space.getInViewPortObjects(
-          -PointEX.fromOffset(state.currentOffset)/value,
+          -PointEX.fromOffset(state.currentOffset)/newScale,
           state.validViewPortSizeOfSpace);
   }
   set currentOffset(Offset value) {
