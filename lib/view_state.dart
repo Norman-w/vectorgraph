@@ -18,36 +18,6 @@ import 'space/space.dart';
 import 'objects/space_object.dart';
 import 'space/space_layer.dart';
 
-
-// class ViewState{
-//   ///当前视口到世界空间的缩放比例
-//   Decimal viewSpaceScale2ObjectSpace = Decimal.one;
-//   ///当前视口的偏移量,不是世界空间的偏移量
-//   Offset viewSpaceOffset = Offset.zero;
-//   ///当前视口的像素大小
-//   Size viewPortSize = Size.zero;
-//   ///当前视口在世界空间中的有效大小
-//   SizeEX objectSpaceViewingSize = SizeEX.zero;
-//   ///当前视口中能看到的所有物件
-//   List<SpaceObject> allObjectInViewPort = [];
-//   // ///标尺需要的矩形,从中心点开始
-//   // Rect get rulerRectFromCenter => Rect.fromCenter(
-//   //     center: (-PointEX.fromOffset(currentOffset) / currentScale).toOffset(),
-//   //     width: validViewPortSizeOfSpace.width.toDouble(),
-//   //     height: validViewPortSizeOfSpace.height.toDouble());
-//   // Space _space = initSpace();
-//   ///拷贝当前视图状态
-//   ViewState copyWith(){
-//     return ViewState()
-//       ..viewSpaceScale2ObjectSpace = viewSpaceScale2ObjectSpace
-//       ..viewSpaceOffset = viewSpaceOffset
-//       // ..viewSpaceBounds = viewSpaceBounds
-//       ..viewPortSize = viewPortSize
-//       ..objectSpaceViewingSize = objectSpaceViewingSize
-//       ..allObjectInViewPort = allObjectInViewPort
-//     ;
-//   }
-// }
 class ViewState{
   //region 视图空间
   Offset viewSpaceViewPortOffset = Offset.zero;
@@ -58,11 +28,6 @@ class ViewState{
   ///视口的大小
   Size viewPortSize = Size.zero;
   //endregion
-
-  // //region 关系
-  // ///当前视口到世界空间的缩放比例
-  // Decimal viewSpaceScale2ObjectSpace = Decimal.one;
-  // //endregion
 
   //region 物体空间
   ///当前视口中能看到的所有物件
