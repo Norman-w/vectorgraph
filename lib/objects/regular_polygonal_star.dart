@@ -35,10 +35,15 @@ class RegularPolygonalStarObject extends Polygon with SpaceObject{
     //1°的π值
     var deg1 = decimalPi / Decimal.halfCircle;
     //回转角度,让第一个点在圆的正上方
-    var rotationAngle = ((perSideDeg + perSideDeg).toDecimal() -
+    var rotationAngle = ((perSideDeg
+    //对单数变和多数边的星形都做一个旋转处理,让第一个点都在正上方
+        + (_stabCount.isOdd? 0.5 * perSideDeg : perSideDeg)
+    ).toDecimal() -
         Decimal.fromInt(90)) * deg1;
     //⭐️内圈短边的顶点所需要的回转角度
-    var rotationAngleInside = ((perSideDeg + 0.5* perSideDeg).toDecimal() -
+    var rotationAngleInside = ((perSideDeg
+        + (_stabCount.isOdd? 0: 0.5 * perSideDeg)
+    ).toDecimal() -
         Decimal.fromInt(90)) * deg1;
     var outsidePoints = <PointEX>[];
     var insidePoints = <PointEX>[];
