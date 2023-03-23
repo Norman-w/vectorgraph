@@ -64,7 +64,6 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
 
   ///视图空间的矩形区域
   Rect? get viewSpaceBounds => _viewSpaceBounds;
-  // RectEX? get objectSpaceBounds => RectEX.
   set viewSpaceBounds(Rect? value) {
     if(_viewSpaceBounds == value || value == null){
       return;
