@@ -56,13 +56,19 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
   onHoverMouseRegion(PointerHoverEvent event) {
     //鼠标移动检测鼠标焦点上的物件
     // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
-    var state = ref.watch(viewStateProvider);
-    PointEX worldPoint = event.position.toPointEX() / state.currentScale
-        - PointEX(state.validViewPortSizeOfSpace.width / Decimal.two, state.validViewPortSizeOfSpace.height / Decimal.two)
-        - state.currentOffset.toPointEX()/state.currentScale;
+    ViewState state = ref.watch(viewStateProvider);
+    // PointEX worldPoint = event.position.toPointEX() / state.viewPortScale
+    //     - PointEX(state.objectSpaceViewingSize.width / Decimal.two, state.objectSpaceViewingSize.height / Decimal.two)
+    //     - state.viewSpaceOffset.toPointEX()/state.viewSpaceScale2ObjectSpace;
+    PointEX worldPoint = Space.viewPortPointPos2SpacePointPos(
+        event.position,
+        state.viewSpaceViewPortOffset,
+        state.viewPortScale,
+        state.objectSpaceViewingRect.size
+    );
 
     for (var element in state.allObjectInViewPort) {
-      var deviation = Decimal.fromInt(2)/state.currentScale.abs();
+      var deviation = Decimal.fromInt(2)/state.viewPortScale.abs();
         switch(element.runtimeType){
           case RectObject:
             var rect = element as RectObject;
@@ -193,8 +199,8 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         mouseDownPosition = event.position;
         logText = '右键按下,鼠标所在位置 ${event.position}';
       });
-      var oldOffset = ref.watch(viewStateProvider).currentOffset;
-      ref.read(viewStateProvider.notifier).currentOffset = oldOffset.translate(event.delta.dx, event.delta.dy);
+      var oldOffset = ref.watch(viewStateProvider).viewSpaceViewPortOffset;
+      ref.read(viewStateProvider.notifier).updateViewSpaceOffset(oldOffset.translate(event.delta.dx, event.delta.dy));
 
       //更新坐标检测鼠标焦点上的物件
       // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
@@ -207,9 +213,9 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
         //鼠标在世界中的坐标
         PointEX mousePositionInSpace = Space.viewPortPointPos2SpacePointPos(
             mouseMoveToPosition,
-            viewState.currentOffset,
-            viewState.currentScale,
-            viewState.validViewPortSizeOfSpace
+            viewState.viewSpaceViewPortOffset,
+            viewState.viewPortScale,
+            viewState.objectSpaceViewingRect.size
         );
         debugPrint('鼠标在世界中的坐标 $mousePositionInSpace');
       });
@@ -235,13 +241,13 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
       // logText = '鼠标滚轮 ${event.scrollDelta}';
       var oldScale = ref
           .watch(viewStateProvider)
-          .currentScale;
+          .viewPortScale;
 
       Decimal newScale = oldScale +
           (reverseMouseWheel ? event.scrollDelta.dy.toDecimal() / decimal1000 : -event.scrollDelta
               .dy.toDecimal() / decimal1000);
 
-        ref.read(viewStateProvider.notifier).updateCurrentScale(newScale, event.position);
+        ref.read(viewStateProvider.notifier).updateViewPortScale(newScale, event.position);
       //鼠标滚轮更新尺寸检测鼠标焦点上的物件
       // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
     }
@@ -259,11 +265,11 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     //region 位移
     var oldOffset = ref
         .watch(viewStateProvider)
-        .currentOffset;
+        .viewSpaceViewPortOffset;
 
     var newOffset = oldOffset.translate(
         event.localPanDelta.dx, event.localPanDelta.dy);
-    ref.read(viewStateProvider.notifier).currentOffset = newOffset;
+    ref.read(viewStateProvider.notifier).updateViewSpaceOffset(newOffset);
     //endregion
     // var oldScale = ref
     //     .watch(viewStateControllerProvider)
@@ -272,7 +278,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     //在上一次放大倍数的基础上缩放
     var newScale = panScaleStart! * event.scale.toDecimal();
 
-      ref.read(viewStateProvider.notifier).updateCurrentScale(newScale, event.position);
+      ref.read(viewStateProvider.notifier).updateViewPortScale(newScale, event.position);
 
     //更新尺寸检测鼠标焦点上的物件
     // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
@@ -282,7 +288,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
   onPointerPanZoomStart(event) {
     setState(() {
       //保存现在的缩放倍数,不直接修改放大倍数防止setState造成过量乘数
-      panScaleStart = ref.watch(viewStateProvider).currentScale;
+      panScaleStart = ref.watch(viewStateProvider).viewPortScale;
     });
   }
 
@@ -328,7 +334,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
 
           SizeListener(
               onWidgetSizeChange: (size) {
-                ref.read(viewStateProvider.notifier).bound = context.globalPaintBounds;
+                ref.read(viewStateProvider.notifier).viewSpaceBounds = context.globalPaintBounds;
                 ref.read(viewStateProvider.notifier).viewPortPixelSize = size;
               },
             child:

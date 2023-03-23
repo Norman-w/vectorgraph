@@ -9,7 +9,7 @@ import 'package:vectorgraph/objects/regular_polygonal_star.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
-import 'model/geometry/SizeEX.dart';
+import 'model/geometry/rect/RectEX.dart';
 import 'objects/bezier_object.dart';
 import 'objects/line_object.dart';
 import 'objects/point_object.dart';
@@ -19,36 +19,73 @@ import 'objects/space_object.dart';
 import 'space/space_layer.dart';
 
 
+// class ViewState{
+//   ///当前视口到世界空间的缩放比例
+//   Decimal viewSpaceScale2ObjectSpace = Decimal.one;
+//   ///当前视口的偏移量,不是世界空间的偏移量
+//   Offset viewSpaceOffset = Offset.zero;
+//   ///当前视口的像素大小
+//   Size viewPortSize = Size.zero;
+//   ///当前视口在世界空间中的有效大小
+//   SizeEX objectSpaceViewingSize = SizeEX.zero;
+//   ///当前视口中能看到的所有物件
+//   List<SpaceObject> allObjectInViewPort = [];
+//   // ///标尺需要的矩形,从中心点开始
+//   // Rect get rulerRectFromCenter => Rect.fromCenter(
+//   //     center: (-PointEX.fromOffset(currentOffset) / currentScale).toOffset(),
+//   //     width: validViewPortSizeOfSpace.width.toDouble(),
+//   //     height: validViewPortSizeOfSpace.height.toDouble());
+//   // Space _space = initSpace();
+//   ///拷贝当前视图状态
+//   ViewState copyWith(){
+//     return ViewState()
+//       ..viewSpaceScale2ObjectSpace = viewSpaceScale2ObjectSpace
+//       ..viewSpaceOffset = viewSpaceOffset
+//       // ..viewSpaceBounds = viewSpaceBounds
+//       ..viewPortSize = viewPortSize
+//       ..objectSpaceViewingSize = objectSpaceViewingSize
+//       ..allObjectInViewPort = allObjectInViewPort
+//     ;
+//   }
+// }
 class ViewState{
-  ///当前视口到世界空间的缩放比例
-  Decimal currentScale = Decimal.one;
-  ///当前视口的偏移量,不是世界空间的偏移量
-  Offset currentOffset = Offset.zero;
-  ///当前视口的边界
-  Rect bound = Rect.zero;
-  ///当前视口的像素大小
-  Size viewPortPixelSize = Size.zero;
-  ///当前视口在世界空间中的有效大小
-  SizeEX validViewPortSizeOfSpace = SizeEX.zero;
+  //region 视图空间
+  Offset viewSpaceViewPortOffset = Offset.zero;
+  ///视口聚焦的位置,因为是鼠标往右拖动,视口中心实际上是在左移,所以是负数
+  PointEX get viewPortPosition => -PointEX.fromOffset(viewSpaceViewPortOffset)/viewPortScale;
+  ///视口的放大倍数
+  Decimal viewPortScale = Decimal.one;
+  ///视口的大小
+  Size viewPortSize = Size.zero;
+  //endregion
+
+  // //region 关系
+  // ///当前视口到世界空间的缩放比例
+  // Decimal viewSpaceScale2ObjectSpace = Decimal.one;
+  // //endregion
+
+  //region 物体空间
   ///当前视口中能看到的所有物件
   List<SpaceObject> allObjectInViewPort = [];
-  // ///标尺需要的矩形,从中心点开始
-  // Rect get rulerRectFromCenter => Rect.fromCenter(
-  //     center: (-PointEX.fromOffset(currentOffset) / currentScale).toOffset(),
-  //     width: validViewPortSizeOfSpace.width.toDouble(),
-  //     height: validViewPortSizeOfSpace.height.toDouble());
-  // Space _space = initSpace();
-  ///拷贝当前视图状态
+  
+  ///物体空间内可视大小
+  RectEX get objectSpaceViewingRect => RectEX.fromCenter(
+      center: viewPortPosition,
+      width: viewPortSize.width.toDecimal() / viewPortScale,
+      height: viewPortSize.height.toDecimal() / viewPortScale);
+  //endregion
+
+  //region state拷贝
   ViewState copyWith(){
     return ViewState()
-      ..currentScale = currentScale
-      ..currentOffset = currentOffset
-      ..bound = bound
-      ..viewPortPixelSize = viewPortPixelSize
-      ..validViewPortSizeOfSpace = validViewPortSizeOfSpace
-      ..allObjectInViewPort = allObjectInViewPort
+        ..viewSpaceViewPortOffset = viewSpaceViewPortOffset
+        ..viewPortScale = viewPortScale
+        ..viewPortSize = viewPortSize
+        ..viewPortScale = viewPortScale
+        ..allObjectInViewPort = allObjectInViewPort
     ;
   }
+  //endregion
 }
 
 final viewStateProvider = StateNotifierProvider<ViewStateNotifier, ViewState>((ref) {
@@ -56,63 +93,50 @@ final viewStateProvider = StateNotifierProvider<ViewStateNotifier, ViewState>((r
 });
 
 class ViewStateNotifier extends StateNotifier<ViewState> {
-  Rect? _bound;
+  Rect? _viewSpaceBounds;
 
   ViewStateNotifier(super.state);
 
-  Rect? get bound => _bound;
-  set bound(Rect? value) {
-    if(_bound == value || value == null){
+  ///视图空间的矩形区域
+  Rect? get viewSpaceBounds => _viewSpaceBounds;
+  // RectEX? get objectSpaceBounds => RectEX.
+  set viewSpaceBounds(Rect? value) {
+    if(_viewSpaceBounds == value || value == null){
       return;
     }
-    state = state.copyWith()
-    ..bound = value
-    ..viewPortPixelSize = value.size
-      //注意这里很关键,如果是使用state.viewPortPixelSize,获取到的是旧的值,而不是最新的值,所以要使用value.size
-    // ..validViewPortSizeOfSpace = SizeEX.fromSize(state.viewPortPixelSize) / state.currentScale
-    ..validViewPortSizeOfSpace = SizeEX.fromSize(value.size) / state.currentScale
-    ..allObjectInViewPort = _space.getInViewPortObjects(
-        -PointEX.fromOffset(state.currentOffset)/state.currentScale,
-        state.validViewPortSizeOfSpace);
+    var newState = state.copyWith()
+    ..viewPortSize = value.size;
+    newState.allObjectInViewPort = _space.getInViewPortObjects(newState.objectSpaceViewingRect);
+
+    state = newState;
   }
   Decimal decimal1000 = Decimal.fromInt(1000);
   Decimal decimal10000 = Decimal.fromInt(10000);
   Decimal decimalDot1 = Decimal.parse("0.1");
-  void updateCurrentScale(Decimal newScale, Offset cursorPosition) {
-    var boundCenter = state.bound.center;
-    //缩放时的补偿.如果没有的话显得缩放时候的中心坐标获取的不自然.在缩放后要往中心点位置移动一点距离
-    var offset = (cursorPosition - boundCenter)*0.01;
-    if (newScale < decimalDot1) {
-      newScale = decimalDot1;
-      //超限了以后不再移动
-      offset = Offset.zero;
+  ///更新当前缩放比例
+  void updateViewPortScale(Decimal newScale, Offset cursorPosition) {
+    if(newScale > decimal1000 || newScale < decimalDot1){
+      return;
     }
-    else if (newScale > decimal10000) {
-      newScale = decimal10000;
-      offset = Offset.zero;
-    }
-    state = state.copyWith()
-      ..currentScale = newScale
-      ..currentOffset = state.currentOffset - offset
-      ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX() / newScale
-      ..allObjectInViewPort = _space.getInViewPortObjects(
-          -PointEX.fromOffset(state.currentOffset)/newScale,
-          state.validViewPortSizeOfSpace);
+    var newState = state.copyWith()
+      ..viewPortScale = newScale;
+    newState.allObjectInViewPort = _space.getInViewPortObjects(newState.objectSpaceViewingRect);
+    state = newState;
   }
-  set currentOffset(Offset value) {
-    state = state.copyWith()..currentOffset = value
-    ..validViewPortSizeOfSpace = state.viewPortPixelSize.toSizeEX()/state.currentScale
-      ..allObjectInViewPort = _space.getInViewPortObjects(
-          -PointEX.fromOffset(value)/state.currentScale,
-          state.validViewPortSizeOfSpace);
+  ///更新当前视口偏移量
+  void updateViewSpaceOffset(Offset value) {
+    var newState = state.copyWith();
+    // var objectSpaceOffset = PointEX.fromOffset(value) / newState.viewPortScale;
+    // newState.viewPortPosition = newState.viewPortPosition - objectSpaceOffset;
+    newState.viewSpaceViewPortOffset = value;
+    newState.allObjectInViewPort = _space.getInViewPortObjects(newState.objectSpaceViewingRect);
+    state = newState;
   }
   set viewPortPixelSize(Size value) {
-    state = state.copyWith()
-      ..viewPortPixelSize = value
-      ..validViewPortSizeOfSpace = value.toSizeEX() / state.currentScale
-      ..allObjectInViewPort = _space.getInViewPortObjects(
-          -PointEX.fromOffset(state.currentOffset)/state.currentScale,
-          state.validViewPortSizeOfSpace);
+    var newState = state.copyWith()
+      ..viewPortSize = value;
+    newState.allObjectInViewPort = _space.getInViewPortObjects(newState.objectSpaceViewingRect);
+    state = newState;
   }
   final Space _space = initSpace();
   PointEX worldPoint = PointEX.zero;

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import '../../../utils/num_utils.dart';
+import '../SizeEX.dart';
 import '../points/point_ex.dart';
 
 class RectEX {
@@ -23,6 +24,7 @@ class RectEX {
   PointEX get topLeft => PointEX(left, top);
   PointEX get bottomRight => PointEX(right, bottom);
   PointEX get bottomLeft => PointEX(left, bottom);
+  SizeEX get size => SizeEX(width, height);
 
 
 

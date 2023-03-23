@@ -27,15 +27,11 @@ class Space {
     papers.add(paper);
   }
 
-  List<SpaceObject> getInViewPortObjects(PointEX viewPortShowingSpaceRectCenter, SizeEX showingSpaceRectSize){
+  List<SpaceObject> getInViewPortObjects(RectEX objectSpaceViewingRect){
     var result = <SpaceObject>[];
     for (var layer in layers) {
       result.addAll(layer.getInBounds(
-          RectEX.fromLTWH(
-              viewPortShowingSpaceRectCenter.x - showingSpaceRectSize.width / Decimal.two,
-              viewPortShowingSpaceRectCenter.y - showingSpaceRectSize.height / Decimal.two,
-              showingSpaceRectSize.width,
-              showingSpaceRectSize.height)
+          objectSpaceViewingRect
       ));
       //测试时候直接都加进来
       // result.addAll(layer.objects);
