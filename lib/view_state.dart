@@ -78,13 +78,26 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
   Decimal decimal10000 = Decimal.fromInt(10000);
   Decimal decimalDot1 = Decimal.parse("0.1");
   ///更新当前缩放比例
-  void updateViewPortScale(Decimal newScale, Offset cursorPosition) {
+  void updateViewPortScale(Decimal newScale, Offset viewSpaceCursorPosition) {
     if(newScale > decimal1000 || newScale < decimalDot1){
       return;
     }
+    var v = Space.viewPortPointPos2SpacePointPos(
+        viewSpaceCursorPosition,
+        state.viewSpaceViewPortOffset,
+        state.viewPortScale,
+        state.objectSpaceViewingRect.size) - state.viewPortPosition;
+
+    var v2 = Space.spacePointPos2ViewPortPointPos(
+        v,
+        state.viewSpaceViewPortOffset,
+        state.viewPortScale,
+        state.viewPortSize);
+    print("v: $v2");
     var newState = state.copyWith()
       ..viewPortScale = newScale;
     newState.allObjectInViewPort = _space.getInViewPortObjects(newState.objectSpaceViewingRect);
+    // newState.viewSpaceViewPortOffset = v2;
     state = newState;
   }
   ///更新当前视口偏移量
