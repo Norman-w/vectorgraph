@@ -19,12 +19,13 @@ import 'objects/space_object.dart';
 import 'space/space_layer.dart';
 
 class ViewState{
-  PointEX _objectSpaceViewPortOffset = PointEX.zero;
-  Offset _viewSpaceViewPortOffset = Offset.zero;
+  PointEX _viewPortPosition = PointEX.zero;
+  // Offset _viewSpaceViewPortOffset = Offset.zero;
   //region 视图空间
-  Offset get viewSpaceViewPortOffset => _viewSpaceViewPortOffset;
+  // Offset get viewSpaceViewPortOffset => _viewSpaceViewPortOffset;
+  Offset get viewSpaceViewPortOffset => -(_viewPortPosition * viewPortScale).toOffset();
   ///视口聚焦的位置,因为是鼠标往右拖动,视口中心实际上是在左移,所以是负数
-  PointEX get viewPortPosition => _objectSpaceViewPortOffset;
+  PointEX get viewPortPosition => _viewPortPosition;
   ///视口的放大倍数
   Decimal viewPortScale = Decimal.one;
   ///视口的大小
@@ -45,8 +46,8 @@ class ViewState{
   //region state拷贝
   ViewState copyWith(){
     return ViewState()
-        .._objectSpaceViewPortOffset = _objectSpaceViewPortOffset
-        .._viewSpaceViewPortOffset = _viewSpaceViewPortOffset
+        .._viewPortPosition = _viewPortPosition
+        // .._viewSpaceViewPortOffset = _viewSpaceViewPortOffset
         ..viewPortScale = viewPortScale
         ..viewPortSize = viewPortSize
         ..viewPortScale = viewPortScale
@@ -85,32 +86,32 @@ class ViewStateNotifier extends StateNotifier<ViewState> {
     if(newScale > decimal1000 || newScale < decimalDot1){
       return;
     }
-    ///鼠标相当于在视图中间的哪个方向上,偏移了多少
-    var cursorOffsetOfViewPortCenter = viewSpaceCursorPosition - state.viewPortSize.center(Offset.zero);
-    ///鼠标所在的那个点的世界坐标
-    PointEX worldPoint = Space.viewPortPointPos2SpacePointPos(
-            viewSpaceCursorPosition,
-            state.viewSpaceViewPortOffset,
-            state.viewPortScale,
-            state.objectSpaceViewingRect.size
-        );
-    ///鼠标的点距离视口中心点多远
-    var worldOffset = worldPoint - state.viewPortPosition;
-    print("鼠标所在的点的世界坐标点距离视口当前所指的世界坐标点的距离是:$worldOffset");
-    var w = worldOffset - state._objectSpaceViewPortOffset;
-    var newState = state.copyWith()
-      ..viewPortScale = newScale;
-    newState._objectSpaceViewPortOffset = state._objectSpaceViewPortOffset + worldOffset;
-    newState._viewSpaceViewPortOffset = state._viewSpaceViewPortOffset + cursorOffsetOfViewPortCenter;
+    var oldState = state;
+    //拉点
+    var cursorWorldPoint = PointEX(Decimal.fromInt(100),Decimal.zero);
+    cursorWorldPoint = Space.viewPortPointPos2SpacePointPos(
+        viewSpaceCursorPosition,
+        oldState.viewSpaceViewPortOffset,
+        oldState.viewPortScale,
+        oldState.objectSpaceViewingRect.size
+    );
+    //这次是上次的倍数
+    var thisTimeIsLastTimeScale = newScale / oldState.viewPortScale;
+    //拉动点到中心
+    var pullPoint2WorldCenter = cursorWorldPoint - oldState.viewPortPosition;
+    //新的中心点
+    var newViewPortPosition = cursorWorldPoint - (pullPoint2WorldCenter) / thisTimeIsLastTimeScale;
 
+    var newState = oldState.copyWith()..viewPortScale = newScale;
+    newState._viewPortPosition = newViewPortPosition;
     newState.allObjectInViewPort = _space.getInViewPortObjects(newState.objectSpaceViewingRect);
     state = newState;
   }
   ///更新当前视口偏移量
   void updateViewSpaceOffset(Offset value) {
     var newState = state.copyWith();
-    newState._viewSpaceViewPortOffset = value;
-    newState._objectSpaceViewPortOffset = -PointEX.fromOffset(value)/newState.viewPortScale;
+    // newState._viewSpaceViewPortOffset = value;
+    newState._viewPortPosition = -PointEX.fromOffset(value)/newState.viewPortScale;
     newState.allObjectInViewPort = _space.getInViewPortObjects(newState.objectSpaceViewingRect);
     state = newState;
   }
@@ -166,6 +167,10 @@ Space initSpace(){
 
   layer1.addPoint(
       PointObject(Decimal.zero, Decimal.ten)..radius = Decimal.fromInt(2)
+  );
+
+  layer1.addPoint(
+      PointObject(Decimal.fromInt(50), Decimal.zero)..radius = Decimal.fromInt(4)
   );
 
   //endregion
