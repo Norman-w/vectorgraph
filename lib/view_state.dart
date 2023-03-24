@@ -277,7 +277,7 @@ Space initSpace(){
   //endregion
 
   //region 第六层,正多角星
-  for(int i=0;i<1000;i++){
+  for(int i=0;i<10000;i++){
     var size = Decimal.fromInt(Random().nextInt(270)+30);
     var count = Random().nextInt(8)+3;
     var x = Decimal.fromInt(Random().nextInt(40000)-20000);
