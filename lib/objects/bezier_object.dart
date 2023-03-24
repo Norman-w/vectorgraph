@@ -7,9 +7,10 @@ import '../model/geometry/lines/bezier.dart';
 import '../model/geometry/lines/line_segment.dart';
 import '../viewer/line_painter.dart';
 import '../space/space.dart';
+import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 
-class BezierObject extends Bezier with SpaceObject{
+class BezierObject extends Bezier with ALineObject{
   BezierObject(super.position, super.end);
 
   // RectObject.fromCenter({required super.center, required super.width, required super.height}) : super.fromCenter();
@@ -37,21 +38,12 @@ class BezierObject extends Bezier with SpaceObject{
 
   @override
   RectEX get worldBounds => bounds;
-}
-class BezierObjectNotifier extends StateNotifier<BezierObject>{
-  bool _isInteractive = false;
-  BezierObjectNotifier(super.state, this._isInteractive);
-  get isInteractive => _isInteractive;
-  void updateIsInteractive(bool newIsInteractive){
-    _isInteractive = newIsInteractive;
-    state = state.copyWith()
-      ..isInteractive = newIsInteractive;
+
+  @override
+  bool isPointOn(PointEX pointEX, Decimal deviation) {
+    return isPointOnLine(pointEX, deviation: deviation);
   }
 }
-
-final bezierObjectsProvider =
-StateNotifierProvider.family<BezierObjectNotifier, BezierObject, BezierObject>(
-        (ref, rect) => BezierObjectNotifier(rect, false));
 
 class BezierObjectWidget extends ConsumerWidget{
   final BezierObject bezierObject;
@@ -80,7 +72,7 @@ class BezierObjectWidget extends ConsumerWidget{
                 //哈哈 像不像3D效果
                 // +viewPortOffset
     ).toList();
-    var linesPainter = LinesPainter(offsetList, ref.watch(bezierObjectsProvider(bezierObject)).isInteractive?
+    var linesPainter = LinesPainter(offsetList, ref.watch(lineObjectsProvider(bezierObject)).isInteractive?
     hoverColor:normalColor
     );
     return CustomPaint(

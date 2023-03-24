@@ -5,10 +5,11 @@ import 'package:vectorgraph/utils/num_utils.dart';
 import '../model/geometry/lines/line_segment.dart';
 import '../viewer/line_painter.dart';
 import '../space/space.dart';
+import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 import '../model/geometry/rect/RectEX.dart';
 
-class LineObject extends LineSegment with SpaceObject{
+class LineObject extends LineSegment with ALineObject{
   ///线段所在的世界坐标位置
   final PointEX _position;
   var _selfBounds = RectEX.zero;
@@ -35,21 +36,13 @@ class LineObject extends LineSegment with SpaceObject{
 
   @override
   RectEX get worldBounds => getBoundingBox();
-}
-class LineObjectNotifier extends StateNotifier<LineObject>{
-  bool _isInteractive = false;
-  LineObjectNotifier(super.state, this._isInteractive);
-  get isInteractive => _isInteractive;
-  void updateIsInteractive(bool newIsInteractive){
-    _isInteractive = newIsInteractive;
-    state = state.copyWith()
-      ..isInteractive = newIsInteractive;
+
+  @override
+  bool isPointOn(PointEX pointEX,Decimal deviation) {
+    return isPointOnLine(pointEX, deviation:deviation);
   }
 }
 
-final lineObjectsProvider =
-StateNotifierProvider.family<LineObjectNotifier, LineObject, LineObject>(
-        (ref, rect) => LineObjectNotifier(rect, false));
 
 class LineObjectWidget extends ConsumerWidget{
   final LineObject lineObject;

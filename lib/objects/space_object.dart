@@ -1,5 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../model/geometry/points/point_ex.dart';
 import '../model/geometry/rect/RectEX.dart';
 import '../utils/num_utils.dart';
@@ -17,13 +15,40 @@ mixin SpaceObject{
   SpaceObject copyWith();
 }
 
-class SpaceObjectController extends StateNotifier<SpaceObject>{
-  bool _isInteractive = false;
-  SpaceObjectController(super.state, this._isInteractive);
-  get isInteractive => _isInteractive;
-  void updateIsInteractive(bool newIsInteractive){
-    _isInteractive = newIsInteractive;
-    state = state.copyWith()
-      ..isInteractive = newIsInteractive;
-  }
+mixin APointObject implements SpaceObject{
+  ///给定的点是否在我的范围内(由于点有大小,所以实际上意思是,给定的点是否在我这个点的圆内)
+  bool isPointInMe(PointEX pointEX, Decimal deviation);
+  @override
+  APointObject copyWith();
+  @override
+  bool isInteractive = false;
 }
+mixin ALineObject implements SpaceObject{
+  ///给定的点是否和我相交,是否在我的线或者线集合(贝塞尔曲线或者其他曲线实际上是线集合)上
+  bool isPointOn(PointEX pointEX, Decimal deviation);
+  @override
+  ALineObject copyWith();
+  @override
+  bool isInteractive = false;
+}
+mixin APlaneObject implements SpaceObject{
+  ///给定的点是否在我的边线上
+  bool isPointOnEdgeLines(PointEX pointEX, Decimal deviation);
+  ///给定的点是否在我内部
+  bool isPointIn(PointEX pointEX);
+  @override
+  APlaneObject copyWith();
+  @override
+  bool isInteractive = false;
+}
+//
+// class SpaceObjectController extends StateNotifier<SpaceObject>{
+//   bool _isInteractive = false;
+//   SpaceObjectController(super.state, this._isInteractive);
+//   get isInteractive => _isInteractive;
+//   void updateIsInteractive(bool newIsInteractive){
+//     _isInteractive = newIsInteractive;
+//     state = state.copyWith()
+//       ..isInteractive = newIsInteractive;
+//   }
+// }

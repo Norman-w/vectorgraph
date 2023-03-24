@@ -5,9 +5,10 @@ import '../model/geometry/points/point_ex.dart';
 import '../utils/num_utils.dart';
 import '../viewer/points_painter.dart';
 import '../space/space.dart';
+import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 
-class PointObject extends PointEX with SpaceObject{
+class PointObject extends PointEX with APointObject{
   late Decimal radius;
   PointObject(super.x, super.y, {Decimal? radius}){
     this.radius = radius ?? Decimal.fromInt(1);
@@ -25,24 +26,14 @@ class PointObject extends PointEX with SpaceObject{
 
   @override
   RectEX get worldBounds => RectEX.fromCircle(center: PointEX(x, y), radius: radius);
-}
 
-class PointObjectNotifier extends StateNotifier<PointObject>{
-  bool _isInteractive = false;
-  PointObjectNotifier(super.state, this._isInteractive);
-  get isInteractive => _isInteractive;
-  void updateIsInteractive(bool newIsInteractive){
-    _isInteractive = newIsInteractive;
-    state = state.copyWith()
-      ..isInteractive = newIsInteractive;
+  @override
+  bool isPointInMe(PointEX pointEX, Decimal deviation) {
+    var distance = distanceTo(pointEX);
+    var newIsInteractive = distance < radius/Decimal.two + deviation;
+    return newIsInteractive;
   }
 }
-
-final pointObjectsProvider =
-StateNotifierProvider.family<PointObjectNotifier, PointObject, PointObject>(
-        (ref, point) => PointObjectNotifier(point, false));
-
-
 
 class PointObjectWidget extends ConsumerWidget{
   final PointObject pointObject;

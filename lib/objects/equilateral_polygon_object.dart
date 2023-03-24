@@ -7,9 +7,10 @@ import 'package:vectorgraph/utils/num_utils.dart';
 import '../model/geometry/planes/equilateral_polygon.dart';
 import '../viewer/line_painter.dart';
 import '../space/space.dart';
+import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 
-class EquilateralPolygonObject extends EquilateralPolygon with SpaceObject {
+class EquilateralPolygonObject extends EquilateralPolygon with APlaneObject {
   final PointEX _position;
   @override
   PointEX get position => _position;
@@ -20,14 +21,15 @@ class EquilateralPolygonObject extends EquilateralPolygon with SpaceObject {
     return EquilateralPolygonObject(_position, size:size, count:count);
   }
 
-  bool isPointOnEdgeLines(PointEX point, {Decimal? deviation}) {
+  @override
+  bool isPointOnEdgeLines(PointEX pointEX, Decimal deviation) {
     //check each line
     return getLineSegments()
         .any(
             (element) =>
             element.isPointOnLine(
               //由于贝塞尔曲线使用的是0点+世界坐标偏移的方式,所以在检测时也要使用这种方式,(减去偏移)
-                point - position
+                pointEX - position
                 , deviation: deviation)
     );
   }
@@ -38,20 +40,7 @@ class EquilateralPolygonObject extends EquilateralPolygon with SpaceObject {
   @override
   RectEX get worldBounds => bounds.shift(_position.x, _position.y);
 }
-class EquilateralPolygonObjectNotifier extends StateNotifier<EquilateralPolygonObject>{
-  bool _isInteractive = false;
-  EquilateralPolygonObjectNotifier(super.state, this._isInteractive);
-  get isInteractive => _isInteractive;
-  void updateIsInteractive(bool newIsInteractive){
-    _isInteractive = newIsInteractive;
-    state = state.copyWith()
-      ..isInteractive = newIsInteractive;
-  }
-}
 
-final equilateralPolygonObjectsProvider =
-StateNotifierProvider.family<EquilateralPolygonObjectNotifier, EquilateralPolygonObject, EquilateralPolygonObject>(
-        (ref, rect) => EquilateralPolygonObjectNotifier(rect, false));
 
 class EquilateralPolygonObjectWidget extends ConsumerWidget{
   final EquilateralPolygonObject equilateralPolygonObject;
@@ -79,7 +68,7 @@ class EquilateralPolygonObjectWidget extends ConsumerWidget{
               (e + equilateralPolygonObject.position
                 , viewPortOffset, viewPortScale, viewPortPixelSize)
     ).toList();
-    var linesPainter = LinesPainter(offsetList, ref.watch(equilateralPolygonObjectsProvider(equilateralPolygonObject)).isInteractive?
+    var linesPainter = LinesPainter(offsetList, ref.watch(planeObjectsProvider(equilateralPolygonObject)).isInteractive?
     hoverColor:normalColor
     );
     return CustomPaint(

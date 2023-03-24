@@ -7,9 +7,10 @@ import 'package:vectorgraph/utils/num_utils.dart';
 import '../model/geometry/planes/polygon.dart';
 import '../viewer/line_painter.dart';
 import '../space/space.dart';
+import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 
-class PolygonObject extends Polygon with SpaceObject{
+class PolygonObject extends Polygon with APlaneObject{
   final PointEX _position;
   PolygonObject(this._position, List<PointEX> points){
     super.points = points;
@@ -21,14 +22,15 @@ class PolygonObject extends Polygon with SpaceObject{
       return PolygonObject(_position, points);
   }
 
-  bool isPointOnEdgeLines(PointEX point, {Decimal? deviation}){
+  @override
+  bool isPointOnEdgeLines(PointEX pointEX, Decimal? deviation){
     //check each line
     return getLineSegments()
         .any(
             (element) =>
             element.isPointOnLine(
               //由于贝塞尔曲线使用的是0点+世界坐标偏移的方式,所以在检测时也要使用这种方式,(减去偏移)
-                point - _position
+                pointEX - _position
                 , deviation: deviation)
     );
   }
@@ -41,20 +43,6 @@ class PolygonObject extends Polygon with SpaceObject{
   @override
   RectEX get worldBounds => bounds.shift(_position.x, _position.y);
 }
-class PolygonObjectNotifier extends StateNotifier<PolygonObject>{
-  bool _isInteractive = false;
-  PolygonObjectNotifier(super.state, this._isInteractive);
-  get isInteractive => _isInteractive;
-  void updateIsInteractive(bool newIsInteractive){
-    _isInteractive = newIsInteractive;
-    state = state.copyWith()
-      ..isInteractive = newIsInteractive;
-  }
-}
-
-final polygonObjectsProvider =
-StateNotifierProvider.family<PolygonObjectNotifier, PolygonObject, PolygonObject>(
-        (ref, rect) => PolygonObjectNotifier(rect, false));
 
 class PolygonObjectWidget extends ConsumerWidget{
   final PolygonObject polygonObject;
@@ -85,7 +73,7 @@ class PolygonObjectWidget extends ConsumerWidget{
     if(offsetList.isNotEmpty){
       offsetList.add(offsetList[0]);
     }
-    var linesPainter = LinesPainter(offsetList, ref.watch(polygonObjectsProvider(polygonObject)).isInteractive?
+    var linesPainter = LinesPainter(offsetList, ref.watch(planeObjectsProvider(polygonObject)).isInteractive?
     hoverColor:normalColor
     );
     return CustomPaint(

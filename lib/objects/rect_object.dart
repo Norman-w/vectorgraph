@@ -6,10 +6,11 @@ import 'package:vectorgraph/viewer/rect_painter.dart';
 
 import '../model/geometry/SizeEX.dart';
 import '../model/geometry/lines/line_segment.dart';
+import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 import '../model/geometry/rect/RectEX.dart';
 
-class RectObject extends RectEX with SpaceObject{
+class RectObject extends RectEX with APlaneObject{
   ///矩形的所在位置.使用矩形的中心点坐标
   PointEX? _position;
   set position(PointEX newPosition){
@@ -48,6 +49,7 @@ class RectObject extends RectEX with SpaceObject{
     return _lines;
   }
   ///检测点是否在矩形的边缘上.
+  @override
   bool isPointOnEdgeLines(PointEX point, Decimal deviation){
     var list = lines;
     for(var l in list){
@@ -73,21 +75,13 @@ class RectObject extends RectEX with SpaceObject{
 
   @override
   RectEX get worldBounds => shift(position.x, position.y);
-}
-class RectObjectNotifier extends StateNotifier<RectObject>{
-  bool _isInteractive = false;
-  RectObjectNotifier(super.state, this._isInteractive);
-  get isInteractive => _isInteractive;
-  void updateIsInteractive(bool newIsInteractive){
-    _isInteractive = newIsInteractive;
-    state = state.copyWith()
-      ..isInteractive = newIsInteractive;
+
+  @override
+  bool isPointIn(PointEX pointEX) {
+    return contains(pointEX);
   }
 }
 
-final rectObjectsProvider =
-StateNotifierProvider.family<RectObjectNotifier, RectObject, RectObject>(
-        (ref, rect) => RectObjectNotifier(rect, false));
 
 class RectObjectWidget extends ConsumerWidget{
   final RectObject rectObject;
@@ -108,7 +102,7 @@ class RectObjectWidget extends ConsumerWidget{
   Widget build(BuildContext context, WidgetRef ref) {
     var realViewRect = getViewRect(rectObject, viewPortScale, viewPortOffset, viewPortPixelSize);
     return CustomPaint(
-      painter: RectPainter(realViewRect, ref.watch(rectObjectsProvider(rectObject)).isInteractive?
+      painter: RectPainter(realViewRect, ref.watch(planeObjectsProvider(rectObject)).isInteractive?
           // Colors.white: getRandomColor()
         hoverColor:normalColor
       ),

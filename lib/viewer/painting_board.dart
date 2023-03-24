@@ -13,18 +13,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vectorgraph/model/geometry/lines/line_segment.dart';
-import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
-import 'package:vectorgraph/objects/line_object.dart';
-import 'package:vectorgraph/objects/polygon_object.dart';
-import 'package:vectorgraph/objects/regular_polygonal_star.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/utils/widget.dart';
 
 import '../model/geometry/points/point_ex.dart';
-import '../objects/bezier_object.dart';
-import '../objects/point_object.dart';
-import '../objects/rect_object.dart';
+import '../objects/notifier_and_provider_of_object.dart';
+import '../objects/space_object.dart';
 import 'size_listener.dart';
 import '../space/space.dart';
 import '../view_state.dart';
@@ -57,9 +51,6 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     //鼠标移动检测鼠标焦点上的物件
     // ref.read(viewStateProvider.notifier).updateInteractiveObjects(event.position);
     ViewState state = ref.watch(viewStateProvider);
-    // PointEX worldPoint = event.position.toPointEX() / state.viewPortScale
-    //     - PointEX(state.objectSpaceViewingSize.width / Decimal.two, state.objectSpaceViewingSize.height / Decimal.two)
-    //     - state.viewSpaceOffset.toPointEX()/state.viewSpaceScale2ObjectSpace;
     PointEX worldPoint = Space.viewPortPointPos2SpacePointPos(
         event.position,
         state.viewSpaceViewPortOffset,
@@ -69,107 +60,37 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
 
     for (var element in state.allObjectInViewPort) {
       var deviation = Decimal.fromInt(2)/state.viewPortScale.abs();
-        switch(element.runtimeType){
-          case RectObject:
-            var rect = element as RectObject;
-            var oldIsInteractive = rect.isInteractive;
-            var newIsInteractive = rect.isPointOnEdgeLines(worldPoint, deviation);
-            if(oldIsInteractive != newIsInteractive)
-              {
-                rect.isInteractive = newIsInteractive;
-                ref.read(rectObjectsProvider(rect).notifier).updateIsInteractive(newIsInteractive);
-                if(newIsInteractive)
-                  {
-                    // print('on it');
-                  }
-              }
-            break;
-          case LineObject:
-            var line = element as LineObject;
-            var oldIsInteractive = line.isInteractive;
-            var newIsInteractive = line.isPointOnLine(worldPoint, deviation:deviation);
-            if(oldIsInteractive != newIsInteractive)
-            {
-              line.isInteractive = newIsInteractive;
-              ref.read(lineObjectsProvider(line).notifier).updateIsInteractive(newIsInteractive);
-              if(newIsInteractive)
-              {
-                // print('on it');
-              }
-            }
-            break;
-          case BezierObject:
-            var bezier = element as BezierObject;
-            var oldIsInteractive = bezier.isInteractive;
-            var newIsInteractive = bezier.isPointOnLine(worldPoint, deviation:deviation);
-            if(oldIsInteractive != newIsInteractive)
-            {
-              bezier.isInteractive = newIsInteractive;
-              ref.read(bezierObjectsProvider(bezier).notifier).updateIsInteractive(newIsInteractive);
-              if(newIsInteractive)
-              {
-                // print('on it');
-              }
-            }
-            break;
-          case EquilateralPolygonObject:
-            var ePolygon = element as EquilateralPolygonObject;
-            var oldIsInteractive = ePolygon.isInteractive;
-            var newIsInteractive = ePolygon.isPointOnEdgeLines(worldPoint, deviation:deviation);
-            if(oldIsInteractive != newIsInteractive)
-            {
-              ePolygon.isInteractive = newIsInteractive;
-              ref.read(equilateralPolygonObjectsProvider(ePolygon).notifier).updateIsInteractive(newIsInteractive);
-              if(newIsInteractive)
-              {
-                // print('on it');
-              }
-            }
-            break;
-          case PolygonObject:
-            var polygon = element as PolygonObject;
-            var oldIsInteractive = polygon.isInteractive;
-            var newIsInteractive = polygon.isPointOnEdgeLines(worldPoint, deviation:deviation);
-            if(oldIsInteractive != newIsInteractive)
-            {
-              polygon.isInteractive = newIsInteractive;
-              ref.read(polygonObjectsProvider(polygon).notifier).updateIsInteractive(newIsInteractive);
-              if(newIsInteractive)
-              {
-                // print('on it');
-              }
-            }
-            break;
-          case RegularPolygonalStarObject:
-            var star = element as RegularPolygonalStarObject;
-            var oldIsInteractive = star.isInteractive;
-            var newIsInteractive = star.isPointOnEdgeLines(worldPoint, deviation:deviation);
-            if(oldIsInteractive != newIsInteractive)
-            {
-              star.isInteractive = newIsInteractive;
-              ref.read(regularPolygonalStartsProvider(star).notifier).updateIsInteractive(newIsInteractive);
-              if(newIsInteractive)
-              {
-                // print('on it');
-              }
-            }
-            break;
-          case PointObject:
-            var point = element as PointObject;
-            var oldIsInteractive = point.isInteractive;
-            var distanceToCursor = point.distanceTo(worldPoint);
-            bool newIsInteractive = distanceToCursor < point.radius/Decimal.two + deviation;
-            if(oldIsInteractive != newIsInteractive)
-              {
-                point.isInteractive = newIsInteractive;
-                ref.read(pointObjectsProvider(point).notifier).updateIsInteractive(newIsInteractive);
-                if(newIsInteractive)
-                  {
-                    // print('on it');
-                  }
-              }
-            break;
+      var oldIsInteractive = element.isInteractive;
+      //region 点
+      if(element is APointObject){
+        bool newIsInteractive = element.isPointInMe(worldPoint, deviation);
+        if(oldIsInteractive != newIsInteractive)
+        {
+          element.isInteractive = newIsInteractive;
+          ref.read(pointObjectsProvider(element).notifier).updateIsInteractive(newIsInteractive);
         }
+      }
+      //endregion
+      //region 线
+      else if(element is ALineObject){
+        bool newIsInteractive = element.isPointOn(worldPoint, deviation);
+        if(oldIsInteractive != newIsInteractive)
+        {
+          element.isInteractive = newIsInteractive;
+          ref.read(lineObjectsProvider(element).notifier).updateIsInteractive(newIsInteractive);
+        }
+      }
+      //endregion
+      //region 面
+      else if(element is APlaneObject){
+        bool newIsInteractive = element.isPointOnEdgeLines(worldPoint, deviation);
+        if(oldIsInteractive != newIsInteractive)
+        {
+          element.isInteractive = newIsInteractive;
+          ref.read(planeObjectsProvider(element).notifier).updateIsInteractive(newIsInteractive);
+        }
+      }
+      //endregion
     }
     setState(() {
       logText = '世界坐标$worldPoint   视图坐标${event.position}';

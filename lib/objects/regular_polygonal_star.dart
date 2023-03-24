@@ -3,15 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/lines/line_segment.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/model/geometry/rect/RectEX.dart';
-import 'package:vectorgraph/utils/num_utils.dart';
+import
+'package:vectorgraph/utils/num_utils.dart';
 import '../model/geometry/lines/cross_info.dart';
 import '../model/geometry/planes/polygon.dart';
 import '../viewer/line_painter.dart';
 import '../space/space.dart';
+import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 
 ///正多角星
-class RegularPolygonalStarObject extends Polygon with SpaceObject{
+class RegularPolygonalStarObject extends Polygon with APlaneObject{
   final PointEX _position;
   final int _stabCount;
   final Decimal _outsideRadius;
@@ -94,14 +96,15 @@ class RegularPolygonalStarObject extends Polygon with SpaceObject{
       return RegularPolygonalStarObject(_position, _stabCount,_outsideRadius,_insideRadius);
   }
 
-  bool isPointOnEdgeLines(PointEX point, {Decimal? deviation}){
+  @override
+  bool isPointOnEdgeLines(PointEX pointEX, Decimal? deviation){
     //check each line
     return getLineSegments()
         .any(
             (element) =>
             element.isPointOnLine(
               //由于贝塞尔曲线使用的是0点+世界坐标偏移的方式,所以在检测时也要使用这种方式,(减去偏移)
-                point - _position
+                pointEX - _position
                 , deviation: deviation)
     );
   }
@@ -114,20 +117,20 @@ class RegularPolygonalStarObject extends Polygon with SpaceObject{
   @override
   RectEX get worldBounds => bounds.shift(_position.x, _position.y);
 }
-class RegularPolygonalStarObjectNotifier extends StateNotifier<RegularPolygonalStarObject>{
-  bool _isInteractive = false;
-  RegularPolygonalStarObjectNotifier(super.state, this._isInteractive);
-  get isInteractive => _isInteractive;
-  void updateIsInteractive(bool newIsInteractive){
-    _isInteractive = newIsInteractive;
-    state = state.copyWith()
-      ..isInteractive = newIsInteractive;
-  }
-}
-
-final regularPolygonalStartsProvider =
-StateNotifierProvider.family<RegularPolygonalStarObjectNotifier, RegularPolygonalStarObject, RegularPolygonalStarObject>(
-        (ref, rect) => RegularPolygonalStarObjectNotifier(rect, false));
+// class RegularPolygonalStarObjectNotifier extends StateNotifier<RegularPolygonalStarObject>{
+//   bool _isInteractive = false;
+//   RegularPolygonalStarObjectNotifier(super.state, this._isInteractive);
+//   get isInteractive => _isInteractive;
+//   void updateIsInteractive(bool newIsInteractive){
+//     _isInteractive = newIsInteractive;
+//     state = state.copyWith()
+//       ..isInteractive = newIsInteractive;
+//   }
+// }
+//
+// final regularPolygonalStartsProvider =
+// StateNotifierProvider.family<RegularPolygonalStarObjectNotifier, RegularPolygonalStarObject, RegularPolygonalStarObject>(
+//         (ref, rect) => RegularPolygonalStarObjectNotifier(rect, false));
 
 class RegularPolygonalStarWidget extends ConsumerWidget{
   final RegularPolygonalStarObject polygonObject;
@@ -158,7 +161,7 @@ class RegularPolygonalStarWidget extends ConsumerWidget{
     if(offsetList.isNotEmpty){
       offsetList.add(offsetList[0]);
     }
-    var linesPainter = LinesPainter(offsetList, ref.watch(regularPolygonalStartsProvider(polygonObject)).isInteractive?
+    var linesPainter = LinesPainter(offsetList, ref.watch(planeObjectsProvider(polygonObject)).isInteractive?
     hoverColor:normalColor
     );
     return CustomPaint(
