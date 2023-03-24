@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/lines/line_segment.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/model/geometry/rect/RectEX.dart';
-import
-'package:vectorgraph/utils/num_utils.dart';
+import 'package:vectorgraph/utils/num_utils.dart';
 import '../model/geometry/lines/cross_info.dart';
 import '../model/geometry/planes/polygon.dart';
 import '../viewer/line_painter.dart';
