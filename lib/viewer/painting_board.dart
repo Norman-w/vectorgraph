@@ -83,8 +83,8 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
       //endregion
       //region 面
       else if(element is APlaneObject){
-        bool newIsInteractive = element.isPointOnEdgeLines(worldPoint, deviation);
-        bool newIsFocus = element.isPointIn(worldPoint);
+        bool newIsInteractive = element.isWorldPointOnEdgeLines(worldPoint, deviation);
+        bool newIsFocus = element.isWorldPointIn(worldPoint);
         bool oldIsFocus = element.isFocus;
         if(oldIsInteractive != newIsInteractive || oldIsFocus != newIsFocus)
         {

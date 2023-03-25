@@ -23,7 +23,7 @@ class PolygonObject extends Polygon with SpaceObject,APlaneObject{
   }
 
   @override
-  bool isPointOnEdgeLines(PointEX pointEX, Decimal? deviation){
+  bool isWorldPointOnEdgeLines(PointEX pointEX, Decimal? deviation){
     //check each line
     return getLineSegments()
         .any(
@@ -42,6 +42,11 @@ class PolygonObject extends Polygon with SpaceObject,APlaneObject{
 
   @override
   RectEX get worldBounds => bounds.shift(_position.x, _position.y);
+
+  @override
+  bool isWorldPointIn(PointEX pointEX) {
+    return isPointIn(pointEX - position);
+  }
 }
 
 class PolygonObjectWidget extends ConsumerWidget{

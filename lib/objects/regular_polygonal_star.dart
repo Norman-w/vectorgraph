@@ -96,7 +96,7 @@ class RegularPolygonalStarObject extends Polygon with SpaceObject,APlaneObject{
   }
 
   @override
-  bool isPointOnEdgeLines(PointEX pointEX, Decimal? deviation){
+  bool isWorldPointOnEdgeLines(PointEX pointEX, Decimal? deviation){
     //check each line
     return getLineSegments()
         .any(
@@ -115,6 +115,11 @@ class RegularPolygonalStarObject extends Polygon with SpaceObject,APlaneObject{
 
   @override
   RectEX get worldBounds => bounds.shift(_position.x, _position.y);
+
+  @override
+  bool isWorldPointIn(PointEX pointEX) {
+    return isPointIn(pointEX - position);
+  }
 }
 // class RegularPolygonalStarObjectNotifier extends StateNotifier<RegularPolygonalStarObject>{
 //   bool _isInteractive = false;

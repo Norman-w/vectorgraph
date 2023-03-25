@@ -50,7 +50,7 @@ class RectObject extends RectEX with SpaceObject,APlaneObject{
   }
   ///检测点是否在矩形的边缘上.
   @override
-  bool isPointOnEdgeLines(PointEX point, Decimal deviation){
+  bool isWorldPointOnEdgeLines(PointEX point, Decimal deviation){
     var list = lines;
     for(var l in list){
       if(l.isPointOnLine(point - position,deviation: deviation)) {
@@ -77,10 +77,8 @@ class RectObject extends RectEX with SpaceObject,APlaneObject{
   RectEX get worldBounds => shift(position.x, position.y);
 
   @override
-  bool isPointIn(PointEX pointEX) {
-    var ret = worldBounds.contains(pointEX);
-    print('是否包含:$ret');
-    return ret;
+  bool isWorldPointIn(PointEX pointEX) {
+    return worldBounds.contains(pointEX);
   }
 }
 

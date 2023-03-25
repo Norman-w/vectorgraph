@@ -41,9 +41,9 @@ mixin ALineObject implements SpaceObject{
 }
 mixin APlaneObject implements SpaceObject{
   ///给定的点是否在我的边线上
-  bool isPointOnEdgeLines(PointEX pointEX, Decimal deviation);
+  bool isWorldPointOnEdgeLines(PointEX pointEX, Decimal deviation);
   ///给定的点是否在我内部
-  bool isPointIn(PointEX pointEX);
+  bool isWorldPointIn(PointEX pointEX);
   @override
   APlaneObject copyWith();
   ///当前是否被聚焦

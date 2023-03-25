@@ -22,7 +22,7 @@ class EquilateralPolygonObject extends EquilateralPolygon with SpaceObject,APlan
   }
 
   @override
-  bool isPointOnEdgeLines(PointEX pointEX, Decimal deviation) {
+  bool isWorldPointOnEdgeLines(PointEX pointEX, Decimal deviation) {
     //check each line
     return getLineSegments()
         .any(
@@ -39,6 +39,11 @@ class EquilateralPolygonObject extends EquilateralPolygon with SpaceObject,APlan
 
   @override
   RectEX get worldBounds => bounds.shift(_position.x, _position.y);
+
+  @override
+  bool isWorldPointIn(PointEX pointEX) {
+    return isPointIn(pointEX - position);
+  }
 }
 
 
