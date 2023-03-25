@@ -28,7 +28,7 @@ class PointObject extends PointEX with SpaceObject,APointObject{
   RectEX get worldBounds => RectEX.fromCircle(center: PointEX(x, y), radius: radius);
 
   @override
-  bool isPointInMe(PointEX pointEX, Decimal deviation) {
+  bool isPointOn(PointEX pointEX, Decimal deviation) {
     var distance = distanceTo(pointEX);
     var newIsInteractive = distance < radius/Decimal.two + deviation;
     return newIsInteractive;

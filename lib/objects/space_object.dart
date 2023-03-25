@@ -29,7 +29,7 @@ mixin SpaceObject{
 
 mixin APointObject implements SpaceObject{
   ///给定的点是否在我的范围内(由于点有大小,所以实际上意思是,给定的点是否在我这个点的圆内)
-  bool isPointInMe(PointEX pointEX, Decimal deviation);
+  bool isPointOn(PointEX pointEX, Decimal deviation);
   @override
   APointObject copyWith();
 }

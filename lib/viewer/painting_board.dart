@@ -63,7 +63,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
       var oldIsInteractive = element.isInteractive;
       //region 点
       if(element is APointObject){
-        bool newIsInteractive = element.isPointInMe(worldPoint, deviation);
+        bool newIsInteractive = element.isPointOn(worldPoint, deviation);
         if(oldIsInteractive != newIsInteractive)
         {
           element.isInteractive = newIsInteractive;
