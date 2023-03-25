@@ -42,7 +42,7 @@ class EquilateralPolygonObject extends EquilateralPolygon with SpaceObject,APlan
 
   @override
   bool isWorldPointIn(PointEX pointEX) {
-    return isPointIn(pointEX - position);
+    return !worldBounds.contains(pointEX)?false:isPointIn(pointEX - position);
   }
 }
 

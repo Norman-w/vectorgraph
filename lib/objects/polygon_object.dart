@@ -45,7 +45,7 @@ class PolygonObject extends Polygon with SpaceObject,APlaneObject{
 
   @override
   bool isWorldPointIn(PointEX pointEX) {
-    return isPointIn(pointEX - position);
+    return !worldBounds.contains(pointEX)?false:isPointIn(pointEX - position);
   }
 }
 
