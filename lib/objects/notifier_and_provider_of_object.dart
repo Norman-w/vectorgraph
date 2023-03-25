@@ -38,17 +38,27 @@ StateNotifierProvider.family<LineObjectNotifier, ALineObject, ALineObject>(
 
 //region 面
 class PlaneObjectNotifier extends StateNotifier<APlaneObject>{
-  bool _isInteractive = false;
-  PlaneObjectNotifier(super.state, this._isInteractive);
-  get isInteractive => _isInteractive;
-  void updateIsInteractive(bool newIsInteractive){
-    _isInteractive = newIsInteractive;
+  // bool _isInteractive = false;
+  PlaneObjectNotifier(super.state);
+  // get isInteractive => _isInteractive;
+  // void updateIsInteractive(bool newIsInteractive){
+  //   // _isInteractive = newIsInteractive;
+  //   state = state.copyWith()
+  //     ..isInteractive = newIsInteractive;
+  // }
+  // void updateIsFocus(bool newIsFocus){
+  //   state = state.copyWith()
+  //     ..isFocus = newIsFocus;
+  // }
+  ///更新交互状态信息,都写到一个函数里面了.
+  void updateInteractiveInfo(bool isInteractive, bool isFocus){
     state = state.copyWith()
-      ..isInteractive = newIsInteractive;
+        ..isFocus = isFocus
+        ..isInteractive = isInteractive;
   }
 }
 
 final planeObjectsProvider =
 StateNotifierProvider.family<PlaneObjectNotifier, APlaneObject, APlaneObject>(
-        (ref, rect) => PlaneObjectNotifier(rect, false));
+        (ref, rect) => PlaneObjectNotifier(rect));
 //endregion

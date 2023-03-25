@@ -46,6 +46,8 @@ mixin APlaneObject implements SpaceObject{
   bool isPointIn(PointEX pointEX);
   @override
   APlaneObject copyWith();
+  ///当前是否被聚焦
+  bool isFocus = false;
 }
 //
 // class SpaceObjectController extends StateNotifier<SpaceObject>{

@@ -78,7 +78,9 @@ class RectObject extends RectEX with SpaceObject,APlaneObject{
 
   @override
   bool isPointIn(PointEX pointEX) {
-    return contains(pointEX);
+    var ret = worldBounds.contains(pointEX);
+    print('是否包含:$ret');
+    return ret;
   }
 }
 
@@ -101,11 +103,10 @@ class RectObjectWidget extends ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var realViewRect = getViewRect(rectObject, viewPortScale, viewPortOffset, viewPortPixelSize);
+    var aPlaneObject = ref.watch(planeObjectsProvider(rectObject));
+    var color = aPlaneObject.isFocus? focusColor: aPlaneObject.isInteractive? hoverColor: normalColor;
     return CustomPaint(
-      painter: RectPainter(realViewRect, ref.watch(planeObjectsProvider(rectObject)).isInteractive?
-          // Colors.white: getRandomColor()
-        hoverColor:normalColor
-      ),
+      painter: RectPainter(realViewRect, color),
     );
   }
   ///获取真实的视图矩形

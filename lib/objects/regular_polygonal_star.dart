@@ -160,9 +160,9 @@ class RegularPolygonalStarWidget extends ConsumerWidget{
     if(offsetList.isNotEmpty){
       offsetList.add(offsetList[0]);
     }
-    var linesPainter = LinesPainter(offsetList, ref.watch(planeObjectsProvider(polygonObject)).isInteractive?
-    hoverColor:normalColor
-    );
+    var aPlaneObject = ref.watch(planeObjectsProvider(polygonObject));
+    var color = aPlaneObject.isFocus? focusColor: aPlaneObject.isInteractive? hoverColor: normalColor;
+    var linesPainter = LinesPainter(offsetList, color);
     return CustomPaint(
       painter: linesPainter,
     );

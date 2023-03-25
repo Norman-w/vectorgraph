@@ -68,9 +68,9 @@ class EquilateralPolygonObjectWidget extends ConsumerWidget{
               (e + equilateralPolygonObject.position
                 , viewPortOffset, viewPortScale, viewPortPixelSize)
     ).toList();
-    var linesPainter = LinesPainter(offsetList, ref.watch(planeObjectsProvider(equilateralPolygonObject)).isInteractive?
-    hoverColor:normalColor
-    );
+    var aPlaneObject = ref.watch(planeObjectsProvider(equilateralPolygonObject));
+    var color = aPlaneObject.isFocus? focusColor: aPlaneObject.isInteractive? hoverColor: normalColor;
+    var linesPainter = LinesPainter(offsetList,color);
     return CustomPaint(
       painter: linesPainter,
     );
