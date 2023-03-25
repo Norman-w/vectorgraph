@@ -12,7 +12,7 @@ import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 
 ///正多角星
-class RegularPolygonalStarObject extends Polygon with APlaneObject{
+class RegularPolygonalStarObject extends Polygon with SpaceObject,APlaneObject{
   final PointEX _position;
   final int _stabCount;
   final Decimal _outsideRadius;

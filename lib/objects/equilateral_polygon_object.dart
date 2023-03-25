@@ -10,7 +10,7 @@ import '../space/space.dart';
 import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 
-class EquilateralPolygonObject extends EquilateralPolygon with APlaneObject {
+class EquilateralPolygonObject extends EquilateralPolygon with SpaceObject,APlaneObject {
   final PointEX _position;
   @override
   PointEX get position => _position;

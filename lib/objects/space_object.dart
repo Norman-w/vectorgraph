@@ -2,6 +2,18 @@ import '../model/geometry/points/point_ex.dart';
 import '../model/geometry/rect/RectEX.dart';
 import '../utils/num_utils.dart';
 
+/// 如果
+/// class PointObject extends PointEX with SpaceObject,APointObject{
+/// 则mixin APointObject implements SpaceObject{
+/// 中不需要实现
+/// @override
+/// bool isInteractive = false;
+///
+/// 否则想要class PointObject extends PointEX with APointObject{
+/// 的话,就需要在APointObject中实现
+/// @override
+/// bool isInteractive = false;
+
 mixin SpaceObject{
   ///获取对象的世界坐标
   PointEX get position;
@@ -20,16 +32,12 @@ mixin APointObject implements SpaceObject{
   bool isPointInMe(PointEX pointEX, Decimal deviation);
   @override
   APointObject copyWith();
-  @override
-  bool isInteractive = false;
 }
 mixin ALineObject implements SpaceObject{
   ///给定的点是否和我相交,是否在我的线或者线集合(贝塞尔曲线或者其他曲线实际上是线集合)上
   bool isPointOn(PointEX pointEX, Decimal deviation);
   @override
   ALineObject copyWith();
-  @override
-  bool isInteractive = false;
 }
 mixin APlaneObject implements SpaceObject{
   ///给定的点是否在我的边线上
@@ -38,8 +46,6 @@ mixin APlaneObject implements SpaceObject{
   bool isPointIn(PointEX pointEX);
   @override
   APlaneObject copyWith();
-  @override
-  bool isInteractive = false;
 }
 //
 // class SpaceObjectController extends StateNotifier<SpaceObject>{

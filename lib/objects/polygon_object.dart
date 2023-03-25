@@ -10,7 +10,7 @@ import '../space/space.dart';
 import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 
-class PolygonObject extends Polygon with APlaneObject{
+class PolygonObject extends Polygon with SpaceObject,APlaneObject{
   final PointEX _position;
   PolygonObject(this._position, List<PointEX> points){
     super.points = points;

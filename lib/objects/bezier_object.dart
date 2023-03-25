@@ -10,7 +10,7 @@ import '../space/space.dart';
 import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 
-class BezierObject extends Bezier with ALineObject{
+class BezierObject extends Bezier with SpaceObject,ALineObject{
   BezierObject(super.position, super.end);
 
   // RectObject.fromCenter({required super.center, required super.width, required super.height}) : super.fromCenter();

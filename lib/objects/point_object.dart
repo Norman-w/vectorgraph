@@ -8,7 +8,7 @@ import '../space/space.dart';
 import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 
-class PointObject extends PointEX with APointObject{
+class PointObject extends PointEX with SpaceObject,APointObject{
   late Decimal radius;
   PointObject(super.x, super.y, {Decimal? radius}){
     this.radius = radius ?? Decimal.fromInt(1);

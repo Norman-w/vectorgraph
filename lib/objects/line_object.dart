@@ -9,7 +9,7 @@ import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 import '../model/geometry/rect/RectEX.dart';
 
-class LineObject extends LineSegment with ALineObject{
+class LineObject extends LineSegment with SpaceObject,ALineObject{
   ///线段所在的世界坐标位置
   final PointEX _position;
   var _selfBounds = RectEX.zero;

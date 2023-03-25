@@ -10,7 +10,7 @@ import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 import '../model/geometry/rect/RectEX.dart';
 
-class RectObject extends RectEX with APlaneObject{
+class RectObject extends RectEX with SpaceObject,APlaneObject{
   ///矩形的所在位置.使用矩形的中心点坐标
   PointEX? _position;
   set position(PointEX newPosition){
