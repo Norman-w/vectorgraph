@@ -22,7 +22,7 @@ class CircleObject extends Circle with SpaceObject,APlaneObject{
   @override
   bool isWorldPointOnEdgeLines(PointEX pointEX, Decimal deviation){
     var distance = _position.distanceTo(pointEX);
-    var newIsInteractive = distance < radius + deviation;
+    var newIsInteractive = (distance - radius).abs() < deviation;
     return newIsInteractive;
   }
   @override
