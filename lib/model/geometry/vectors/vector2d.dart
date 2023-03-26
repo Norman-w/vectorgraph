@@ -80,5 +80,10 @@ class Vector2D{
   }
 
   Decimal get length => decimalSqrt(x * x + y * y);
+
+  Vector2D normalize() {
+    Decimal length = this.length;
+    return Vector2D(x / length, y / length);
+  }
 }
 
