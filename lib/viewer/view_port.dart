@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
+import 'package:vectorgraph/objects/circle_object.dart';
 import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
 import 'package:vectorgraph/objects/point_object.dart';
 import 'package:vectorgraph/objects/polygon_object.dart';
@@ -93,6 +94,14 @@ class ViewPort extends ConsumerWidget {
           viewPortOffset: state.viewSpaceViewPortOffset,
           viewPortScale: state.viewPortScale,
           // normalColor: Colors.deepOrange,
+        );
+      }
+      else if(e.runtimeType == CircleObject){
+        CircleObject circle = e as CircleObject;
+        return CircleObjectWidget(circleObject: circle,
+          viewPortPixelSize: state.viewPortSize,
+          viewPortOffset: state.viewSpaceViewPortOffset,
+          viewPortScale: state.viewPortScale,
         );
       }
       return Container();

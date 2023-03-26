@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
+import 'package:vectorgraph/objects/circle_object.dart';
 import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
 import 'package:vectorgraph/objects/polygon_object.dart';
 import 'package:vectorgraph/objects/regular_polygonal_star.dart';
@@ -132,7 +133,8 @@ Space initSpace(){
   var layer3 = SpaceLayer(2);
   var layer4 = SpaceLayer(3);
   var layer5 = SpaceLayer(4);
-  var layer6 = SpaceLayer(6);
+  var layer6 = SpaceLayer(5);
+  var layer7 = SpaceLayer(6);
 
 
 
@@ -277,7 +279,7 @@ Space initSpace(){
   //endregion
 
   //region 第六层,正多角星
-  for(int i=0;i<10000;i++){
+  for(int i=0;i<1000;i++){
     var size = Decimal.fromInt(Random().nextInt(270)+30);
     var count = Random().nextInt(8)+3;
     var x = Decimal.fromInt(Random().nextInt(40000)-20000);
@@ -290,6 +292,17 @@ Space initSpace(){
   }
   //endregion
 
+  //region 第七层,圆形
+  for(int i=0;i<1000;i++){
+    var radius = Decimal.fromInt(Random().nextInt(70)+30);
+    var x = Decimal.fromInt(Random().nextInt(40000)-20000);
+    var y = Decimal.fromInt(Random().nextInt(20000)-10000);
+    var point = PointEX(x,y);
+    CircleObject circleObject = CircleObject(point, radius);
+    layer6.addCircle(circleObject);
+  }
+  //endregion
+
   space.addPaper(paper);
 
   space.layers.add(layer1);
@@ -298,6 +311,7 @@ Space initSpace(){
   space.layers.add(layer4);
   space.layers.add(layer5);
   space.layers.add(layer6);
+  space.layers.add(layer7);
 
   return space;
 }

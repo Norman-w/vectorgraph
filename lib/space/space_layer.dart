@@ -7,6 +7,7 @@ import 'package:vectorgraph/objects/polygon_object.dart';
 import 'package:vectorgraph/objects/regular_polygonal_star.dart';
 import '../model/geometry/rect/RectEX.dart';
 import '../objects/bezier_object.dart';
+import '../objects/circle_object.dart';
 import '../objects/rect_object.dart';
 import '../objects/space_object.dart';
 
@@ -36,6 +37,9 @@ class SpaceLayer{
   }
   void addRegularPolygonalStart(RegularPolygonalStarObject regularPolygonalStarObject){
     objects.add(regularPolygonalStarObject);
+  }
+  void addCircle(CircleObject circleObject){
+    objects.add(circleObject);
   }
   //get all rects
   // List<Rect> get rectangles => objects.whereType<Rect>().toList();
