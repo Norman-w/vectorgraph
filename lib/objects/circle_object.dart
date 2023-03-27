@@ -36,7 +36,7 @@ class CircleObject extends Circle with SpaceObject,APlaneObject{
 
   @override
   bool isWorldPointIn(PointEX pointEX) {
-    return !worldBounds.contains(pointEX)?false:isPointIn(pointEX - position, Decimal.one);
+    return !worldBounds.contains(pointEX)?false:isPointIn(pointEX, Decimal.one);
   }
 
   bool isPointIn(PointEX pointEX, Decimal deviation){
