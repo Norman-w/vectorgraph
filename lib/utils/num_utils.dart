@@ -310,6 +310,10 @@ Decimal decimalAtan(Decimal x) {
   return atan(x.toDouble()).toDecimal();
 }
 
+Decimal decimalTan(Decimal x){
+  return tan(x.toDouble()).toDecimal();
+}
+
 Decimal decimalMin(x, y){
   return x>y? y:x;
 }

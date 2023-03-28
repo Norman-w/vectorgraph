@@ -11,7 +11,7 @@ class Ray{
   Vector2D getVector(){
     return Vector2D(anyPointOnLine.x - start.x, anyPointOnLine.y - start.y);
   }
-  double getAngle(){
+  Decimal getAngle(){
     return getVector().getAngle();
   }
   void normalize(){

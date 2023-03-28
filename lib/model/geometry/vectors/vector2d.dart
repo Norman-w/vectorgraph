@@ -49,7 +49,7 @@ class Vector2D{
     y = length * decimalSin(angle);
   }
 
-  getAngle() {
+  Decimal getAngle() {
     return decimalAtan2(y, x);
   }
 

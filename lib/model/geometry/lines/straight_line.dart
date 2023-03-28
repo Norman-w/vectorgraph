@@ -10,7 +10,7 @@ class StraightLine{
   {
     return Vector2D(point2.x - point1.x, point2.y - point1.y);
   }
-  double getAngle(){
+  Decimal getAngle(){
     return getVector().getAngle();
   }
   void normalize(){

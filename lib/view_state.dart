@@ -10,8 +10,10 @@ import 'package:vectorgraph/objects/regular_polygonal_star.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
+import 'model/geometry/planes/ellipse.dart';
 import 'model/geometry/rect/RectEX.dart';
 import 'objects/bezier_object.dart';
+import 'objects/ellipse_object.dart';
 import 'objects/line_object.dart';
 import 'objects/point_object.dart';
 import 'objects/rect_object.dart';
@@ -135,6 +137,7 @@ Space initSpace(){
   var layer5 = SpaceLayer(4);
   var layer6 = SpaceLayer(5);
   var layer7 = SpaceLayer(6);
+  var layer8 = SpaceLayer(7);
 
 
 
@@ -303,6 +306,28 @@ Space initSpace(){
   }
   //endregion
 
+  //region 第八层,椭圆和验证椭圆的点
+  Ellipse ellipse = Ellipse()
+    ..radiusX = Decimal.fromInt(50)
+    ..radiusY = Decimal.fromInt(25);
+
+  for(var i=0;i<360;i++){
+    var pt = ellipse.getOnEdgePointByAngle(Decimal.fromInt(i));
+    PointObject pointObject = PointObject(pt.x,pt.y);
+    layer8.addPoint(pointObject);
+  }
+
+  layer8.addEllipse(
+    EllipseObject(
+      PointEX.zero
+      ,Decimal.fromInt(100)
+      ,Decimal.fromInt(50)
+  ));
+
+  // var pt = ellipse.getOnEdgePointByAngle(Decimal.fromInt(15));
+  // print(pt);
+  //endregion
+
   space.addPaper(paper);
 
   space.layers.add(layer1);
@@ -312,6 +337,6 @@ Space initSpace(){
   space.layers.add(layer5);
   space.layers.add(layer6);
   space.layers.add(layer7);
-
+  space.layers.add(layer8);
   return space;
 }
