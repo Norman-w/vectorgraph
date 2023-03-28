@@ -50,3 +50,35 @@ class ArcPainter extends CustomPainter {
 //     );
 //   }
 // }
+
+///待测试的代码
+
+// import 'package:flutter/material.dart';
+// import 'dart:math' as math;
+//
+// class MyArcPainter extends CustomPainter {
+//   @override
+//   void paint(Canvas canvas, Size size) {
+//     Paint paint = Paint()
+//       ..color = Colors.green
+//       ..style = PaintingStyle.stroke
+//       ..strokeWidth = 2;
+//
+//     Rect oval = Rect.fromCenter(center: Offset(300, 100), width: 200, height: 120);
+//     canvas.drawArc(oval, math.pi / 2, math.pi, false, paint);
+//   }
+//
+//   @override
+//   bool shouldRepaint(CustomPainter oldDelegate) {
+//     return false;
+//   }
+// }
+//
+// class MyArcWidget extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return CustomPaint(
+//       painter: MyArcPainter(),
+//     );
+//   }
+// }
