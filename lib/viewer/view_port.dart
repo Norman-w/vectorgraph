@@ -10,10 +10,12 @@ import 'package:vectorgraph/objects/rect_object.dart';
 import 'package:vectorgraph/objects/regular_polygonal_star.dart';
 
 
+import '../objects/arc_object.dart';
 import '../objects/bezier_object.dart';
 import '../objects/line_object.dart';
 import 'ruler.dart';
 import '../view_state.dart';
+import 'widget_of_object/arc_object_widget.dart';
 import 'widget_of_object/circle_object_widget.dart';
 import 'widget_of_object/ellipse_object_widget.dart';
 import 'widget_of_object/bezier_object_widget.dart';
@@ -117,6 +119,14 @@ class ViewPort extends ConsumerWidget {
       else if(e.runtimeType == EllipseObject){
         EllipseObject ellipse = e as EllipseObject;
         return EllipseObjectWidget(ellipseObject: ellipse,
+          viewPortPixelSize: state.viewPortSize,
+          viewPortOffset: state.viewSpaceViewPortOffset,
+          viewPortScale: state.viewPortScale,
+        );
+      }
+      else if(e.runtimeType == ArcObject){
+        ArcObject arc = e as ArcObject;
+        return ArcObjectWidget(arcObject: arc,
           viewPortPixelSize: state.viewPortSize,
           viewPortOffset: state.viewSpaceViewPortOffset,
           viewPortScale: state.viewPortScale,

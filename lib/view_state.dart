@@ -12,6 +12,7 @@ import 'package:vectorgraph/viewer/paper.dart';
 
 import 'model/geometry/planes/ellipse.dart';
 import 'model/geometry/rect/RectEX.dart';
+import 'objects/arc_object.dart';
 import 'objects/bezier_object.dart';
 import 'objects/ellipse_object.dart';
 import 'objects/line_object.dart';
@@ -138,6 +139,7 @@ Space initSpace(){
   var layer6 = SpaceLayer(5);
   var layer7 = SpaceLayer(6);
   var layer8 = SpaceLayer(7);
+  var layer9 = SpaceLayer(9);
 
 
 
@@ -328,6 +330,18 @@ Space initSpace(){
   // print(pt);
   //endregion
 
+  //region 第九层,圆弧
+  ArcObject arcObject = ArcObject(
+    PointEX(Decimal.fromInt(0), Decimal.fromInt(0)),
+    Decimal.fromInt(100),
+    Decimal.fromInt(50),
+    Decimal.fromInt(0),
+    true,true,
+    PointEX(Decimal.fromInt(100), Decimal.fromInt(100)),
+  );
+  layer9.addArc(arcObject);
+  //endregion
+
   space.addPaper(paper);
 
   space.layers.add(layer1);
@@ -338,5 +352,6 @@ Space initSpace(){
   space.layers.add(layer6);
   space.layers.add(layer7);
   space.layers.add(layer8);
+  space.layers.add(layer9);
   return space;
 }
