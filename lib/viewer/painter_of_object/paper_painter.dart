@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import 'paper.dart';
+import '../paper.dart';
 import 'rect_painter.dart';
 
 class PaperPainter extends RectPainter{

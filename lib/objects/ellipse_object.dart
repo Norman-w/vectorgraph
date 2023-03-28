@@ -1,13 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/model/geometry/rect/RectEX.dart';
 import 'package:vectorgraph/model/geometry/vectors/vector2d.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
-import 'package:vectorgraph/viewer/ellipse_painter.dart';
 import '../model/geometry/planes/ellipse.dart';
-import '../space/space.dart';
-import 'notifier_and_provider_of_object.dart';
 import 'space_object.dart';
 
 class EllipseObject extends Ellipse with SpaceObject,APlaneObject{
@@ -75,38 +70,5 @@ class EllipseObject extends Ellipse with SpaceObject,APlaneObject{
     // print('椭圆上该角度点坐标到圆心的距离: $pointOnEdgeByAngleDistance');
 
     return vector.distance(Vector2D.zero) < pointOnEdgeByAngleDistance - deviation;
-  }
-}
-
-class EllipseObjectWidget extends ConsumerWidget{
-  final EllipseObject ellipseObject;
-  final Decimal viewPortScale;
-  final Offset viewPortOffset;
-  final Size viewPortPixelSize;
-  final Color normalColor;// = Colors.white60;
-  final Color hoverColor;// = Colors.white;
-  final Color focusColor;// = Colors.blue;
-  const EllipseObjectWidget({super.key,
-    required this.ellipseObject,
-    required this.viewPortScale,
-    required this.viewPortOffset,
-    required this.viewPortPixelSize,
-    this.normalColor = Colors.black, this.hoverColor = Colors.white, this.focusColor = Colors.lightGreen,
-  });
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var aPlaneObject = ref.watch(planeObjectsProvider(ellipseObject));
-    var color = aPlaneObject.isFocus? focusColor: aPlaneObject.isInteractive? hoverColor: normalColor;
-    var viewOffset = Space.
-    spacePointPos2ViewPortPointPos
-      (aPlaneObject.position , viewPortOffset, viewPortScale, viewPortPixelSize);
-    var ellipsePainter = EllipsePainter(
-      viewOffset,
-      (ellipseObject.radiusX * viewPortScale).toDouble(),
-      (ellipseObject.radiusY * viewPortScale).toDouble(),
-      color, 2,);
-    return CustomPaint(
-      painter: ellipsePainter,
-    );
   }
 }

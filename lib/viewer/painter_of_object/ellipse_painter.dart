@@ -1,22 +1,4 @@
 import 'package:flutter/material.dart';
-class EllipsePaint extends StatelessWidget {
-  final Offset position;
-  final double radiusX;
-  final double radiusY;
-  final Color color;
-  final double strokeWidth;
-  final bool showPositionText;
-  const EllipsePaint(this.position, this.radiusX, this.radiusY, this.color, this.strokeWidth,
-      {this.showPositionText = false, super.key});
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: EllipsePainter(position, radiusX, radiusY, color, strokeWidth,
-          showPositionText: showPositionText)
-    );
-  }
-}
-
 class EllipsePainter extends CustomPainter {
   final Offset position;
   final double radiusX;

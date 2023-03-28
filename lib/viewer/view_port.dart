@@ -14,6 +14,15 @@ import '../objects/bezier_object.dart';
 import '../objects/line_object.dart';
 import 'ruler.dart';
 import '../view_state.dart';
+import 'widget_of_object/circle_object_widget.dart';
+import 'widget_of_object/ellipse_object_widget.dart';
+import 'widget_of_object/bezier_object_widget.dart';
+import 'widget_of_object/equilateral_polygon_object_widget.dart';
+import 'widget_of_object/line_object_widget.dart';
+import 'widget_of_object/point_object_widget.dart';
+import 'widget_of_object/polygon_object_widget.dart';
+import 'widget_of_object/ragular_polygonal_star_widget.dart';
+import 'widget_of_object/rect_object_widget.dart';
 
 class ViewPort extends ConsumerWidget {
   const ViewPort({super.key});
