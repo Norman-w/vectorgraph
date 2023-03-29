@@ -332,13 +332,34 @@ Space initSpace(){
 
   //region 第九层,圆弧
   ArcObject arcObject = ArcObject(
-    PointEX(Decimal.fromInt(0), Decimal.fromInt(0)),
+    PointEX(Decimal.fromInt(125), Decimal.fromInt(75)),
     Decimal.fromInt(100),
     Decimal.fromInt(50),
     Decimal.fromInt(0),
     true,true,
-    PointEX(Decimal.fromInt(100), Decimal.fromInt(100)),
+    PointEX(Decimal.fromInt(100), Decimal.fromInt(50)),
   );
+  // ArcInfo arcInfo = arcObject.getArcStartAngAndSwAng(
+  //     arcObject.position.x.toDouble(),
+  //     arcObject.position.y.toDouble(),
+  //     arcObject.endPoint.x.toDouble(),
+  //     arcObject.endPoint.y.toDouble(),
+  //     true,
+  //     true,
+  //     arcObject.rx.toDouble(),
+  //     arcObject.ry.toDouble(),
+  //     arcObject.xr.toDouble());
+
+  // ArcInfo arcInfo = arcObject.getArcStartAngAndSwAng(
+  //     125,75,
+  //     100,50,
+  //     true,
+  //     true,
+  //     100,50,
+  //     0
+  // );
+  // print(arcInfo);
+
   layer9.addArc(arcObject);
   //endregion
 
