@@ -658,8 +658,8 @@ class Arc{
     //endregion
 
     //region 4. Compute θ1 and Δθ
-    var ux = (x1_ - cx_) / rx;
-    var uy = (y1_ - cy_) / ry;
+    var ux = 1;
+    var uy = 0;
     var vx = (-x1_ - cx_) / rx;
     var vy = (-y1_ - cy_) / ry;
 
