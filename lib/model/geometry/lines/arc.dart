@@ -333,130 +333,130 @@ class Arc{
   //
   // }
 
-  /// 获取弧线的开始角度和摆动角度
-  /// 起点X
-  /// 起点Y
-  /// 终点X
-  /// 终点Y
-  /// 优劣弧:1 优弧  0劣弧
-  /// 顺逆时针绘制：1 顺时针  0 逆时针
-  /// 椭圆半长轴
-  /// 椭圆半短轴
-  /// 旋转角
-  ArcInfo getArcStartAngAndSwAng(
-      double startX,
-      double startY,
-      double endX,
-      double endY,
-      ///优弧
-      bool fA,
-      //顺时针
-      bool fs,
-      double rx,
-      double ry,
-      double jia) {
-    var matrix1 = Matrix4.zero()
-        ..setEntry(0, 0, cos(jia))
-        ..setEntry(0, 1, sin(jia))
-        ..setEntry(1, 0, -sin(jia))
-        ..setEntry(1, 1, cos(jia));
-    var matrix2 = Matrix4.zero()
-        ..setEntry(0, 0, (startX - endX) / 2)
-        ..setEntry(1, 0, (startY - endY) / 2);
-
-    var matrixX1Y1 = matrix1 * matrix2;
-
-    var x1_ = matrixX1Y1.entry(0, 0);
-    var y1_ = matrixX1Y1.entry(1, 0);
-
-    var a = pow(rx, 2) * pow(ry, 2) - pow(rx, 2) * pow(y1_, 2) - pow(ry, 2) * pow(x1_, 2);
-    var b = pow(ry, 2) * pow(y1_, 2) + pow(ry, 2) * pow(x1_, 2);
-
-    double c = 0;
-    if (fA == fs) {
-      c = -sqrt(a / b);
-    } else {
-      c = sqrt(a / b);
-    }
-
-    var matrixCxCy = Matrix4.zero()
-        ..setEntry(0, 0, c * (rx * y1_ / ry))
-        ..setEntry(1, 0, c * (-ry * x1_ / rx));
-
-    var cx_ = matrixCxCy.entry(0, 0);
-    var cy_ = matrixCxCy.entry(1, 0);
-
-    //求开始角
-    //cos<夹角> = 两向量之积 / 两向量模的乘积
-    //< 夹角 > = arcCos(两向量之积 / 两向量模的乘积)
-
-    //向量U的坐标
-    double vectorUx = 1;
-    double vectorUy = 0;
-
-    //向量V的坐标
-    double vectorVx = (x1_ - cx_) / rx;
-    double vectorVy = (y1_ - cy_) / ry;
-
-    var multiVectorUVectorV = vectorUx * vectorVx + vectorUy * vectorVy; //两向量的乘积
-    var vectorUMod = sqrt(vectorUx * vectorUx + vectorUy * vectorUy);//向量U的模
-    var vectorVMod = sqrt(vectorVx * vectorVx + vectorVy * vectorVy);//向量V的模
-    var cosResult = multiVectorUVectorV / (vectorUMod * vectorVMod);
-
-    var startAngle = acos(cosResult) * 180 / pi;
-
-    //求摆动角
-    //cos<夹角> = 两向量之积 / 两向量模的乘积
-    //< 夹角 > = arcCos(两向量之积 / 两向量模的乘积)
-
-    //向量U的坐标
-    vectorUx = (x1_ - cx_) / rx;
-    vectorUy = (y1_ - cy_) / ry;
-
-    //向量V的坐标
-    vectorVx = (-x1_ - cx_) / rx;
-    vectorVy = (-y1_ - cy_) / ry;
-
-    multiVectorUVectorV = vectorUx * vectorVx + vectorUy * vectorVy; //两向量的乘积
-    vectorUMod = sqrt(vectorUx * vectorUx + vectorUy * vectorUy);//向量U的模
-    vectorVMod = sqrt(vectorVx * vectorVx + vectorVy * vectorVy);//向量V的模
-    cosResult = multiVectorUVectorV / (vectorUMod * vectorVMod);
-
-    var swAngle = acos(cosResult) * 180 / pi;
-
-    if (fs == 0) {
-      swAngle = -swAngle;
-    } else {
-      swAngle = swAngle.abs();
-    }
-
-
-    //region 圆心计算
-    var matrixCx_Cy_ = Matrix4.zero()
-      ..setEntry(0, 0, c * (rx * y1_ / ry))
-      ..setEntry(1, 0, c * (-ry * x1_ / rx));
-
-    var tempMatrix = Matrix4.zero()
-      ..setEntry(0, 0, cos(jia))
-      ..setEntry(0, 1, -sin(jia))
-      ..setEntry(1, 0, sin(jia))
-      ..setEntry(1, 1, cos(jia));
-
-    var multiplyMatrix = tempMatrix.multiplied(matrixCx_Cy_);
-
-    var matrixCxCy2 = Matrix4.zero()
-      ..setEntry(0, 0, multiplyMatrix.entry(0, 0) + ((startX + endX) / 2))
-      ..setEntry(1, 0, multiplyMatrix.entry(1, 0) + ((startY + endY) / 2));
-
-
-    //endregion
-    var ret = ArcInfo();
-    ret.centerPoint = Offset(matrixCxCy2.entry(0, 0), matrixCxCy2.entry(1, 0));
-    ret.startAngle = startAngle;
-    ret.sweepAngle = swAngle;
-    return ret;
-    // return [startAngle, swAngle];
-  }
+  // /// 获取弧线的开始角度和摆动角度
+  // /// 起点X
+  // /// 起点Y
+  // /// 终点X
+  // /// 终点Y
+  // /// 优劣弧:1 优弧  0劣弧
+  // /// 顺逆时针绘制：1 顺时针  0 逆时针
+  // /// 椭圆半长轴
+  // /// 椭圆半短轴
+  // /// 旋转角
+  // ArcInfo getArcStartAngAndSwAng(
+  //     double startX,
+  //     double startY,
+  //     double endX,
+  //     double endY,
+  //     ///优弧
+  //     bool fA,
+  //     //顺时针
+  //     bool fs,
+  //     double rx,
+  //     double ry,
+  //     double jia) {
+  //   var matrix1 = Matrix4.zero()
+  //       ..setEntry(0, 0, cos(jia))
+  //       ..setEntry(0, 1, sin(jia))
+  //       ..setEntry(1, 0, -sin(jia))
+  //       ..setEntry(1, 1, cos(jia));
+  //   var matrix2 = Matrix4.zero()
+  //       ..setEntry(0, 0, (startX - endX) / 2)
+  //       ..setEntry(1, 0, (startY - endY) / 2);
+  //
+  //   var matrixX1Y1 = matrix1 * matrix2;
+  //
+  //   var x1_ = matrixX1Y1.entry(0, 0);
+  //   var y1_ = matrixX1Y1.entry(1, 0);
+  //
+  //   var a = pow(rx, 2) * pow(ry, 2) - pow(rx, 2) * pow(y1_, 2) - pow(ry, 2) * pow(x1_, 2);
+  //   var b = pow(ry, 2) * pow(y1_, 2) + pow(ry, 2) * pow(x1_, 2);
+  //
+  //   double c = 0;
+  //   if (fA == fs) {
+  //     c = -sqrt(a / b);
+  //   } else {
+  //     c = sqrt(a / b);
+  //   }
+  //
+  //   var matrixCxCy = Matrix4.zero()
+  //       ..setEntry(0, 0, c * (rx * y1_ / ry))
+  //       ..setEntry(1, 0, c * (-ry * x1_ / rx));
+  //
+  //   var cx_ = matrixCxCy.entry(0, 0);
+  //   var cy_ = matrixCxCy.entry(1, 0);
+  //
+  //   //求开始角
+  //   //cos<夹角> = 两向量之积 / 两向量模的乘积
+  //   //< 夹角 > = arcCos(两向量之积 / 两向量模的乘积)
+  //
+  //   //向量U的坐标
+  //   double vectorUx = 1;
+  //   double vectorUy = 0;
+  //
+  //   //向量V的坐标
+  //   double vectorVx = (x1_ - cx_) / rx;
+  //   double vectorVy = (y1_ - cy_) / ry;
+  //
+  //   var multiVectorUVectorV = vectorUx * vectorVx + vectorUy * vectorVy; //两向量的乘积
+  //   var vectorUMod = sqrt(vectorUx * vectorUx + vectorUy * vectorUy);//向量U的模
+  //   var vectorVMod = sqrt(vectorVx * vectorVx + vectorVy * vectorVy);//向量V的模
+  //   var cosResult = multiVectorUVectorV / (vectorUMod * vectorVMod);
+  //
+  //   var startAngle = acos(cosResult) * 180 / pi;
+  //
+  //   //求摆动角
+  //   //cos<夹角> = 两向量之积 / 两向量模的乘积
+  //   //< 夹角 > = arcCos(两向量之积 / 两向量模的乘积)
+  //
+  //   //向量U的坐标
+  //   vectorUx = (x1_ - cx_) / rx;
+  //   vectorUy = (y1_ - cy_) / ry;
+  //
+  //   //向量V的坐标
+  //   vectorVx = (-x1_ - cx_) / rx;
+  //   vectorVy = (-y1_ - cy_) / ry;
+  //
+  //   multiVectorUVectorV = vectorUx * vectorVx + vectorUy * vectorVy; //两向量的乘积
+  //   vectorUMod = sqrt(vectorUx * vectorUx + vectorUy * vectorUy);//向量U的模
+  //   vectorVMod = sqrt(vectorVx * vectorVx + vectorVy * vectorVy);//向量V的模
+  //   cosResult = multiVectorUVectorV / (vectorUMod * vectorVMod);
+  //
+  //   var swAngle = acos(cosResult) * 180 / pi;
+  //
+  //   if (fs == 0) {
+  //     swAngle = -swAngle;
+  //   } else {
+  //     swAngle = swAngle.abs();
+  //   }
+  //
+  //
+  //   //region 圆心计算
+  //   var matrixCx_Cy_ = Matrix4.zero()
+  //     ..setEntry(0, 0, c * (rx * y1_ / ry))
+  //     ..setEntry(1, 0, c * (-ry * x1_ / rx));
+  //
+  //   var tempMatrix = Matrix4.zero()
+  //     ..setEntry(0, 0, cos(jia))
+  //     ..setEntry(0, 1, -sin(jia))
+  //     ..setEntry(1, 0, sin(jia))
+  //     ..setEntry(1, 1, cos(jia));
+  //
+  //   var multiplyMatrix = tempMatrix.multiplied(matrixCx_Cy_);
+  //
+  //   var matrixCxCy2 = Matrix4.zero()
+  //     ..setEntry(0, 0, multiplyMatrix.entry(0, 0) + ((startX + endX) / 2))
+  //     ..setEntry(1, 0, multiplyMatrix.entry(1, 0) + ((startY + endY) / 2));
+  //
+  //
+  //   //endregion
+  //   var ret = ArcInfo();
+  //   ret.centerPoint = Offset(matrixCxCy2.entry(0, 0), matrixCxCy2.entry(1, 0));
+  //   ret.startAngle = startAngle;
+  //   ret.sweepAngle = swAngle;
+  //   return ret;
+  //   // return [startAngle, swAngle];
+  // }
 
 
 
@@ -507,26 +507,117 @@ class Arc{
   //
   // }
 
-  getArcCenterPoint(double x1, double y1, double x2, double y2, double fA, double fs, double rx, double ry, double jia){
+  // getArcCenterPoint(double x1, double y1, double x2, double y2, double fA, double fs, double rx, double ry, double jia){
+  //   var matrix1 = Matrix4.zero()
+  //   ..setEntry(0, 0, cos(jia))
+  //   ..setEntry(0, 1, sin(jia))
+  //   ..setEntry(1, 0, -sin(jia))
+  //   ..setEntry(1, 1, cos(jia));
+  //
+  //   var matrix2 = Matrix4.zero()
+  //   ..setEntry(0, 0, (x1 - x2) / 2)
+  //   ..setEntry(1, 0, (y1 - y2) / 2);
+  //
+  //   var matrixX1Y1 = matrix1.multiplied(matrix2);
+  //
+  //   var x1_ = matrixX1Y1.entry(0, 0);
+  //   var y1_ = matrixX1Y1.entry(1, 0);
+  //
+  //   var rx2 = pow(rx, 2); var ry2 = pow(ry, 2); var x1_2 = pow(x1_, 2); var y1_2 = pow(y1_, 2);
+  //
+  //   var a = pow(rx, 2) * pow(ry, 2) - pow(rx, 2) * pow(y1_, 2) - pow(ry, 2) * pow(x1_, 2);
+  //   // var b = pow(rx, 2) * pow(y1_, 2) + pow(ry, 2) * pow(x1_, 2);
+  //   var b = rx2 * y1_2 + ry2 * x1_2;
+  //
+  //   double c = 0;
+  //   if (fA == fs) {
+  //     c = -sqrt(a / b);
+  //   } else {
+  //     c = sqrt(a / b);
+  //   }
+  //
+  //   var d = rx*y1_;
+  //   var e = d/ry;
+  //
+  //   var f = ry*x1_;
+  //   var g = -(f/rx);
+  //
+  //   var cx_ = c * e;
+  //   var cy_ = c * g;
+  //
+  //   var matrix_step3_1 = Matrix4.zero()
+  //   ..setEntry(0, 0, cos(jia))
+  //   ..setEntry(0, 1, -sin(jia))
+  //   ..setEntry(1, 0, sin(jia))
+  //   ..setEntry(1, 1, cos(jia));
+  //
+  //   var matrix_step3_2 = Matrix4.zero()
+  //   ..setEntry(0, 0, cx_)
+  //   ..setEntry(1, 0, cy_);
+  //
+  //   var matrix_step3 = matrix_step3_1.multiplied(matrix_step3_2);
+  //
+  //   var cx = matrix_step3.entry(0, 0) + ((x1 + x2) / 2);
+  //   var cy = matrix_step3.entry(1, 0) + ((y1 + y2) / 2);
+  //
+  //   return Offset(cx, cy);
+  //
+  //   // var matrixCx_Cy_ = Matrix4.zero()
+  //   // ..setEntry(0, 0, c * (rx * y1_ / ry))
+  //   // ..setEntry(1, 0, c * (-ry * x1_ / rx));
+  //   //
+  //   // var tempMatrix = Matrix4.zero()
+  //   // ..setEntry(0, 0, cos(jia))
+  //   // ..setEntry(0, 1, -sin(jia))
+  //   // ..setEntry(1, 0, sin(jia))
+  //   // ..setEntry(1, 1, cos(jia));
+  //   //
+  //   // var multiplyMatrix = tempMatrix.multiplied(matrixCx_Cy_);
+  //   //
+  //   // var matrixCxCy = Matrix4.zero()
+  //   // ..setEntry(0, 0, multiplyMatrix.entry(0, 0) + ((x1 + x2) / 2))
+  //   // ..setEntry(1, 0, multiplyMatrix.entry(1, 0) + ((y1 + y2) / 2));
+  //
+  //   // return Offset(matrixCxCy.entry(0, 0), matrixCxCy.entry(1, 0));
+  // }
+
+  ArcInfo getArcInfoBySvgParams(
+      double startX, double startY,
+      double rx, double ry,
+      double xAxisRotation,
+      bool largeArcFlag,
+      bool sweepFlag,
+      endX, endY) {
+    ArcInfo ret = ArcInfo();
+
+    var x1=startX;
+    var y1=startY;
+    var x2=endX;
+    var y2=endY;
+    var fA = largeArcFlag;
+    var fs = sweepFlag;
+
+    //region 1. Compute (x1′, y1′)
     var matrix1 = Matrix4.zero()
-    ..setEntry(0, 0, cos(jia))
-    ..setEntry(0, 1, sin(jia))
-    ..setEntry(1, 0, -sin(jia))
-    ..setEntry(1, 1, cos(jia));
+      ..setEntry(0, 0, cos(xAxisRotation))
+      ..setEntry(0, 1, sin(xAxisRotation))
+      ..setEntry(1, 0, -sin(xAxisRotation))
+      ..setEntry(1, 1, cos(xAxisRotation));
 
     var matrix2 = Matrix4.zero()
-    ..setEntry(0, 0, (x1 - x2) / 2)
-    ..setEntry(1, 0, (y1 - y2) / 2);
+      ..setEntry(0, 0, (x1 - x2) / 2)
+      ..setEntry(1, 0, (y1 - y2) / 2);
 
     var matrixX1Y1 = matrix1.multiplied(matrix2);
 
     var x1_ = matrixX1Y1.entry(0, 0);
     var y1_ = matrixX1Y1.entry(1, 0);
+    //endregion
 
+    //region 2. Compute (cx′, cy′)
     var rx2 = pow(rx, 2); var ry2 = pow(ry, 2); var x1_2 = pow(x1_, 2); var y1_2 = pow(y1_, 2);
 
     var a = pow(rx, 2) * pow(ry, 2) - pow(rx, 2) * pow(y1_, 2) - pow(ry, 2) * pow(x1_, 2);
-    // var b = pow(rx, 2) * pow(y1_, 2) + pow(ry, 2) * pow(x1_, 2);
     var b = rx2 * y1_2 + ry2 * x1_2;
 
     double c = 0;
@@ -544,41 +635,64 @@ class Arc{
 
     var cx_ = c * e;
     var cy_ = c * g;
+    //endregion
 
+    //region 3. Compute (cx, cy) from (cx′, cy′)
     var matrix_step3_1 = Matrix4.zero()
-    ..setEntry(0, 0, cos(jia))
-    ..setEntry(0, 1, -sin(jia))
-    ..setEntry(1, 0, sin(jia))
-    ..setEntry(1, 1, cos(jia));
+      ..setEntry(0, 0, cos(xAxisRotation))
+      ..setEntry(0, 1, -sin(xAxisRotation))
+      ..setEntry(1, 0, sin(xAxisRotation))
+      ..setEntry(1, 1, cos(xAxisRotation));
 
     var matrix_step3_2 = Matrix4.zero()
-    ..setEntry(0, 0, cx_)
-    ..setEntry(1, 0, cy_);
+      ..setEntry(0, 0, cx_)
+      ..setEntry(1, 0, cy_);
 
     var matrix_step3 = matrix_step3_1.multiplied(matrix_step3_2);
 
     var cx = matrix_step3.entry(0, 0) + ((x1 + x2) / 2);
     var cy = matrix_step3.entry(1, 0) + ((y1 + y2) / 2);
 
-    return Offset(cx, cy);
 
-    // var matrixCx_Cy_ = Matrix4.zero()
-    // ..setEntry(0, 0, c * (rx * y1_ / ry))
-    // ..setEntry(1, 0, c * (-ry * x1_ / rx));
-    //
-    // var tempMatrix = Matrix4.zero()
-    // ..setEntry(0, 0, cos(jia))
-    // ..setEntry(0, 1, -sin(jia))
-    // ..setEntry(1, 0, sin(jia))
-    // ..setEntry(1, 1, cos(jia));
-    //
-    // var multiplyMatrix = tempMatrix.multiplied(matrixCx_Cy_);
-    //
-    // var matrixCxCy = Matrix4.zero()
-    // ..setEntry(0, 0, multiplyMatrix.entry(0, 0) + ((x1 + x2) / 2))
-    // ..setEntry(1, 0, multiplyMatrix.entry(1, 0) + ((y1 + y2) / 2));
+    ret.centerPoint = Offset(cx, cy);
+    //endregion
 
-    // return Offset(matrixCxCy.entry(0, 0), matrixCxCy.entry(1, 0));
+    //region 4. Compute θ1 and Δθ
+    var ux = (x1_ - cx_) / rx;
+    var uy = (y1_ - cy_) / ry;
+    var vx = (-x1_ - cx_) / rx;
+    var vy = (-y1_ - cy_) / ry;
+
+    var p = ux;
+    var q = uy;
+    var r = sqrt(pow(vx, 2) + pow(vy, 2));
+    var s = ux * vy - uy * vx;
+
+    var theta1 = 0.0;
+    if (p == 0 && q == 1) {
+      theta1 = 0;
+    } else if (p == 1 && q == 0) {
+      theta1 = pi / 2;
+    } else if (p == 0 && q == -1) {
+      theta1 = pi;
+    } else if (p == -1 && q == 0) {
+      theta1 = pi * 3 / 2;
+    } else {
+      theta1 = atan2(q, p);
+    }
+
+    var deltaTheta = 0.0;
+    if (fs == true) {
+      deltaTheta = atan2(r * s, p * r * r + q * s * s);
+    } else {
+      deltaTheta = atan2(-r * s, p * r * r + q * s * s) - 2 * pi;
+    }
+    //endregion
+
+    ret.startAngle = theta1;
+    ret.sweepAngle = deltaTheta;
+
+    return ret;
   }
 }
 

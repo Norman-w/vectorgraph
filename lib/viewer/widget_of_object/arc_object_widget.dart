@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/viewer/painter_of_object/arc_painter.dart';
@@ -30,58 +32,48 @@ class ArcObjectWidget extends ConsumerWidget{
     Space.spacePointPos2ViewPortPointPos(arcObject.position, viewPortOffset, viewPortScale, viewPortPixelSize);
     var endPointInView =
     Space.spacePointPos2ViewPortPointPos(arcObject.endPoint, viewPortOffset, viewPortScale, viewPortPixelSize);
-    var rectInView = Rect.fromLTWH(
-        startPointInView.dx,
-        startPointInView.dy,
-        (arcObject.rx * viewPortScale).toDouble(),
-        (arcObject.ry * viewPortScale).toDouble()
-    );
-
-    ArcInfo arcInfo = arcObject.getArcStartAngAndSwAng(100, 100, 150, 150, true, true, 100, 30, 0);
-    // var painter = ArcPainter(startPointInView,
-    //     rectInView,
-    //     0,(decimalPi/Decimal.fromInt(180)*Decimal.fromInt(360)).toDouble(),
-    //     true,
-    //     Colors.red
-    // );
-    print(arcInfo.toString());
-
-
-    var a1 = (decimalPi/Decimal.fromInt(180)*Decimal.fromDouble(arcInfo.startAngle)).toDouble();
-    var a2 = (decimalPi/Decimal.fromInt(180)*Decimal.fromDouble(arcInfo.sweepAngle)).toDouble();
-
-
-    var start = 135;
-    var sweep = 45;
 
     //起始位置
     double startX = 400;
     double startY = 300;
 
+    //结束位置
+    double endX = 450;
+    double endY = 350;
+
     //椭圆的长短轴
     double rx = 100;
     double ry = 50;
+
+    //region 测试使用圆心函数
+    //通过参考w3上的svg圆弧原理公式,重新修正了该函数后,得到了正确的解,之前参考的C#代码有错误.
+    //目前可以正确获取到圆心坐标,推导相关的SketchUP图命名为:svg和canvas圆弧推导.skp.已存储在坚果云中.
+    var rr  =arcObject.getArcInfoBySvgParams(startX,startY,rx,ry, 0,true,false, endX,endY);
+    print("弧线信息：${rr.toString()}");
+    print("起始角度：${rr.startAngle * 180 / pi}");
+    print("扫描角度：${rr.sweepAngle * 180 / pi}");
+    //endregion
 
 
     //小弧
     var painter = ArcPainter(
         // arcInfo.centerPoint + Offset(400,800),
-        Rect.fromCenter(center: Offset(startX,startY), width: rx, height: ry),
-        decimalPerDegree.toDouble() * start ,
-        decimalPerDegree.toDouble() * sweep,
+        Rect.fromCenter(center: rr.centerPoint, width: rx, height: ry),
+        // decimalPerDegree.toDouble() * start ,
+        rr.startAngle,
+        // decimalPerDegree.toDouble() * sweep,
+        rr.sweepAngle,
         // decimalPerDegree.toDouble() * 30,
         true,
         Colors.blue);
-
-    var start2 = start + sweep;
-    var sweep2 = 360-sweep;
-
     //大弧
     var painter2 = ArcPainter(
       // arcInfo.centerPoint + Offset(400,800),
-        Rect.fromCenter(center: Offset(startX,startY), width: rx, height: ry),
-        decimalPerDegree.toDouble() * start2 ,
-        decimalPerDegree.toDouble() * sweep2,
+        Rect.fromCenter(center: rr.centerPoint, width: rx, height: ry),
+        // decimalPerDegree.toDouble() * start2 ,
+        rr.startAngle + rr.sweepAngle,
+        // decimalPerDegree.toDouble() * sweep2,
+        2*pi - rr.sweepAngle,
         // decimalPerDegree.toDouble() * 30,
         true,
         Colors.red);
@@ -93,27 +85,22 @@ class ArcObjectWidget extends ConsumerWidget{
     var painter5 = LinePainter(Offset(startX,startY), Offset(startX+100,startY+100), lineColor);
     var painter6 = LinePainter(Offset(startX,startY), Offset(startX-100,startY+100), lineColor);
 
-    //椭圆上的坐标
+    //椭圆上的坐标点集合
     var ellipse = Ellipse()
     ..radiusX = Decimal.fromDouble(rx/2)
     ..radiusY = Decimal.fromDouble(ry/2);
     List<Offset> points = [];
-    for(var i=start2;i<(start2+sweep2);i++){
-      var p = ellipse.getOnEdgePointByAngle(Decimal.fromInt(i)).toOffset() +
-          Offset(startX,startY);
-      points.add(p);
-    }
+    // for(var i=start2;i<(start2+sweep2);i++){
+    //   var p = ellipse.getOnEdgePointByAngle(Decimal.fromInt(i)).toOffset() +
+    //       Offset(startX,startY);
+    //   points.add(p);
+    // }
 
     var pointPainter1 = PointsPainter(points, Color.fromARGB(44, 13, 251, 198), 3);
 
 
 
-    //region 测试使用圆心函数
-    //通过参考w3上的svg圆弧原理公式,重新修正了该函数后,得到了正确的解,之前参考的C#代码有错误.
-    //目前可以正确获取到圆心坐标,推导相关的SketchUP图命名为:svg和canvas圆弧推导.skp.已存储在坚果云中.
-    var rr  =arcObject.getArcCenterPoint(400,300,450,350,1,0,100,50,0);
-    print("圆心坐标：${rr.toString()}");
-    //endregion
+
 
 
     return Stack(
@@ -140,10 +127,6 @@ class ArcObjectWidget extends ConsumerWidget{
           painter: painter6,
         ),
       ],
-    );
-
-    return CustomPaint(
-      painter: painter
     );
   }
 }
