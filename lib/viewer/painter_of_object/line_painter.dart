@@ -45,6 +45,7 @@ class LinePainter extends CustomPainter {
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
+      //绘制虚线
       ..strokeWidth = 2.0;
     canvas.drawLine(start,end, paint);
   }

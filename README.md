@@ -56,5 +56,11 @@ https://www.runoob.com/svg/svg-polygon.html
 根据SVG Arc求出其开始角、摆动角和椭圆圆心,目前没参考上 https://www.cnblogs.com/ryzen/p/15832672.html
 
 
+SVG路径中圆弧的语法和计算逻辑文章 https://www.cnblogs.com/igin/p/16919891.html
+
+上面链接中引用的官方SVG圆弧计算逻辑文章 https://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
+
+之前参考的C#代码写圆弧 https://www.cnblogs.com/ryzen/p/15832672.html (这个链接和w3的链接都是copilot的结果,他竟然都答对了.监控我?啊~ 是因为上面记录过参考信息了.注:此链接内的内容有错误,自己对照w3的公式重写后获取圆心正确了)
+
 ## 当前进度
 2023年03月28日:正在做曲线(Arc)的绘制

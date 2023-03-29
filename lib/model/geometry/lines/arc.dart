@@ -523,8 +523,11 @@ class Arc{
     var x1_ = matrixX1Y1.entry(0, 0);
     var y1_ = matrixX1Y1.entry(1, 0);
 
+    var rx2 = pow(rx, 2); var ry2 = pow(ry, 2); var x1_2 = pow(x1_, 2); var y1_2 = pow(y1_, 2);
+
     var a = pow(rx, 2) * pow(ry, 2) - pow(rx, 2) * pow(y1_, 2) - pow(ry, 2) * pow(x1_, 2);
-    var b = pow(ry, 2) * pow(y1_, 2) + pow(ry, 2) * pow(x1_, 2);
+    // var b = pow(rx, 2) * pow(y1_, 2) + pow(ry, 2) * pow(x1_, 2);
+    var b = rx2 * y1_2 + ry2 * x1_2;
 
     double c = 0;
     if (fA == fs) {
@@ -533,23 +536,49 @@ class Arc{
       c = sqrt(a / b);
     }
 
-    var matrixCx_Cy_ = Matrix4.zero()
-    ..setEntry(0, 0, c * (rx * y1_ / ry))
-    ..setEntry(1, 0, c * (-ry * x1_ / rx));
+    var d = rx*y1_;
+    var e = d/ry;
 
-    var tempMatrix = Matrix4.zero()
+    var f = ry*x1_;
+    var g = -(f/rx);
+
+    var cx_ = c * e;
+    var cy_ = c * g;
+
+    var matrix_step3_1 = Matrix4.zero()
     ..setEntry(0, 0, cos(jia))
     ..setEntry(0, 1, -sin(jia))
     ..setEntry(1, 0, sin(jia))
     ..setEntry(1, 1, cos(jia));
 
-    var multiplyMatrix = tempMatrix.multiplied(matrixCx_Cy_);
+    var matrix_step3_2 = Matrix4.zero()
+    ..setEntry(0, 0, cx_)
+    ..setEntry(1, 0, cy_);
 
-    var matrixCxCy = Matrix4.zero()
-    ..setEntry(0, 0, multiplyMatrix.entry(0, 0) + ((x1 + x2) / 2))
-    ..setEntry(1, 0, multiplyMatrix.entry(1, 0) + ((y1 + y2) / 2));
+    var matrix_step3 = matrix_step3_1.multiplied(matrix_step3_2);
 
-    return Offset(matrixCxCy.entry(0, 0), matrixCxCy.entry(1, 0));
+    var cx = matrix_step3.entry(0, 0) + ((x1 + x2) / 2);
+    var cy = matrix_step3.entry(1, 0) + ((y1 + y2) / 2);
+
+    return Offset(cx, cy);
+
+    // var matrixCx_Cy_ = Matrix4.zero()
+    // ..setEntry(0, 0, c * (rx * y1_ / ry))
+    // ..setEntry(1, 0, c * (-ry * x1_ / rx));
+    //
+    // var tempMatrix = Matrix4.zero()
+    // ..setEntry(0, 0, cos(jia))
+    // ..setEntry(0, 1, -sin(jia))
+    // ..setEntry(1, 0, sin(jia))
+    // ..setEntry(1, 1, cos(jia));
+    //
+    // var multiplyMatrix = tempMatrix.multiplied(matrixCx_Cy_);
+    //
+    // var matrixCxCy = Matrix4.zero()
+    // ..setEntry(0, 0, multiplyMatrix.entry(0, 0) + ((x1 + x2) / 2))
+    // ..setEntry(1, 0, multiplyMatrix.entry(1, 0) + ((y1 + y2) / 2));
+
+    // return Offset(matrixCxCy.entry(0, 0), matrixCxCy.entry(1, 0));
   }
 }
 

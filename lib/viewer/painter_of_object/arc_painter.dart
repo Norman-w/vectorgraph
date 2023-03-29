@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 class ArcPainter extends CustomPainter {
-  final Offset position;
+  // final Offset position;
   final Rect rect;
   final double startAngle;
   final double sweepAngle;
   final bool useCenter;
   final Color color;
-  ArcPainter(this.position, this.rect, this.startAngle, this.sweepAngle, this.useCenter, this.color);
+  ArcPainter(
+      // this.position,
+      this.rect, this.startAngle, this.sweepAngle, this.useCenter, this.color);
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
@@ -20,7 +22,7 @@ class ArcPainter extends CustomPainter {
     return true;
   }
 }
-
+//
 // class MyArcPainter extends CustomPainter {
 //   @override
 //   void paint(Canvas canvas, Size size) {

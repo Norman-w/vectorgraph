@@ -268,6 +268,8 @@ Decimal decimalACos(Decimal value)
 
 var decimalPi = Decimal.parse('3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679');
 var decimalPiHalf = decimalPi/Decimal.two;
+///每度的弧度pi值
+var decimalPerDegree = decimalPi/Decimal.fromInt(180);
 
 Decimal decimalAtan2(Decimal y, Decimal x) {
   // if (x > Decimal.zero) {
