@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vectorgraph/model/geometry/vectors/vector2d.dart';
 
 import '../../../utils/num_utils.dart';
 import '../points/point_ex.dart';
@@ -658,39 +659,42 @@ class Arc{
     //endregion
 
     //region 4. Compute θ1 and Δθ
-    var ux = 1;
-    var uy = 0;
-    var vx = (-x1_ - cx_) / rx;
-    var vy = (-y1_ - cy_) / ry;
+    double ux = 1;
+    double uy = 0;
+    var vx = (x1_ - cx_) / rx;
+    var vy = (y1_ - cy_) / ry;
 
-    var p = ux;
-    var q = uy;
-    var r = sqrt(pow(vx, 2) + pow(vy, 2));
-    var s = ux * vy - uy * vx;
+    Vector2D v1 = Vector2D(Decimal.fromDouble(ux), uy.toDecimal());
+    Vector2D v2 = Vector2D(vx.toDecimal(), vy.toDecimal());
 
-    var theta1 = 0.0;
-    if (p == 0 && q == 1) {
-      theta1 = 0;
-    } else if (p == 1 && q == 0) {
-      theta1 = pi / 2;
-    } else if (p == 0 && q == -1) {
-      theta1 = pi;
-    } else if (p == -1 && q == 0) {
-      theta1 = pi * 3 / 2;
-    } else {
-      theta1 = atan2(q, p);
+    var theta1 = v1.angleTo(v2);
+
+    double ux1 = (x1_ - cx_) / rx;
+    double uy1 = (y1_ - cy_) / ry;
+
+    double vx1 = (-x1_ - cx_) / rx;
+    double vy1 = (-y1_ - cy_) / ry;
+
+    Vector2D v3 = Vector2D(ux1.toDecimal(), uy1.toDecimal());
+    Vector2D v4 = Vector2D(vx1.toDecimal(), vy1.toDecimal());
+
+    var deltaTheta = v3.angleTo(v4);
+
+    // where Δθ is fixed in the range −360° < Δθ < 360° such that:
+    //
+    // if fS = 0, then Δθ < 0,
+    //
+    // else if fS = 1, then Δθ > 0.
+    if (fs && deltaTheta < Decimal.zero) {
+      deltaTheta += Decimal.two * decimalPi;
+    } else if (!fs && deltaTheta > Decimal.zero) {
+      deltaTheta -= Decimal.two * decimalPi;
     }
-
-    var deltaTheta = 0.0;
-    if (fs == true) {
-      deltaTheta = atan2(r * s, p * r * r + q * s * s);
-    } else {
-      deltaTheta = atan2(-r * s, p * r * r + q * s * s) - 2 * pi;
-    }
+    // In other words, if fS = 0 and the right side of (eq. 5.6) is greater than 0, then subtract 360°, whereas if fS = 1 and the right side of (eq. 5.6) is less than 0, then add 360°. In all other cases leave it as is.
     //endregion
 
-    ret.startAngle = theta1;
-    ret.sweepAngle = deltaTheta;
+    ret.startAngle = theta1.toDouble();
+    ret.sweepAngle = deltaTheta.toDouble();
 
     return ret;
   }

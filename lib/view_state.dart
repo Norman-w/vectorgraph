@@ -313,11 +313,11 @@ Space initSpace(){
     ..radiusX = Decimal.fromInt(50)
     ..radiusY = Decimal.fromInt(25);
 
-  for(var i=0;i<360;i++){
-    var pt = ellipse.getOnEdgePointByAngle(Decimal.fromInt(i));
-    PointObject pointObject = PointObject(pt.x,pt.y);
-    layer8.addPoint(pointObject);
-  }
+  // for(var i=0;i<360;i++){
+  //   var pt = ellipse.getOnEdgePointByAngle(Decimal.fromInt(i));
+  //   PointObject pointObject = PointObject(pt.x,pt.y);
+  //   layer8.addPoint(pointObject);
+  // }
 
   layer8.addEllipse(
     EllipseObject(

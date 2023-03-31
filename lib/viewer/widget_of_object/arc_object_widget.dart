@@ -11,6 +11,8 @@ import '../../space/space.dart';
 import '../../utils/num_utils.dart';
 import '../painter_of_object/points_painter.dart';
 
+var times =0;
+
 class ArcObjectWidget extends ConsumerWidget{
   final ArcObject arcObject;
   final Decimal viewPortScale;
@@ -62,7 +64,7 @@ class ArcObjectWidget extends ConsumerWidget{
         // decimalPerDegree.toDouble() * start ,
         rr.startAngle,
         // decimalPerDegree.toDouble() * sweep,
-        rr.sweepAngle,
+        (times++%20) * (rr.sweepAngle/20),
         // decimalPerDegree.toDouble() * 30,
         true,
         Colors.blue);
@@ -73,7 +75,7 @@ class ArcObjectWidget extends ConsumerWidget{
         // decimalPerDegree.toDouble() * start2 ,
         rr.startAngle + rr.sweepAngle,
         // decimalPerDegree.toDouble() * sweep2,
-        2*pi - rr.sweepAngle,
+        pi - rr.sweepAngle,
         // decimalPerDegree.toDouble() * 30,
         true,
         Colors.red);

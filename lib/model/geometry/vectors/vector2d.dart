@@ -53,6 +53,14 @@ class Vector2D{
     return decimalAtan2(y, x);
   }
 
+  Decimal angleTo(Vector2D vector) {
+    Decimal angle = getAngle() - vector.getAngle();
+    if (angle < Decimal.zero) {
+      angle += decimalPi * Decimal.two;
+    }
+    return angle;
+  }
+
   @override
   String toString() {
     return 'Vector2D{x: ${x.toStringAsFixed(2)}, y: ${y.toStringAsFixed(2)}';
