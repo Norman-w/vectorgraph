@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/viewer/painter_of_object/arc_painter.dart';
 import 'package:vectorgraph/viewer/painter_of_object/line_painter.dart';
-import '../../model/geometry/lines/arc.dart';
 import '../../model/geometry/planes/ellipse.dart';
 import '../../objects/arc_object.dart';
 import '../../space/space.dart';
@@ -50,7 +49,7 @@ class ArcObjectWidget extends ConsumerWidget{
     //region 测试使用圆心函数
     //通过参考w3上的svg圆弧原理公式,重新修正了该函数后,得到了正确的解,之前参考的C#代码有错误.
     //目前可以正确获取到圆心坐标,推导相关的SketchUP图命名为:svg和canvas圆弧推导.skp.已存储在坚果云中.
-    var rr  =arcObject.getArcInfoBySvgParams(startX,startY,rx,ry, 0,true,false, endX,endY);
+    var rr  =arcObject.getArcInfoBySvgParams(startX,startY,rx,ry, 0,true,true, endX,endY);
     print("弧线信息：${rr.toString()}");
     print("起始角度：${rr.startAngle * 180 / pi}");
     print("扫描角度：${rr.sweepAngle * 180 / pi}");
@@ -60,11 +59,12 @@ class ArcObjectWidget extends ConsumerWidget{
     //小弧
     var painter = ArcPainter(
         // arcInfo.centerPoint + Offset(400,800),
-        Rect.fromCenter(center: rr.centerPoint, width: rx, height: ry),
+        Rect.fromCenter(center: rr.centerPoint, width: rx*2, height: ry*2),
         // decimalPerDegree.toDouble() * start ,
         rr.startAngle,
         // decimalPerDegree.toDouble() * sweep,
-        (times++%20) * (rr.sweepAngle/20),
+        rr.sweepAngle,
+        // (times++%20) * (rr.sweepAngle/20),
         // decimalPerDegree.toDouble() * 30,
         true,
         Colors.blue);
@@ -110,9 +110,9 @@ class ArcObjectWidget extends ConsumerWidget{
         CustomPaint(
           painter: painter,
         ),
-        CustomPaint(
-          painter: painter2,
-        ),
+        // CustomPaint(
+        //   painter: painter2,
+        // ),
         CustomPaint(
           painter: painter3,
         ),

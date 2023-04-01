@@ -40,26 +40,6 @@ class Arc{
 
 
 
-  // MainWindow()
-  // {
-  //   // //OpenXml的360° circle
-  //   // const double c = 21600000d;
-  //   //
-  //   // //<arcTo wR="152403" hR="152403" stAng="cd4" swAng="-5400000" />
-  //   // var wR = 172403;
-  //   // var hR = 152403;
-  //   // var stAng = c / 2;
-  //   // var swAng = -c / 3;
-  //   //
-  //   //
-  //   // StringBuilder stringPath = new StringBuilder();
-  //   // var currentPoint = new Point(0, 0);
-  //   // stringPath.Append($"M {currentPoint.X} {currentPoint.Y}");
-  //   //
-  //   // var arcStr = OpenXmlArcToArcStr(stringPath, wR, hR, stAng, swAng, currentPoint);
-  //   // this.Path.Data = Geometry.Parse(arcStr);
-  // }
-
   // /// <summary>
   // /// OpenXml Arc 转为SVG Arc 字符串
   // /// </summary>
@@ -237,350 +217,6 @@ class Arc{
   // }
   // }
 
-  // /// <summary>
-  // /// 获取弧线的开始角度和摆动角度
-  // /// </summary>
-  // /// <param name="x1">起点X</param>
-  // /// <param name="y1">起点Y</param>
-  // /// <param name="x2">终点X</param>
-  // /// <param name="y2">终点Y</param>
-  // /// <param name="fA">优劣弧:1 优弧  0劣弧</param>
-  // /// <param name="fs">顺逆时针绘制：1 顺时针  0 逆时针</param>
-  // /// <param name="rx">椭圆半长轴</param>
-  // /// <param name="ry">椭圆半短轴</param>
-  // /// <param name="jia">旋转角</param>
-  // /// <returns></returns>
-  // static
-  //  (double startAngle, double swAngle)
-  // GetArcStartAngAndSwAng(double x1, double y1, double x2, double y2, double fA, double fs, double rx, double ry, double jia)
-  // {
-  // var matrix1 = new Matrix { M11 = Math.Cos(jia), M12 = Math.Sin(jia), M21 = -Math.Sin(jia), M22 = Math.Cos(jia) };
-  // var matrix2 = new Matrix { M11 = (x1 - x2) / 2, M21 = (y1 - y2) / 2 };
-  // var matrixX1Y1 = Matrix.Multiply(matrix1, matrix2);
-  //
-  // var x1_ = matrixX1Y1.M11;
-  // var y1_ = matrixX1Y1.M21;
-  //
-  // var a = Math.Pow(rx, 2) * Math.Pow(ry, 2) - Math.Pow(rx, 2) * Math.Pow(y1_, 2) - Math.Pow(ry, 2) * Math.Pow(x1_, 2);
-  // var b = Math.Pow(ry, 2) * Math.Pow(y1_, 2) + Math.Pow(ry, 2) * Math.Pow(x1_, 2);
-  //
-  // double c = 0;
-  // if (fA == fs)
-  // {
-  // c = -Math.Sqrt(a / b);
-  // }
-  // else
-  // {
-  // c = Math.Sqrt(a / b);
-  // }
-  //
-  // var matrixCxCy = new Matrix { M11 = c * (rx * y1_ / ry), M21 = c * (-ry * x1_ / rx) };
-  //
-  // var cx_ = matrixCxCy.M11;
-  // var cy_ = matrixCxCy.M21;
-  //
-  //
-  // //求开始角
-  // //cos<夹角> = 两向量之积 / 两向量模的乘积
-  // //< 夹角 > = arcCos(两向量之积 / 两向量模的乘积)
-  //
-  // //向量U的坐标
-  // double vectorUx = 1;
-  // double vectorUy = 0;
-  //
-  // //向量V的坐标
-  // double vectorVx = (x1_ - cx_) / rx;
-  // double vectorVy = (y1_ - cy_) / ry;
-  //
-  //
-  // var multiVectorUVectorV = vectorUx * vectorVx + vectorUy * vectorVy; //两向量的乘积
-  // var vectorUMod = Math.Sqrt(vectorUx * vectorUx + vectorUy * vectorUy);//向量U的模
-  // var vectorVMod = Math.Sqrt(vectorVx * vectorVx + vectorVy * vectorVy);//向量V的模
-  // var cosResult = multiVectorUVectorV / (vectorUMod * vectorVMod);
-  //
-  // var startAngle = Math.Acos(cosResult) * 180 / Math.PI;
-  //
-  //
-  // //求摆动角
-  // //cos<夹角> = 两向量之积 / 两向量模的乘积
-  // //< 夹角 > = arcCos(两向量之积 / 两向量模的乘积)
-  //
-  // //向量U的坐标
-  // vectorUx = (x1_ - cx_) / rx;
-  // vectorUy = (y1_ - cy_) / ry;
-  //
-  // //向量V的坐标
-  // vectorVx = (-x1_ - cx_) / rx;
-  // vectorVy = (-y1_ - cy_) / ry;
-  //
-  // multiVectorUVectorV = vectorUx * vectorVx + vectorUy * vectorVy; //两向量的乘积
-  // vectorUMod = Math.Sqrt(vectorUx * vectorUx + vectorUy * vectorUy);//向量U的模
-  // vectorVMod = Math.Sqrt(vectorVx * vectorVx + vectorVy * vectorVy);//向量V的模
-  // cosResult = multiVectorUVectorV / (vectorUMod * vectorVMod);
-  //
-  // var swAngle = Math.Acos(cosResult) * 180 / Math.PI;
-  //
-  // if (fs == 0)
-  // {
-  // swAngle = -swAngle;
-  // }
-  // else
-  // {
-  // swAngle = Math.Abs(swAngle);
-  // }
-  //
-  //
-  // return (startAngle, swAngle);
-  //
-  // }
-
-  // /// 获取弧线的开始角度和摆动角度
-  // /// 起点X
-  // /// 起点Y
-  // /// 终点X
-  // /// 终点Y
-  // /// 优劣弧:1 优弧  0劣弧
-  // /// 顺逆时针绘制：1 顺时针  0 逆时针
-  // /// 椭圆半长轴
-  // /// 椭圆半短轴
-  // /// 旋转角
-  // ArcInfo getArcStartAngAndSwAng(
-  //     double startX,
-  //     double startY,
-  //     double endX,
-  //     double endY,
-  //     ///优弧
-  //     bool fA,
-  //     //顺时针
-  //     bool fs,
-  //     double rx,
-  //     double ry,
-  //     double jia) {
-  //   var matrix1 = Matrix4.zero()
-  //       ..setEntry(0, 0, cos(jia))
-  //       ..setEntry(0, 1, sin(jia))
-  //       ..setEntry(1, 0, -sin(jia))
-  //       ..setEntry(1, 1, cos(jia));
-  //   var matrix2 = Matrix4.zero()
-  //       ..setEntry(0, 0, (startX - endX) / 2)
-  //       ..setEntry(1, 0, (startY - endY) / 2);
-  //
-  //   var matrixX1Y1 = matrix1 * matrix2;
-  //
-  //   var x1_ = matrixX1Y1.entry(0, 0);
-  //   var y1_ = matrixX1Y1.entry(1, 0);
-  //
-  //   var a = pow(rx, 2) * pow(ry, 2) - pow(rx, 2) * pow(y1_, 2) - pow(ry, 2) * pow(x1_, 2);
-  //   var b = pow(ry, 2) * pow(y1_, 2) + pow(ry, 2) * pow(x1_, 2);
-  //
-  //   double c = 0;
-  //   if (fA == fs) {
-  //     c = -sqrt(a / b);
-  //   } else {
-  //     c = sqrt(a / b);
-  //   }
-  //
-  //   var matrixCxCy = Matrix4.zero()
-  //       ..setEntry(0, 0, c * (rx * y1_ / ry))
-  //       ..setEntry(1, 0, c * (-ry * x1_ / rx));
-  //
-  //   var cx_ = matrixCxCy.entry(0, 0);
-  //   var cy_ = matrixCxCy.entry(1, 0);
-  //
-  //   //求开始角
-  //   //cos<夹角> = 两向量之积 / 两向量模的乘积
-  //   //< 夹角 > = arcCos(两向量之积 / 两向量模的乘积)
-  //
-  //   //向量U的坐标
-  //   double vectorUx = 1;
-  //   double vectorUy = 0;
-  //
-  //   //向量V的坐标
-  //   double vectorVx = (x1_ - cx_) / rx;
-  //   double vectorVy = (y1_ - cy_) / ry;
-  //
-  //   var multiVectorUVectorV = vectorUx * vectorVx + vectorUy * vectorVy; //两向量的乘积
-  //   var vectorUMod = sqrt(vectorUx * vectorUx + vectorUy * vectorUy);//向量U的模
-  //   var vectorVMod = sqrt(vectorVx * vectorVx + vectorVy * vectorVy);//向量V的模
-  //   var cosResult = multiVectorUVectorV / (vectorUMod * vectorVMod);
-  //
-  //   var startAngle = acos(cosResult) * 180 / pi;
-  //
-  //   //求摆动角
-  //   //cos<夹角> = 两向量之积 / 两向量模的乘积
-  //   //< 夹角 > = arcCos(两向量之积 / 两向量模的乘积)
-  //
-  //   //向量U的坐标
-  //   vectorUx = (x1_ - cx_) / rx;
-  //   vectorUy = (y1_ - cy_) / ry;
-  //
-  //   //向量V的坐标
-  //   vectorVx = (-x1_ - cx_) / rx;
-  //   vectorVy = (-y1_ - cy_) / ry;
-  //
-  //   multiVectorUVectorV = vectorUx * vectorVx + vectorUy * vectorVy; //两向量的乘积
-  //   vectorUMod = sqrt(vectorUx * vectorUx + vectorUy * vectorUy);//向量U的模
-  //   vectorVMod = sqrt(vectorVx * vectorVx + vectorVy * vectorVy);//向量V的模
-  //   cosResult = multiVectorUVectorV / (vectorUMod * vectorVMod);
-  //
-  //   var swAngle = acos(cosResult) * 180 / pi;
-  //
-  //   if (fs == 0) {
-  //     swAngle = -swAngle;
-  //   } else {
-  //     swAngle = swAngle.abs();
-  //   }
-  //
-  //
-  //   //region 圆心计算
-  //   var matrixCx_Cy_ = Matrix4.zero()
-  //     ..setEntry(0, 0, c * (rx * y1_ / ry))
-  //     ..setEntry(1, 0, c * (-ry * x1_ / rx));
-  //
-  //   var tempMatrix = Matrix4.zero()
-  //     ..setEntry(0, 0, cos(jia))
-  //     ..setEntry(0, 1, -sin(jia))
-  //     ..setEntry(1, 0, sin(jia))
-  //     ..setEntry(1, 1, cos(jia));
-  //
-  //   var multiplyMatrix = tempMatrix.multiplied(matrixCx_Cy_);
-  //
-  //   var matrixCxCy2 = Matrix4.zero()
-  //     ..setEntry(0, 0, multiplyMatrix.entry(0, 0) + ((startX + endX) / 2))
-  //     ..setEntry(1, 0, multiplyMatrix.entry(1, 0) + ((startY + endY) / 2));
-  //
-  //
-  //   //endregion
-  //   var ret = ArcInfo();
-  //   ret.centerPoint = Offset(matrixCxCy2.entry(0, 0), matrixCxCy2.entry(1, 0));
-  //   ret.startAngle = startAngle;
-  //   ret.sweepAngle = swAngle;
-  //   return ret;
-  //   // return [startAngle, swAngle];
-  // }
-
-
-
-  // /// <summary>
-  // /// 获取弧线的椭圆圆心
-  // /// </summary>
-  // /// <param name="x1">起点X</param>
-  // /// <param name="y1">起点Y</param>
-  // /// <param name="x2">终点X</param>
-  // /// <param name="y2">终点Y</param>
-  // /// <param name="fA">优劣弧:1 优弧  0劣弧</param>
-  // /// <param name="fs">顺逆时针绘制：1 顺时针  0 逆时针</param>
-  // /// <param name="rx">椭圆半长轴</param>
-  // /// <param name="ry">椭圆半短轴</param>
-  // /// <param name="jia">旋转角</param>
-  // /// <returns></returns>
-  // private static Point GetArcCenterPoint(double x1, double y1, double x2, double y2, double fA, double fs, double rx, double ry, double jia)
-  // {
-  //
-  // var matrix1 = new Matrix { M11 = Math.Cos(jia), M12 = Math.Sin(jia), M21 = -Math.Sin(jia), M22 = Math.Cos(jia) };
-  // var matrix2 = new Matrix { M11 = (x1 - x2) / 2, M21 = (y1 - y2) / 2 };
-  // var matrixX1Y1 = Matrix.Multiply(matrix1, matrix2);
-  //
-  // var x1_ = matrixX1Y1.M11;
-  // var y1_ = matrixX1Y1.M21;
-  //
-  // var a = Math.Pow(rx, 2) * Math.Pow(ry, 2) - Math.Pow(rx, 2) * Math.Pow(y1_, 2) - Math.Pow(ry, 2) * Math.Pow(x1_, 2);
-  // var b = Math.Pow(ry, 2) * Math.Pow(y1_, 2) + Math.Pow(ry, 2) * Math.Pow(x1_, 2);
-  //
-  // double c = 0;
-  // if (fA == fs)
-  // {
-  // c = -Math.Sqrt(a / b);
-  // }
-  // else
-  // {
-  // c = Math.Sqrt(a / b);
-  // }
-  //
-  // var matrixCx_Cy_ = new Matrix { M11 = c * (rx * y1_ / ry), M21 = c * (-ry * x1_ / rx) };
-  //
-  // var tempMatrix = new Matrix { M11 = Math.Cos(jia), M12 = -Math.Sin(jia), M21 = Math.Sin(jia), M22 = Math.Cos(jia) };
-  // var multiplyMatrix = Matrix.Multiply(tempMatrix, matrixCx_Cy_);
-  //
-  // var matrixCxCy=new Matrix(){M11 = multiplyMatrix.M11+((x1+x2)/2),M21= multiplyMatrix.M21+((y1+y2)/2) };
-  //
-  // return new Point(matrixCxCy.M11, matrixCxCy.M21);
-  //
-  // }
-
-  // getArcCenterPoint(double x1, double y1, double x2, double y2, double fA, double fs, double rx, double ry, double jia){
-  //   var matrix1 = Matrix4.zero()
-  //   ..setEntry(0, 0, cos(jia))
-  //   ..setEntry(0, 1, sin(jia))
-  //   ..setEntry(1, 0, -sin(jia))
-  //   ..setEntry(1, 1, cos(jia));
-  //
-  //   var matrix2 = Matrix4.zero()
-  //   ..setEntry(0, 0, (x1 - x2) / 2)
-  //   ..setEntry(1, 0, (y1 - y2) / 2);
-  //
-  //   var matrixX1Y1 = matrix1.multiplied(matrix2);
-  //
-  //   var x1_ = matrixX1Y1.entry(0, 0);
-  //   var y1_ = matrixX1Y1.entry(1, 0);
-  //
-  //   var rx2 = pow(rx, 2); var ry2 = pow(ry, 2); var x1_2 = pow(x1_, 2); var y1_2 = pow(y1_, 2);
-  //
-  //   var a = pow(rx, 2) * pow(ry, 2) - pow(rx, 2) * pow(y1_, 2) - pow(ry, 2) * pow(x1_, 2);
-  //   // var b = pow(rx, 2) * pow(y1_, 2) + pow(ry, 2) * pow(x1_, 2);
-  //   var b = rx2 * y1_2 + ry2 * x1_2;
-  //
-  //   double c = 0;
-  //   if (fA == fs) {
-  //     c = -sqrt(a / b);
-  //   } else {
-  //     c = sqrt(a / b);
-  //   }
-  //
-  //   var d = rx*y1_;
-  //   var e = d/ry;
-  //
-  //   var f = ry*x1_;
-  //   var g = -(f/rx);
-  //
-  //   var cx_ = c * e;
-  //   var cy_ = c * g;
-  //
-  //   var matrix_step3_1 = Matrix4.zero()
-  //   ..setEntry(0, 0, cos(jia))
-  //   ..setEntry(0, 1, -sin(jia))
-  //   ..setEntry(1, 0, sin(jia))
-  //   ..setEntry(1, 1, cos(jia));
-  //
-  //   var matrix_step3_2 = Matrix4.zero()
-  //   ..setEntry(0, 0, cx_)
-  //   ..setEntry(1, 0, cy_);
-  //
-  //   var matrix_step3 = matrix_step3_1.multiplied(matrix_step3_2);
-  //
-  //   var cx = matrix_step3.entry(0, 0) + ((x1 + x2) / 2);
-  //   var cy = matrix_step3.entry(1, 0) + ((y1 + y2) / 2);
-  //
-  //   return Offset(cx, cy);
-  //
-  //   // var matrixCx_Cy_ = Matrix4.zero()
-  //   // ..setEntry(0, 0, c * (rx * y1_ / ry))
-  //   // ..setEntry(1, 0, c * (-ry * x1_ / rx));
-  //   //
-  //   // var tempMatrix = Matrix4.zero()
-  //   // ..setEntry(0, 0, cos(jia))
-  //   // ..setEntry(0, 1, -sin(jia))
-  //   // ..setEntry(1, 0, sin(jia))
-  //   // ..setEntry(1, 1, cos(jia));
-  //   //
-  //   // var multiplyMatrix = tempMatrix.multiplied(matrixCx_Cy_);
-  //   //
-  //   // var matrixCxCy = Matrix4.zero()
-  //   // ..setEntry(0, 0, multiplyMatrix.entry(0, 0) + ((x1 + x2) / 2))
-  //   // ..setEntry(1, 0, multiplyMatrix.entry(1, 0) + ((y1 + y2) / 2));
-  //
-  //   // return Offset(matrixCxCy.entry(0, 0), matrixCxCy.entry(1, 0));
-  // }
 
   ArcInfo getArcInfoBySvgParams(
       double startX, double startY,
@@ -639,20 +275,20 @@ class Arc{
     //endregion
 
     //region 3. Compute (cx, cy) from (cx′, cy′)
-    var matrix_step3_1 = Matrix4.zero()
+    var matrixStep3_1 = Matrix4.zero()
       ..setEntry(0, 0, cos(xAxisRotation))
       ..setEntry(0, 1, -sin(xAxisRotation))
       ..setEntry(1, 0, sin(xAxisRotation))
       ..setEntry(1, 1, cos(xAxisRotation));
 
-    var matrix_step3_2 = Matrix4.zero()
+    var matrixStep3_2 = Matrix4.zero()
       ..setEntry(0, 0, cx_)
       ..setEntry(1, 0, cy_);
 
-    var matrix_step3 = matrix_step3_1.multiplied(matrix_step3_2);
+    var matrixStep3 = matrixStep3_1.multiplied(matrixStep3_2);
 
-    var cx = matrix_step3.entry(0, 0) + ((x1 + x2) / 2);
-    var cy = matrix_step3.entry(1, 0) + ((y1 + y2) / 2);
+    var cx = matrixStep3.entry(0, 0) + ((x1 + x2) / 2);
+    var cy = matrixStep3.entry(1, 0) + ((y1 + y2) / 2);
 
 
     ret.centerPoint = Offset(cx, cy);
@@ -664,10 +300,7 @@ class Arc{
     var vx = (x1_ - cx_) / rx;
     var vy = (y1_ - cy_) / ry;
 
-    Vector2D v1 = Vector2D(Decimal.fromDouble(ux), uy.toDecimal());
-    Vector2D v2 = Vector2D(vx.toDecimal(), vy.toDecimal());
-
-    var theta1 = v1.angleTo(v2);
+    var theta1 = getAngle(ux,uy,vx,vy);
 
     double ux1 = (x1_ - cx_) / rx;
     double uy1 = (y1_ - cy_) / ry;
@@ -675,28 +308,33 @@ class Arc{
     double vx1 = (-x1_ - cx_) / rx;
     double vy1 = (-y1_ - cy_) / ry;
 
-    Vector2D v3 = Vector2D(ux1.toDecimal(), uy1.toDecimal());
-    Vector2D v4 = Vector2D(vx1.toDecimal(), vy1.toDecimal());
-
-    var deltaTheta = v3.angleTo(v4);
+    var deltaTheta = getAngle(ux1,uy1,vx1,vy1);
 
     // where Δθ is fixed in the range −360° < Δθ < 360° such that:
     //
     // if fS = 0, then Δθ < 0,
     //
     // else if fS = 1, then Δθ > 0.
-    if (fs && deltaTheta < Decimal.zero) {
-      deltaTheta += Decimal.two * decimalPi;
-    } else if (!fs && deltaTheta > Decimal.zero) {
-      deltaTheta -= Decimal.two * decimalPi;
+    if (fs && deltaTheta < 0) {
+      deltaTheta += 2 * pi;
+    } else if (!fs && deltaTheta > 0) {
+      deltaTheta -= 2 * pi;
     }
     // In other words, if fS = 0 and the right side of (eq. 5.6) is greater than 0, then subtract 360°, whereas if fS = 1 and the right side of (eq. 5.6) is less than 0, then add 360°. In all other cases leave it as is.
     //endregion
 
-    ret.startAngle = theta1.toDouble();
-    ret.sweepAngle = deltaTheta.toDouble();
+    ret.startAngle = theta1;
+    ret.sweepAngle = deltaTheta;
 
     return ret;
+  }
+  //已知两向量,求两向量夹角
+  double getAngle(double ux, double uy, double vx, double vy)
+  {
+    double dot = ux * vx + uy * vy;
+    double det = ux * vy - uy * vx;
+    double angle = atan2(det, dot);
+    return angle;
   }
 }
 

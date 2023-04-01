@@ -31,15 +31,15 @@ class Vector2D{
     return Vector2D(x, y);
   }
 
-  operator +(Vector2D vector) {
+  Vector2D operator +(Vector2D vector) {
     return Vector2D(x + vector.x, y + vector.y);
   }
 
-  operator -(Vector2D vector) {
+  Vector2D operator -(Vector2D vector) {
     return Vector2D(x - vector.x, y - vector.y);
   }
 
-  operator *(Decimal value) {
+  Vector2D operator *(Decimal value) {
     return Vector2D(x * value, y * value);
   }
 
