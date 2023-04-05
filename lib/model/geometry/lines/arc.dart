@@ -13,8 +13,8 @@ class Arc{
   ///定义圆弧椭圆旋转角度,以角度为单位(xr%360)
   final Decimal _rotationDegrees;
   ///laf sf 由于符合两点间的圆弧有4条，laf 决定取大角弧（1）还是小角弧（0） ， sf决定取顺时针弧（1）还是逆时针弧线（0）；
-  final bool _laf;
-  final bool _sf;
+  bool _laf;
+  bool _sf;
 
   bool _valid;
   //endregion
@@ -22,9 +22,9 @@ class Arc{
 
   //region SVG弧线的特有属性
   ///定义弧线的起始点
-  final PointEX _startPoint;
+  PointEX _startPoint;
   ///定义弧线的终点
-  final PointEX _endPoint;
+  PointEX _endPoint;
   ///定义圆弧椭圆旋转角度,以弧度为单位(pi/180*角度)
   final Decimal _rotationRadians;
   //endregion
@@ -88,8 +88,18 @@ class Arc{
         _rotationDegrees = _rotationRadians / decimalPerDegree,
         _valid = true
   {
-    print('该方法尚未实现');
-    print(this);
+    var svg = _getArcInfoByCanvasParams(
+      Rect.fromCenter(center: _arcOwnEllipseBoundRect.center.toOffset(),
+          width: _rx.toDouble(),
+          height: _ry.toDouble()),
+      _rotationRadians.toDouble(),
+      _startAngle.toDouble(),
+      _sweepAngle.toDouble(),
+    );
+    _startPoint = svg.startPoint.toPointEX();
+    _endPoint = svg.endPoint.toPointEX();
+    _laf = svg.largeArcFlag;
+    _sf = svg.sweepFlag;
   }
 
   RectEX _bounds = RectEX.zero;
@@ -110,7 +120,7 @@ class Arc{
   //检查弧线是否有效.如果是给定的内切矩形和角度等参数中得不到起点到终点上的那条弧线,则表示为无效,前端应该绘制为一条起点到终点的直线.
   bool get valid => _valid;
 
-  //自己写的,按照w3的标准.检测中心点和两个标志位都没有问题.但是有旋转角度的时候就不正确了.
+  //region 自己写的,按照w3的标准.都没有问题了
   ///使用svg格式参数获取一个圆弧
   ArcInfo _getArcInfoBySvgParams(
       double startX, double startY,
@@ -232,6 +242,58 @@ class Arc{
   // 将弧度转换为角度
   double radiansToDegrees(double rad) {
     return rad / pi * 180;
+  }
+  //endregion
+
+  //使用canvas的参数来填充svg的参数
+  //Given the following variables:
+  //
+  // cx cy rx ry φ θ1 Δθ
+  // the task is to find:
+  //
+  // x1 y1 x2 y2 fA fS
+  //
+  // This can be achieved using the following formulas:
+  SvgArcInfo _getArcInfoByCanvasParams(Rect arcOwnEllipseRect, double rotationDegrees, double startAngle, double sweepAngle) {
+    var cosPhi = cos(degreesToRadians(rotationDegrees));
+    var sinPhi = sin(degreesToRadians(rotationDegrees));
+    var cosTheta1 = cos(startAngle);
+    var sinTheta1 = sin(startAngle);
+    var rx = arcOwnEllipseRect.width / 2;
+    var ry = arcOwnEllipseRect.height / 2;
+    var cx = arcOwnEllipseRect.center.dx;
+    var cy = arcOwnEllipseRect.center.dy;
+    var thetaPlusDeltaTheta = startAngle + sweepAngle;
+    var cosThetaPlusDeltaTheta = cos(thetaPlusDeltaTheta);
+    var sinThetaPlusDeltaTheta = sin(thetaPlusDeltaTheta);
+
+    var matrix_eq_4_1_1 = Matrix4.zero()
+      ..setEntry(0, 0, cosPhi)..setEntry(0, 1, -sinPhi)..setEntry(
+          1, 0, sinPhi)..setEntry(1, 1, cosPhi);
+    var matrix_eq_4_1_2 = Matrix4.zero()
+      ..setEntry(0, 0, rx * cosTheta1)..setEntry(1, 0, ry * sinTheta1);
+    var matrix_eq_4_1 = matrix_eq_4_1_1.multiplied(matrix_eq_4_1_2);
+    var x1 = matrix_eq_4_1.entry(0, 0) + cx;
+    var y1 = matrix_eq_4_1.entry(1, 0) + cy;
+
+    var matrix_eq_4_2_1 = Matrix4.zero()
+      ..setEntry(0, 0, cosPhi)..setEntry(0, 1, -sinPhi)..setEntry(
+          1, 0, sinPhi)..setEntry(1, 1, cosPhi);
+    var matrix_eq_4_2_2 = Matrix4.zero()
+      ..setEntry(0, 0, rx * cosThetaPlusDeltaTheta)..setEntry(
+          1, 0, ry * sinThetaPlusDeltaTheta);
+    var matrix_eq_4_2 = matrix_eq_4_2_1.multiplied(matrix_eq_4_2_2);
+    var x2 = matrix_eq_4_2.entry(0, 0) + cx;
+    var y2 = matrix_eq_4_2.entry(1, 0) + cy;
+
+    bool fa = sweepAngle.abs() > pi ? true : false;
+    bool fs = sweepAngle > 0 ? true : false;
+    var ret = SvgArcInfo();
+    ret.startPoint = Offset(x1, y1);
+    ret.endPoint = Offset(x2, y2);
+    ret.largeArcFlag = fa;
+    ret.sweepFlag = fs;
+    return ret;
   }
 
   //region 备选方案
@@ -711,6 +773,13 @@ class ArcInfo{
   toString() {
     return '中心点: $centerPoint, 起始角度: $startAngle, 旋转角: $sweepAngle';
   }
+}
+
+class SvgArcInfo{
+  late Offset startPoint;
+  late Offset endPoint;
+  late bool largeArcFlag;
+  late bool sweepFlag;
 }
 
 
