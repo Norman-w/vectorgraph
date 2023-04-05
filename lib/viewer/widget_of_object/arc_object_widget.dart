@@ -1,11 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart' hide TextPainter;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/viewer/painter_of_object/arc_painter.dart';
 import '../../objects/arc_object.dart';
 import '../../space/space.dart';
 import '../../utils/num_utils.dart';
+import '../painter_of_object/line_painter.dart';
 
 var times =0;
 
@@ -38,16 +37,12 @@ class ArcObjectWidget extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Offset start = Space.spacePointPos2ViewPortPointPos(
+    Offset center = Space.spacePointPos2ViewPortPointPos(
         arcObject.position, viewPortOffset,viewPortScale, viewPortPixelSize);
-    Offset end = Space.spacePointPos2ViewPortPointPos(
-        arcObject.endPoint, viewPortOffset,viewPortScale, viewPortPixelSize);
-    // print(rr);
-    return Text("");
     var painter = ArcPainter(
         arcObject.rotationRadians.toDouble(),
         Rect.fromCenter(
-            center: start,
+            center: center,
             width: (arcObject.rx*viewPortScale).toDouble() * 2,
             height: (arcObject.ry*viewPortScale).doubleValue * 2),
         arcObject.startAngle.toDouble(),
@@ -59,7 +54,12 @@ class ArcObjectWidget extends ConsumerWidget{
     );
     return
       CustomPaint(
-        painter: painter,
+        painter: arcObject.valid? painter
+        //如果无法找到有效的弧线,使用红色的直线展示以进行提示
+            : LinePainter(
+            Space.spacePointPos2ViewPortPointPos(arcObject.startPoint, viewPortOffset,viewPortScale, viewPortPixelSize),
+            Space.spacePointPos2ViewPortPointPos(arcObject.endPoint, viewPortOffset,viewPortScale, viewPortPixelSize),
+            Colors.red),
       );
   }
 }

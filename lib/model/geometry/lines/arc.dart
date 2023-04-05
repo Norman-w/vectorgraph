@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vectorgraph/model/geometry/vectors/vector2d.dart';
-
 import '../../../utils/num_utils.dart';
 import '../points/point_ex.dart';
 import '../rect/RectEX.dart';
@@ -17,6 +15,8 @@ class Arc{
   ///laf sf 由于符合两点间的圆弧有4条，laf 决定取大角弧（1）还是小角弧（0） ， sf决定取顺时针弧（1）还是逆时针弧线（0）；
   final bool _laf;
   final bool _sf;
+
+  bool _valid;
   //endregion
 
 
@@ -46,7 +46,12 @@ class Arc{
   // }
   ///使用svg的参数初始化一个弧线
   Arc.fromSVG(this._startPoint, this._rx,this._ry, this._rotationDegrees, this._laf, this._sf, this._endPoint)
-  :_arcOwnEllipseBoundRect = RectEX.zero ,_startAngle = Decimal.zero, _sweepAngle = Decimal.zero,_rotationRadians = _rotationDegrees* decimalPerDegree
+  :
+        _arcOwnEllipseBoundRect = RectEX.zero ,
+        _startAngle = Decimal.zero,
+        _sweepAngle = Decimal.zero,
+        _rotationRadians = _rotationDegrees* decimalPerDegree,
+        _valid = true
   {
     var canvasInfo = _getArcInfoBySvgParams(
       _startPoint.x.toDouble(),_startPoint.y.toDouble(),
@@ -59,12 +64,17 @@ class Arc{
 
     print(canvasInfo);
 
-    print("是: ${_arcOwnEllipseBoundRect}, 起始角:${_startAngle} , 结束角度:${_sweepAngle}");
+    if(canvasInfo.centerPoint.dx.isNaN || canvasInfo.centerPoint.dy.isNaN || canvasInfo.sweepAngle.isNaN || canvasInfo.startAngle.isNaN){
+      _valid = false;
+      print('参数无效,无法在所给的起点终点角度等信息找到所需的弧线(找不到圆心或角度信息)');
+      return;
+    }
+    // print("是: ${_arcOwnEllipseBoundRect}, 起始角:${_startAngle} , 结束角度:${_sweepAngle}");
     _arcOwnEllipseBoundRect = RectEX.fromCenter(center: canvasInfo.centerPoint.toPointEX(), width: _rx, height: _ry);
     _startAngle = canvasInfo.startAngle.toDecimal();
     _sweepAngle = canvasInfo.sweepAngle.toDecimal();
     
-    print("是: ${_arcOwnEllipseBoundRect.center}, 起始角:${_startAngle} , 结束角度:${_sweepAngle}");
+    // print("是: ${_arcOwnEllipseBoundRect.center}, 起始角:${_startAngle} , 结束角度:${_sweepAngle}");
   }
 
   ///使用canvas的参数初始化一个弧线
@@ -75,7 +85,8 @@ class Arc{
         _sf = false,
         _rx=_arcOwnEllipseBoundRect.width,
         _ry=_arcOwnEllipseBoundRect.height,
-        _rotationDegrees = _rotationRadians / decimalPerDegree
+        _rotationDegrees = _rotationRadians / decimalPerDegree,
+        _valid = true
   {
     print('该方法尚未实现');
     print(this);
@@ -95,6 +106,9 @@ class Arc{
   PointEX get endPoint => _endPoint;
   Decimal get startAngle => _startAngle;
   Decimal get sweepAngle => _sweepAngle;
+
+  //检查弧线是否有效.如果是给定的内切矩形和角度等参数中得不到起点到终点上的那条弧线,则表示为无效,前端应该绘制为一条起点到终点的直线.
+  bool get valid => _valid;
 
   //自己写的,按照w3的标准.检测中心点和两个标志位都没有问题.但是有旋转角度的时候就不正确了.
   ///使用svg格式参数获取一个圆弧

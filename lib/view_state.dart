@@ -341,7 +341,16 @@ Space initSpace(){
     PointEX(Decimal.fromInt(100), Decimal.fromInt(50)),
   );
 
-  ArcObject arcObject = ArcObject.fromSVG(
+  ArcObject arcObject1 = ArcObject.fromSVG(
+    PointEX(Decimal.fromInt(0), Decimal.fromInt(0)),
+    Decimal.fromInt(100),
+    Decimal.fromInt(50),
+    Decimal.fromInt(30),
+    true,true,
+    PointEX(Decimal.fromInt(100), Decimal.fromInt(50)),
+  );
+
+  ArcObject arcObject2 = ArcObject.fromSVG(
     PointEX(Decimal.fromInt(400), Decimal.fromInt(300)),
     Decimal.fromInt(100),
     Decimal.fromInt(50),
@@ -352,6 +361,8 @@ Space initSpace(){
 
 
   layer9.addArc(arcObject);
+  layer9.addArc(arcObject1);
+  layer9.addArc(arcObject2);
   //endregion
 
   space.addPaper(paper);
