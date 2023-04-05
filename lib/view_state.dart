@@ -10,6 +10,7 @@ import 'package:vectorgraph/objects/regular_polygonal_star.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
+import 'model/geometry/lines/arc.dart';
 import 'model/geometry/planes/ellipse.dart';
 import 'model/geometry/rect/RectEX.dart';
 import 'objects/arc_object.dart';
@@ -350,6 +351,11 @@ Space initSpace(){
     PointEX(Decimal.fromInt(100), Decimal.fromInt(50)),
   );
 
+
+  //测试svg参数到canvas参数填充的有效性
+
+  //测试将转化来的canvas参数再转换回svg参数,看看方法有没有问题
+
   ArcObject arcObject2 = ArcObject.fromSVG(
     PointEX(Decimal.fromInt(400), Decimal.fromInt(300)),
     Decimal.fromInt(100),
@@ -359,6 +365,14 @@ Space initSpace(){
     PointEX(Decimal.fromInt(450), Decimal.fromInt(350)),
   );
 
+  print(arcObject2.toString());
+
+  ArcObject arcObject3 = ArcObject.fromCanvas(
+    Rect.fromLTWH(393.54049621773913, 225.83801512904336, 493.54049621773913, 275.83801512904336),
+      1.5707963267948966.toDecimal(),
+      1.056847385150435.toDecimal(),5.096785754880329.toDecimal());
+  print("arcObject3 = $arcObject3");
+
 
   layer9.addArc(arcObject);
   layer9.addArc(arcObject1);
@@ -367,26 +381,26 @@ Space initSpace(){
 
 
   //region 随机的弧线
-  for(int i=0;i<1000;i++){
-    var radiusX = Decimal.fromInt(Random().nextInt(100)+50);
-    var radiusY = Decimal.fromInt(Random().nextInt(100)+50);
-    var startX = Decimal.fromInt(Random().nextInt(40000)-20000);
-    var startY = Decimal.fromInt(Random().nextInt(20000)-10000);
-    var endX = Decimal.fromInt(Random().nextInt(100)-50) + startX;
-    var endY = Decimal.fromInt(Random().nextInt(80)-40) + startY;
-    var rotationDegrees = Decimal.fromInt(Random().nextInt(360));
-    var laf = Random().nextBool();
-    var sf = Random().nextBool();
-    ArcObject arcObject = ArcObject.fromSVG(
-      PointEX(startX, startY),
-      radiusX,
-      radiusY,
-      rotationDegrees,
-      laf,sf,
-      PointEX(endX, endY),
-    );
-    layer9.addArc(arcObject);
-  }
+  // for(int i=0;i<1000;i++){
+  //   var radiusX = Decimal.fromInt(Random().nextInt(100)+50);
+  //   var radiusY = Decimal.fromInt(Random().nextInt(100)+50);
+  //   var startX = Decimal.fromInt(Random().nextInt(40000)-20000);
+  //   var startY = Decimal.fromInt(Random().nextInt(20000)-10000);
+  //   var endX = Decimal.fromInt(Random().nextInt(100)-50) + startX;
+  //   var endY = Decimal.fromInt(Random().nextInt(80)-40) + startY;
+  //   var rotationDegrees = Decimal.fromInt(Random().nextInt(360));
+  //   var laf = Random().nextBool();
+  //   var sf = Random().nextBool();
+  //   ArcObject arcObject = ArcObject.fromSVG(
+  //     PointEX(startX, startY),
+  //     radiusX,
+  //     radiusY,
+  //     rotationDegrees,
+  //     laf,sf,
+  //     PointEX(endX, endY),
+  //   );
+  //   layer9.addArc(arcObject);
+  // }
   //endregion
   //endregion
 

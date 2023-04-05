@@ -6,6 +6,25 @@ import 'dart:math';
 //圆弧基于椭圆,椭圆基于矩形,所以_rx和_ry分别就等于矩形的宽和高的一半(由于svg使用的是直径,所以从svg中获取的值需要除以2)
 class Arc{
 
+  @override
+  String toString() {
+    //输出全部参数,每个参数添加\r\n换行
+    return 'Arc{\r\n'
+        '_startPoint: $_startPoint,\r\n'
+        '_rx: $_rx,\r\n'
+        '_ry: $_ry,\r\n'
+        '_rotationDegrees: $_rotationDegrees,\r\n'
+        '_laf: $_laf,\r\n'
+        '_sf: $_sf,\r\n'
+        '_endPoint: $_endPoint,\r\n'
+        '_rotationRadians: $_rotationRadians,\r\n'
+        '_arcOwnEllipseBoundRect: $_arcOwnEllipseBoundRect,\r\n'
+        '_startAngle: $_startAngle,\r\n'
+        '_sweepAngle: $_sweepAngle,\r\n'
+        '_valid: $_valid,\r\n'
+        '}';
+  }
+
   //region SVG和CANVAS共有的属性
   ///定义圆弧椭圆的两个半轴
   final Decimal _rx;
