@@ -43,6 +43,20 @@ class Vector2D{
     return Vector2D(x * value, y * value);
   }
 
+  Decimal dot(Vector2D vector) {
+    return x * vector.x + y * vector.y;
+  }
+  Decimal cross(Vector2D vector) {
+    return x * vector.y - y * vector.x;
+  }
+
+  // Vector2D dot(Vector2D other){
+  //   return Vector2D(x * other.x, y * other.y);
+  // }
+  // Vector2D cross(Vector2D other){
+  //   return Vector2D(x * other.y, y * other.x);
+  // }
+
   setLength(Decimal length) {
     Decimal angle = getAngle();
     x = length * decimalCos(angle);
@@ -83,9 +97,9 @@ class Vector2D{
     return Vector2D(length * decimalCos(angle), length * decimalSin(angle));
   }
 
-  Decimal cross(Vector2D vector) {
-    return x * vector.y - y * vector.x;
-  }
+  // Decimal cross(Vector2D vector) {
+  //   return x * vector.y - y * vector.x;
+  // }
 
   Decimal get length => decimalSqrt(x * x + y * y);
 

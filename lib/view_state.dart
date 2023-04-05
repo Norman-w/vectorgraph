@@ -331,34 +331,25 @@ Space initSpace(){
   //endregion
 
   //region 第九层,圆弧
-  ArcObject arcObject = ArcObject(
-    PointEX(Decimal.fromInt(125), Decimal.fromInt(75)),
+  //这样因为弧线所在的椭圆上得不到这样一个弧,所以绘制时候直接绘制为直线.
+  ArcObject arcObject = ArcObject.fromSVG(
+    PointEX(Decimal.fromInt(0), Decimal.fromInt(0)),
     Decimal.fromInt(100),
     Decimal.fromInt(50),
-    Decimal.fromInt(0),
+    Decimal.fromInt(90),
     true,true,
     PointEX(Decimal.fromInt(100), Decimal.fromInt(50)),
   );
-  // ArcInfo arcInfo = arcObject.getArcStartAngAndSwAng(
-  //     arcObject.position.x.toDouble(),
-  //     arcObject.position.y.toDouble(),
-  //     arcObject.endPoint.x.toDouble(),
-  //     arcObject.endPoint.y.toDouble(),
-  //     true,
-  //     true,
-  //     arcObject.rx.toDouble(),
-  //     arcObject.ry.toDouble(),
-  //     arcObject.xr.toDouble());
 
-  // ArcInfo arcInfo = arcObject.getArcStartAngAndSwAng(
-  //     125,75,
-  //     100,50,
-  //     true,
-  //     true,
-  //     100,50,
-  //     0
-  // );
-  // print(arcInfo);
+  ArcObject arcObject = ArcObject.fromSVG(
+    PointEX(Decimal.fromInt(400), Decimal.fromInt(300)),
+    Decimal.fromInt(100),
+    Decimal.fromInt(50),
+    Decimal.fromInt(90),
+    true,true,
+    PointEX(Decimal.fromInt(450), Decimal.fromInt(350)),
+  );
+
 
   layer9.addArc(arcObject);
   //endregion

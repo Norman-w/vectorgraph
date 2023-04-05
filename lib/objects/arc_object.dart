@@ -5,20 +5,10 @@ import '../model/geometry/lines/arc.dart';
 import 'space_object.dart';
 
 class ArcObject extends Arc with SpaceObject,ALineObject{
-  ArcObject(
-  super._position,
-  super._rx,
-  super._ry,
-  super._xr,
-  super._laf,
-  super._sf,
-  super._endPoint,
-      ) ;
+  ArcObject.fromSVG(PointEX startPoint, Decimal rx,Decimal ry,Decimal rotationDegrees, laf,sf,endPoint):super.fromSVG(startPoint, rx, ry, rotationDegrees, laf, sf, endPoint);
   @override
   ArcObject copyWith(){
-    return ArcObject(
-      position, rx, ry, xr, laf, sf, endPoint,
-    );
+    return ArcObject.fromSVG(startPoint, rx, ry, rotationDegrees, laf, sf, endPoint);
   }
 
   bool isPointOnLine(PointEX point, {Decimal? deviation}){
@@ -26,7 +16,7 @@ class ArcObject extends Arc with SpaceObject,ALineObject{
   }
 
   @override
-  toString() => 'ArcObject: $position, $rx, $ry, $xr, $laf, $sf, $endPoint';
+  toString() => 'ArcObject: $position, $rx, $ry, $rotationDegrees, $laf, $sf, $endPoint';
 
   @override
   RectEX get selfBounds => bounds.shift(-position.x, -position.y);
