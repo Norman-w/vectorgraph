@@ -5,6 +5,7 @@ import '../../objects/arc_object.dart';
 import '../../space/space.dart';
 import '../../utils/num_utils.dart';
 import '../painter_of_object/line_painter.dart';
+import '../painter_of_object/points_painter.dart';
 
 var times =0;
 
@@ -52,10 +53,17 @@ class ArcObjectWidget extends ConsumerWidget{
       showArcOwnEllipseCenter,
       showArcOwnEllipseBoundRect,
     );
+    //region 显示计算出来的数据是否准确
+    var viewPortArcStartPoint = Space.spacePointPos2ViewPortPointPos(
+        arcObject.startPoint, viewPortOffset, viewPortScale, viewPortPixelSize);
+    var viewPortArcEndPoint = Space.spacePointPos2ViewPortPointPos(
+        arcObject.endPoint, viewPortOffset, viewPortScale, viewPortPixelSize);
     var linePainter = LinePainter(
-        arcObject.startPoint.toOffset() + center, arcObject.endPoint.toOffset()+center,
+        viewPortArcStartPoint,
+        viewPortArcEndPoint,
         Colors.blueAccent);
-    print("start:${arcObject.startPoint.toOffset() + center}  end:${arcObject.endPoint.toOffset() + center}");
+    var pointPainter = PointPainter(center, Colors.red, 3);
+    //endregion
     return
       Stack(
         children: [
@@ -74,6 +82,9 @@ class ArcObjectWidget extends ConsumerWidget{
           ),
           CustomPaint(
             painter: linePainter,
+          ),
+          CustomPaint(
+            painter: pointPainter,
           ),
         ],
       );

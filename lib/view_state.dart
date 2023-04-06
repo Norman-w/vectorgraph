@@ -369,20 +369,20 @@ Space initSpace(){
 
   ArcObject arcObject3 = ArcObject.fromCanvas(
     //矩形
-      Rect.fromLTWH(-0,-0,400,200),
+      Rect.fromLTWH(100,-100,400,200),
       //旋转
-      0.0.toDecimal()*decimalPerDegree,
+      90.0.toDecimal()*decimalPerDegree,
       //开始
       45.0.toDecimal()*decimalPerDegree,
       //结束
       90.0.toDecimal()*decimalPerDegree
   );
-  print("arcObject3 = $arcObject3");
+  // print("arcObject3 = $arcObject3");
 
 
-  // layer9.addArc(arcObject);
-  // layer9.addArc(arcObject1);
-  // layer9.addArc(arcObject2);
+  layer9.addArc(arcObject);
+  layer9.addArc(arcObject1);
+  layer9.addArc(arcObject2);
   layer9.addArc(arcObject3);
 
 

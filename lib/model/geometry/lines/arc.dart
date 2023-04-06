@@ -81,16 +81,18 @@ class Arc{
       _endPoint.x.toDouble(),
       _endPoint.y.toDouble(),
     );
-
-    print(canvasInfo);
-
-    if(canvasInfo.centerPoint.dx.isNaN || canvasInfo.centerPoint.dy.isNaN || canvasInfo.sweepAngle.isNaN || canvasInfo.startAngle.isNaN){
-      _valid = false;
-      print('参数无效,无法在所给的起点终点角度等信息找到所需的弧线(找不到圆心或角度信息)');
-      return;
-    }
+    // return;
+   if(!canvasInfo.valid)
+      {
+        _valid = false;
+        return;
+      }
     // print("是: ${_arcOwnEllipseBoundRect}, 起始角:${_startAngle} , 结束角度:${_sweepAngle}");
-    _arcOwnEllipseBoundRect = RectEX.fromCenter(center: canvasInfo.centerPoint.toPointEX(), width: _rx, height: _ry);
+    _arcOwnEllipseBoundRect = RectEX(
+        canvasInfo.rect.left.toDecimal(),
+        canvasInfo.rect.top.toDecimal(),
+        canvasInfo.rect.width.toDecimal(),
+        canvasInfo.rect.height.toDecimal());
     _startAngle = canvasInfo.startAngle.toDecimal();
     _sweepAngle = canvasInfo.sweepAngle.toDecimal();
     
@@ -108,16 +110,19 @@ class Arc{
         _rotationDegrees = _rotationRadians / decimalPerDegree,
         _valid = true
   {
-    var svg = _getArcInfoByCanvasParams(
-      Rect.fromCenter(center: _arcOwnEllipseBoundRect.center.toOffset(),
-          width: _rx.toDouble()*2,
-          height: _ry.toDouble()*2),
-      _rotationRadians.toDouble(),
-      _startAngle.toDouble(),
-      _sweepAngle.toDouble(),
+    SvgArcInfo svg = fromCenterToEndpoint(
+        _arcOwnEllipseBoundRect.center.x.toDouble(),
+        _arcOwnEllipseBoundRect.center.y.toDouble(),
+        _rx.toDouble(),
+        _ry.toDouble(),
+        _rotationRadians.toDouble(),
+        _startAngle.toDouble(),
+        _sweepAngle.toDouble()
     );
     _startPoint = svg.startPoint.toPointEX();
     _endPoint = svg.endPoint.toPointEX();
+    // _startPoint = svg.startPoint.toPointEX();
+    // _endPoint = svg.endPoint.toPointEX();
     _laf = svg.largeArcFlag;
     _sf = svg.sweepFlag;
   }
@@ -142,14 +147,14 @@ class Arc{
 
   //region 自己写的,按照w3的标准.都没有问题了
   ///使用svg格式参数获取一个圆弧
-  ArcInfo _getArcInfoBySvgParams(
+  CanvasArcInfo _getArcInfoBySvgParams(
       double startX, double startY,
       double rx, double ry,
       double xAxisRotation,
       bool largeArcFlag,
       bool sweepFlag,
       endX, endY) {
-    ArcInfo ret = ArcInfo();
+    CanvasArcInfo ret = CanvasArcInfo();
 
     //region 1. Compute (x1′, y1′)
     var matrix1 = Matrix4.zero()
@@ -208,7 +213,13 @@ class Arc{
     var cy = matrixStep3.entry(1, 0) + ((startY + endY) / 2);
 
 
-    ret.centerPoint = Offset(cx, cy);
+    //valid check
+    if(cx.isNaN || cy.isNaN){
+      ret.valid = false;
+      return ret;
+    }
+    ret.valid = true;
+    ret.rect = Rect.fromCenter(center: Offset(cx, cy), width: rx*2, height: ry*2);
     //endregion
 
     //region 4. Compute θ1 and Δθ
@@ -265,76 +276,48 @@ class Arc{
   }
   //endregion
 
-  //使用canvas的参数来填充svg的参数
-  //Given the following variables:
-  //
-  // cx cy rx ry φ θ1 Δθ
-  // the task is to find:
-  //
-  // x1 y1 x2 y2 fA fS
-  //
-  // This can be achieved using the following formulas:
-  SvgArcInfo _getArcInfoByCanvasParams(Rect arcOwnEllipseRect, double rotationDegrees, double startAngle, double sweepAngle) {
-    //cos φ
-    var cosPhi = cos(degreesToRadians(rotationDegrees));
-    //sin φ
-    var sinPhi = sin(degreesToRadians(rotationDegrees));
-    //cos θ1
-    var cosTheta1 = cos(startAngle);
-    //sin θ1
-    var sinTheta1 = sin(startAngle);
-    //x半径
-    var rx = arcOwnEllipseRect.width / 2;
-    //y半径
-    var ry = arcOwnEllipseRect.height / 2;
-    //x中心
-    var cx = arcOwnEllipseRect.center.dx;
-    //y中心
-    var cy = arcOwnEllipseRect.center.dy;
-    //θ+Δθ
-    var thetaPlusDeltaTheta = startAngle + sweepAngle;
-    //cos θ+Δθ
-    var cosThetaPlusDeltaTheta = cos(thetaPlusDeltaTheta);
-    //sin θ+Δθ
-    var sinThetaPlusDeltaTheta = sin(thetaPlusDeltaTheta);
-
-    var matrix_eq_4_1_1 = Matrix4.zero()
+  //Conversion from center to endpoint parameterization
+  //https://www.w3.org/TR/SVG/implnote.html#ArcConversionEndpointToCenter
+  SvgArcInfo fromCenterToEndpoint(
+      double cx,
+      double cy,
+      double rx,
+      double ry,
+      double phi,
+      double theta1,
+      double deltaTheta){
+    var cosPhi = cos(phi);
+    var sinPhi = sin(phi);
+    var cosTheta1 = cos(theta1);
+    var sinTheta1 = sin(theta1);
+    var matrix1 = Matrix4.zero()
       ..setEntry(0, 0, cosPhi)..setEntry(0, 1, -sinPhi)..setEntry(
           1, 0, sinPhi)..setEntry(1, 1, cosPhi);
-    var matrix_eq_4_1_2 = Matrix4.zero()
+    var matrix2 = Matrix4.zero()
       ..setEntry(0, 0, rx * cosTheta1)..setEntry(1, 0, ry * sinTheta1);
-    var matrix_eq_4_1 = matrix_eq_4_1_1.multiplied(matrix_eq_4_1_2);
-    var x1 = matrix_eq_4_1.entry(0, 0) + cx;
-    var y1 = matrix_eq_4_1.entry(1, 0) + cy;
+    var x1 = matrix1.multiplied(matrix2).entry(0, 0) + cx;
+    var y1 = matrix1.multiplied(matrix2).entry(1, 0) + cy;
 
-    var matrix_eq_4_2_1 = Matrix4.zero()
+    var cosTheta1PlusDeltaTheta = cos(theta1 + deltaTheta);
+    var sinTheta1PlusDeltaTheta = sin(theta1 + deltaTheta);
+    var matrix3 = Matrix4.zero()
       ..setEntry(0, 0, cosPhi)..setEntry(0, 1, -sinPhi)..setEntry(
           1, 0, sinPhi)..setEntry(1, 1, cosPhi);
-    var matrix_eq_4_2_2 = Matrix4.zero()
-      ..setEntry(0, 0, rx * cosThetaPlusDeltaTheta)..setEntry(
-          1, 0, ry * sinThetaPlusDeltaTheta);
-    var matrix_eq_4_2 = matrix_eq_4_2_1.multiplied(matrix_eq_4_2_2);
-    var x2 = matrix_eq_4_2.entry(0, 0) + cx;
-    var y2 = matrix_eq_4_2.entry(1, 0) + cy;
+    var matrix4 = Matrix4.zero()
+  ..setEntry(0, 0, rx * cosTheta1PlusDeltaTheta)..setEntry(
+          1, 0, ry * sinTheta1PlusDeltaTheta);
+    var x2 = matrix3.multiplied(matrix4).entry(0, 0) + cx;
+    var y2 = matrix3.multiplied(matrix4).entry(1, 0) + cy;
 
-    bool fa = sweepAngle.abs() > pi ? true : false;
-    bool fs = sweepAngle > 0 ? true : false;
+    var fa = deltaTheta.abs() > pi ? true : false;
+    var fs = deltaTheta > 0 ? true : false;
     var ret = SvgArcInfo();
-    // var startVec = Vector2D(x1.toDecimal(), y1.toDecimal()).rotateZ(_rotationRadians);
-    // ret.startPoint = Offset(startVec.x.toDouble(),startVec.y.toDouble());
-    // var endVec = Vector2D(x2.toDecimal(), y2.toDecimal()).rotateZ(_rotationRadians);
-    // ret.endPoint = Offset(endVec.x.toDouble(), endVec.y.toDouble());
-
     ret.startPoint = Offset(x1, y1);
     ret.endPoint = Offset(x2, y2);
-    //旋转后的精确开始和结束点
-    // ret.startPoint = Vector2D(x1.toDecimal(), y1.toDecimal()).rotateZ(_rotationRadians).toOffset();
-    // ret.endPoint = Vector2D(x2.toDecimal(), y2.toDecimal()).rotateZ(_rotationRadians).toOffset();
     ret.largeArcFlag = fa;
     ret.sweepFlag = fs;
     return ret;
   }
-
   //region 备选方案
 
   //region 从canvas到svg的转换?
@@ -777,40 +760,41 @@ class Arc{
 
   //endregion
 }
-class DecimalArc2D{
-  Decimal x = Decimal.zero;
-  Decimal y = Decimal.zero;
-  Decimal width = Decimal.zero;
-  Decimal height = Decimal.zero;
-  Decimal start = Decimal.zero;
-  Decimal extent = Decimal.zero;
-  @override
-  String toString() {
-    return "DecimalArc2D ::: x:$x, y$y, width:$width, height:$height, start$start, sweep:$extent";
-  }
-}
-class Arc2D{
-  late double x;
-  late double y;
-  late double width;
-  late double height;
-  late double start;
-  late double extent;
-  @override
-  String toString() {
-    return "Arc2d ::: x:$x, y$y, width:$width, height:$height, start$start, sweep:$extent";
-  }
-}
+// class DecimalArc2D{
+//   Decimal x = Decimal.zero;
+//   Decimal y = Decimal.zero;
+//   Decimal width = Decimal.zero;
+//   Decimal height = Decimal.zero;
+//   Decimal start = Decimal.zero;
+//   Decimal extent = Decimal.zero;
+//   @override
+//   String toString() {
+//     return "DecimalArc2D ::: x:$x, y$y, width:$width, height:$height, start$start, sweep:$extent";
+//   }
+// }
+// class Arc2D{
+//   late double x;
+//   late double y;
+//   late double width;
+//   late double height;
+//   late double start;
+//   late double extent;
+//   @override
+//   String toString() {
+//     return "Arc2d ::: x:$x, y$y, width:$width, height:$height, start$start, sweep:$extent";
+//   }
+// }
 
 
 
-class ArcInfo{
-  late Offset centerPoint;
+class CanvasArcInfo{
+  late Rect rect;
   late double startAngle;
   late double sweepAngle;
+  late bool valid;
   @override
   toString() {
-    return '中心点: $centerPoint, 起始角度: $startAngle, 旋转角: $sweepAngle';
+    return 'Rect: $rect, 起始角度: $startAngle, 旋转角: $sweepAngle';
   }
 }
 
