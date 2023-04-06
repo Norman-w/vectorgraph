@@ -10,6 +10,7 @@ import 'package:vectorgraph/objects/regular_polygonal_star.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
+import 'model/geometry/lines/arc.dart';
 import 'model/geometry/planes/ellipse.dart';
 import 'model/geometry/rect/RectEX.dart';
 import 'objects/arc_object.dart';
@@ -313,11 +314,11 @@ Space initSpace(){
     ..radiusX = Decimal.fromInt(50)
     ..radiusY = Decimal.fromInt(25);
 
-  for(var i=0;i<360;i++){
-    var pt = ellipse.getOnEdgePointByAngle(Decimal.fromInt(i));
-    PointObject pointObject = PointObject(pt.x,pt.y);
-    layer8.addPoint(pointObject);
-  }
+  // for(var i=0;i<360;i++){
+  //   var pt = ellipse.getOnEdgePointByAngle(Decimal.fromInt(i));
+  //   PointObject pointObject = PointObject(pt.x,pt.y);
+  //   layer8.addPoint(pointObject);
+  // }
 
   layer8.addEllipse(
     EllipseObject(
@@ -331,36 +332,83 @@ Space initSpace(){
   //endregion
 
   //region 第九层,圆弧
-  ArcObject arcObject = ArcObject(
-    PointEX(Decimal.fromInt(125), Decimal.fromInt(75)),
+  //这样因为弧线所在的椭圆上得不到这样一个弧,所以绘制时候直接绘制为直线.
+  ArcObject arcObject = ArcObject.fromSVG(
+    PointEX(Decimal.fromInt(0), Decimal.fromInt(0)),
     Decimal.fromInt(100),
     Decimal.fromInt(50),
-    Decimal.fromInt(0),
+    Decimal.fromInt(90),
     true,true,
     PointEX(Decimal.fromInt(100), Decimal.fromInt(50)),
   );
-  // ArcInfo arcInfo = arcObject.getArcStartAngAndSwAng(
-  //     arcObject.position.x.toDouble(),
-  //     arcObject.position.y.toDouble(),
-  //     arcObject.endPoint.x.toDouble(),
-  //     arcObject.endPoint.y.toDouble(),
-  //     true,
-  //     true,
-  //     arcObject.rx.toDouble(),
-  //     arcObject.ry.toDouble(),
-  //     arcObject.xr.toDouble());
 
-  // ArcInfo arcInfo = arcObject.getArcStartAngAndSwAng(
-  //     125,75,
-  //     100,50,
-  //     true,
-  //     true,
-  //     100,50,
-  //     0
-  // );
-  // print(arcInfo);
+  ArcObject arcObject1 = ArcObject.fromSVG(
+    PointEX(Decimal.fromInt(0), Decimal.fromInt(0)),
+    Decimal.fromInt(100),
+    Decimal.fromInt(50),
+    Decimal.fromInt(30),
+    true,true,
+    PointEX(Decimal.fromInt(100), Decimal.fromInt(50)),
+  );
 
-  layer9.addArc(arcObject);
+
+  //测试svg参数到canvas参数填充的有效性
+
+  //测试将转化来的canvas参数再转换回svg参数,看看方法有没有问题
+
+  ArcObject arcObject2 = ArcObject.fromSVG(
+    PointEX(Decimal.fromInt(400), Decimal.fromInt(300)),
+    Decimal.fromInt(100),
+    Decimal.fromInt(50),
+    Decimal.fromInt(90),
+    true,true,
+    PointEX(Decimal.fromInt(450), Decimal.fromInt(350)),
+  );
+
+  // print(arcObject2.toString());
+
+  ArcObject arcObject3 = ArcObject.fromCanvas(
+    //矩形
+      Rect.fromLTWH(-0,-0,400,200),
+      //旋转
+      0.0.toDecimal()*decimalPerDegree,
+      //开始
+      45.0.toDecimal()*decimalPerDegree,
+      //结束
+      90.0.toDecimal()*decimalPerDegree
+  );
+  print("arcObject3 = $arcObject3");
+
+
+  // layer9.addArc(arcObject);
+  // layer9.addArc(arcObject1);
+  // layer9.addArc(arcObject2);
+  layer9.addArc(arcObject3);
+
+
+
+  //region 随机的弧线
+  // for(int i=0;i<1000;i++){
+  //   var radiusX = Decimal.fromInt(Random().nextInt(100)+50);
+  //   var radiusY = Decimal.fromInt(Random().nextInt(100)+50);
+  //   var startX = Decimal.fromInt(Random().nextInt(40000)-20000);
+  //   var startY = Decimal.fromInt(Random().nextInt(20000)-10000);
+  //   var endX = Decimal.fromInt(Random().nextInt(100)-50) + startX;
+  //   var endY = Decimal.fromInt(Random().nextInt(80)-40) + startY;
+  //   var rotationDegrees = Decimal.fromInt(Random().nextInt(360));
+  //   var laf = Random().nextBool();
+  //   var sf = Random().nextBool();
+  //   ArcObject arcObject = ArcObject.fromSVG(
+  //     PointEX(startX, startY),
+  //     radiusX,
+  //     radiusY,
+  //     rotationDegrees,
+  //     laf,sf,
+  //     PointEX(endX, endY),
+  //   );
+  //   layer9.addArc(arcObject);
+  // }
+  //endregion
   //endregion
 
   space.addPaper(paper);

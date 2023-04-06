@@ -13,6 +13,10 @@ class Vector2D{
     return Vector2D(Decimal.zero,Decimal.zero);
   }
 
+  Offset toOffset(){
+    return Offset(x.toDouble(), y.toDouble());
+  }
+
 
   translate(Vector2D vector) {
     return Vector2D(x + vector.x, y + vector.y);
@@ -25,23 +29,37 @@ class Vector2D{
   }
 
   //rotate z by angle without using matrix
-  rotateZ(Decimal angle) {
+  Vector2D rotateZ(Decimal angle) {
     Decimal x = this.x * decimalCos(angle) - this.y * decimalSin(angle);
     Decimal y = this.x * decimalSin(angle) + this.y * decimalCos(angle);
     return Vector2D(x, y);
   }
 
-  operator +(Vector2D vector) {
+  Vector2D operator +(Vector2D vector) {
     return Vector2D(x + vector.x, y + vector.y);
   }
 
-  operator -(Vector2D vector) {
+  Vector2D operator -(Vector2D vector) {
     return Vector2D(x - vector.x, y - vector.y);
   }
 
-  operator *(Decimal value) {
+  Vector2D operator *(Decimal value) {
     return Vector2D(x * value, y * value);
   }
+
+  Decimal dot(Vector2D vector) {
+    return x * vector.x + y * vector.y;
+  }
+  Decimal cross(Vector2D vector) {
+    return x * vector.y - y * vector.x;
+  }
+
+  // Vector2D dot(Vector2D other){
+  //   return Vector2D(x * other.x, y * other.y);
+  // }
+  // Vector2D cross(Vector2D other){
+  //   return Vector2D(x * other.y, y * other.x);
+  // }
 
   setLength(Decimal length) {
     Decimal angle = getAngle();
@@ -51,6 +69,14 @@ class Vector2D{
 
   Decimal getAngle() {
     return decimalAtan2(y, x);
+  }
+
+  Decimal angleTo(Vector2D vector) {
+    Decimal angle = getAngle() - vector.getAngle();
+    if (angle < Decimal.zero) {
+      angle += decimalPi * Decimal.two;
+    }
+    return angle;
   }
 
   @override
@@ -75,9 +101,9 @@ class Vector2D{
     return Vector2D(length * decimalCos(angle), length * decimalSin(angle));
   }
 
-  Decimal cross(Vector2D vector) {
-    return x * vector.y - y * vector.x;
-  }
+  // Decimal cross(Vector2D vector) {
+  //   return x * vector.y - y * vector.x;
+  // }
 
   Decimal get length => decimalSqrt(x * x + y * y);
 

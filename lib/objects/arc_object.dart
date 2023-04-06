@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/model/geometry/rect/RectEX.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
@@ -5,29 +7,21 @@ import '../model/geometry/lines/arc.dart';
 import 'space_object.dart';
 
 class ArcObject extends Arc with SpaceObject,ALineObject{
-  ArcObject(
-  super._position,
-  super._rx,
-  super._ry,
-  super._xr,
-  super._laf,
-  super._sf,
-  super._endPoint,
-      ) ;
+  ArcObject.fromSVG(PointEX startPoint, Decimal rx,Decimal ry,Decimal rotationDegrees, laf,sf,endPoint):super.fromSVG(startPoint, rx, ry, rotationDegrees, laf, sf, endPoint);
+  ArcObject.fromCanvas(Rect rect,Decimal rotationRadian, Decimal startAngle, Decimal sweepAngle):super.fromCanvas(RectEX.fromLTWH(
+      rect.left.toDecimal(), rect.top.toDecimal(), rect.width.toDecimal(), rect.height.toDecimal()),rotationRadian,startAngle, sweepAngle);
   @override
   ArcObject copyWith(){
-    return ArcObject(
-      position, rx, ry, xr, laf, sf, endPoint,
-    );
+    return ArcObject.fromSVG(startPoint, rx, ry, rotationDegrees, laf, sf, endPoint);
   }
 
   bool isPointOnLine(PointEX point, {Decimal? deviation}){
     return false;
   }
 
-  @override
-  toString() => 'ArcObject: $position, $rx, $ry, $xr, $laf, $sf, $endPoint';
-
+  // @override
+  // toString() =>
+  //     super.toString();
   @override
   RectEX get selfBounds => bounds.shift(-position.x, -position.y);
 

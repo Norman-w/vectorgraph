@@ -264,6 +264,16 @@ Decimal decimalACos(Decimal value)
   return acos(value.toDouble()).toDecimal();
 }
 
+Decimal decimalClamp(Decimal value, Decimal min, Decimal max) {
+  if (value < min) {
+    return min;
+  } else if (value > max) {
+    return max;
+  } else {
+    return value;
+  }
+}
+
 
 
 var decimalPi = Decimal.parse('3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679');
