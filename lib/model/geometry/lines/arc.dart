@@ -155,7 +155,7 @@ class Arc{
     if(centerToLeftTopRotated.y > maxY) maxY = centerToLeftTopRotated.y;
 
     _bounds = RectEX.fromCenter(center: _arcOwnEllipseBoundRect.center, width: maxX*Decimal.two, height: maxY*Decimal.two);
-    print("计算出来的bounds:$_bounds");
+    // print("计算出来的bounds:$_bounds");
   }
   //endregion
 
