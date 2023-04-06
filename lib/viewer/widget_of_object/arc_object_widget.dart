@@ -36,7 +36,7 @@ class ArcObjectWidget extends ConsumerWidget{
         this.hoverColor = Colors.white,
         this.focusColor = Colors.red,
         this.showArcOwnEllipseCenter = false,
-        this.showArcOwnEllipseBoundRect = true,
+        this.showArcOwnEllipseBoundRect = false,
         this.showArcStartToEndLine = false,
       }) : super(key: key);
 
@@ -58,13 +58,12 @@ class ArcObjectWidget extends ConsumerWidget{
       showArcOwnEllipseBoundRect,
     );
 
-    //视图空间中的bounds
-    Rect viewPortBounds = Rect.fromCenter(
-        center: center,
-        width: (arcObject.bounds.width * viewPortScale).toDouble(),
-        height: (arcObject.bounds.height * viewPortScale).doubleValue);
+    ////视图空间中的bounds
+    // Rect viewPortBounds = Rect.fromCenter(
+    //     center: center,
+    //     width: (arcObject.bounds.width * viewPortScale).toDouble(),
+    //     height: (arcObject.bounds.height * viewPortScale).doubleValue);
 
-    // Rect viewPortBounds = arcObject.worldBounds.toRect().shift(center);
     return
       Stack(
         children: [
@@ -102,11 +101,11 @@ class ArcObjectWidget extends ConsumerWidget{
                       viewPortPixelSize)],
                   Colors.redAccent, 3),
             ),
-          CustomPaint(
-            painter: RectPainter(
-                viewPortBounds,
-                Colors.redAccent),
-          ),
+          // CustomPaint(
+          //   painter: RectPainter(
+          //       viewPortBounds,
+          //       Colors.redAccent),
+          // ),
         ],
       );
   }
