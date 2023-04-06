@@ -13,6 +13,10 @@ class Vector2D{
     return Vector2D(Decimal.zero,Decimal.zero);
   }
 
+  Offset toOffset(){
+    return Offset(x.toDouble(), y.toDouble());
+  }
+
 
   translate(Vector2D vector) {
     return Vector2D(x + vector.x, y + vector.y);
@@ -25,7 +29,7 @@ class Vector2D{
   }
 
   //rotate z by angle without using matrix
-  rotateZ(Decimal angle) {
+  Vector2D rotateZ(Decimal angle) {
     Decimal x = this.x * decimalCos(angle) - this.y * decimalSin(angle);
     Decimal y = this.x * decimalSin(angle) + this.y * decimalCos(angle);
     return Vector2D(x, y);

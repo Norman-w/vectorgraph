@@ -365,18 +365,25 @@ Space initSpace(){
     PointEX(Decimal.fromInt(450), Decimal.fromInt(350)),
   );
 
-  print(arcObject2.toString());
+  // print(arcObject2.toString());
 
   ArcObject arcObject3 = ArcObject.fromCanvas(
-    Rect.fromLTWH(393.54049621773913, 225.83801512904336, 493.54049621773913, 275.83801512904336),
-      1.5707963267948966.toDecimal(),
-      1.056847385150435.toDecimal(),5.096785754880329.toDecimal());
+    //矩形
+      Rect.fromLTWH(-0,-0,400,200),
+      //旋转
+      0.0.toDecimal()*decimalPerDegree,
+      //开始
+      45.0.toDecimal()*decimalPerDegree,
+      //结束
+      90.0.toDecimal()*decimalPerDegree
+  );
   print("arcObject3 = $arcObject3");
 
 
-  layer9.addArc(arcObject);
-  layer9.addArc(arcObject1);
-  layer9.addArc(arcObject2);
+  // layer9.addArc(arcObject);
+  // layer9.addArc(arcObject1);
+  // layer9.addArc(arcObject2);
+  layer9.addArc(arcObject3);
 
 
 

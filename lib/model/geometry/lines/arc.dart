@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vectorgraph/model/geometry/vectors/vector2d.dart';
 import '../../../utils/num_utils.dart';
 import '../points/point_ex.dart';
 import '../rect/RectEX.dart';
@@ -102,15 +103,15 @@ class Arc{
         _endPoint = PointEX.zero,
         _laf = false,
         _sf = false,
-        _rx=_arcOwnEllipseBoundRect.width,
-        _ry=_arcOwnEllipseBoundRect.height,
+        _rx=_arcOwnEllipseBoundRect.width/Decimal.two,
+        _ry=_arcOwnEllipseBoundRect.height/Decimal.two,
         _rotationDegrees = _rotationRadians / decimalPerDegree,
         _valid = true
   {
     var svg = _getArcInfoByCanvasParams(
       Rect.fromCenter(center: _arcOwnEllipseBoundRect.center.toOffset(),
-          width: _rx.toDouble(),
-          height: _ry.toDouble()),
+          width: _rx.toDouble()*2,
+          height: _ry.toDouble()*2),
       _rotationRadians.toDouble(),
       _startAngle.toDouble(),
       _sweepAngle.toDouble(),
@@ -274,16 +275,27 @@ class Arc{
   //
   // This can be achieved using the following formulas:
   SvgArcInfo _getArcInfoByCanvasParams(Rect arcOwnEllipseRect, double rotationDegrees, double startAngle, double sweepAngle) {
+    //cos φ
     var cosPhi = cos(degreesToRadians(rotationDegrees));
+    //sin φ
     var sinPhi = sin(degreesToRadians(rotationDegrees));
+    //cos θ1
     var cosTheta1 = cos(startAngle);
+    //sin θ1
     var sinTheta1 = sin(startAngle);
+    //x半径
     var rx = arcOwnEllipseRect.width / 2;
+    //y半径
     var ry = arcOwnEllipseRect.height / 2;
+    //x中心
     var cx = arcOwnEllipseRect.center.dx;
+    //y中心
     var cy = arcOwnEllipseRect.center.dy;
+    //θ+Δθ
     var thetaPlusDeltaTheta = startAngle + sweepAngle;
+    //cos θ+Δθ
     var cosThetaPlusDeltaTheta = cos(thetaPlusDeltaTheta);
+    //sin θ+Δθ
     var sinThetaPlusDeltaTheta = sin(thetaPlusDeltaTheta);
 
     var matrix_eq_4_1_1 = Matrix4.zero()
@@ -308,8 +320,16 @@ class Arc{
     bool fa = sweepAngle.abs() > pi ? true : false;
     bool fs = sweepAngle > 0 ? true : false;
     var ret = SvgArcInfo();
+    // var startVec = Vector2D(x1.toDecimal(), y1.toDecimal()).rotateZ(_rotationRadians);
+    // ret.startPoint = Offset(startVec.x.toDouble(),startVec.y.toDouble());
+    // var endVec = Vector2D(x2.toDecimal(), y2.toDecimal()).rotateZ(_rotationRadians);
+    // ret.endPoint = Offset(endVec.x.toDouble(), endVec.y.toDouble());
+
     ret.startPoint = Offset(x1, y1);
     ret.endPoint = Offset(x2, y2);
+    //旋转后的精确开始和结束点
+    // ret.startPoint = Vector2D(x1.toDecimal(), y1.toDecimal()).rotateZ(_rotationRadians).toOffset();
+    // ret.endPoint = Vector2D(x2.toDecimal(), y2.toDecimal()).rotateZ(_rotationRadians).toOffset();
     ret.largeArcFlag = fa;
     ret.sweepFlag = fs;
     return ret;

@@ -38,28 +38,44 @@ class ArcObjectWidget extends ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Offset center = Space.spacePointPos2ViewPortPointPos(
-        arcObject.position, viewPortOffset,viewPortScale, viewPortPixelSize);
+        arcObject.position, viewPortOffset, viewPortScale, viewPortPixelSize);
     var painter = ArcPainter(
-        arcObject.rotationRadians.toDouble(),
-        Rect.fromCenter(
-            center: center,
-            width: (arcObject.rx*viewPortScale).toDouble() * 2,
-            height: (arcObject.ry*viewPortScale).doubleValue * 2),
-        arcObject.startAngle.toDouble(),
-        arcObject.sweepAngle.toDouble(),
-        true,
-        normalColor,
-        showArcOwnEllipseCenter,
-        showArcOwnEllipseBoundRect,
+      arcObject.rotationRadians.toDouble(),
+      Rect.fromCenter(
+          center: center,
+          width: (arcObject.rx * viewPortScale).toDouble() * 2,
+          height: (arcObject.ry * viewPortScale).doubleValue * 2),
+      arcObject.startAngle.toDouble(),
+      arcObject.sweepAngle.toDouble(),
+      true,
+      normalColor,
+      showArcOwnEllipseCenter,
+      showArcOwnEllipseBoundRect,
     );
+    var linePainter = LinePainter(
+        arcObject.startPoint.toOffset() + center, arcObject.endPoint.toOffset()+center,
+        Colors.blueAccent);
+    print("start:${arcObject.startPoint.toOffset() + center}  end:${arcObject.endPoint.toOffset() + center}");
     return
-      CustomPaint(
-        painter: arcObject.valid? painter
-        //如果无法找到有效的弧线,使用红色的直线展示以进行提示
-            : LinePainter(
-            Space.spacePointPos2ViewPortPointPos(arcObject.startPoint, viewPortOffset,viewPortScale, viewPortPixelSize),
-            Space.spacePointPos2ViewPortPointPos(arcObject.endPoint, viewPortOffset,viewPortScale, viewPortPixelSize),
-            Colors.red),
+      Stack(
+        children: [
+
+          CustomPaint(
+            painter: arcObject.valid ? painter
+            //如果无法找到有效的弧线,使用红色的直线展示以进行提示
+                : LinePainter(
+                Space.spacePointPos2ViewPortPointPos(
+                    arcObject.startPoint, viewPortOffset, viewPortScale,
+                    viewPortPixelSize),
+                Space.spacePointPos2ViewPortPointPos(
+                    arcObject.endPoint, viewPortOffset, viewPortScale,
+                    viewPortPixelSize),
+                Colors.red),
+          ),
+          CustomPaint(
+            painter: linePainter,
+          ),
+        ],
       );
   }
 }
