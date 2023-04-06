@@ -85,6 +85,8 @@ class Arc{
    if(!canvasInfo.valid)
       {
         _valid = false;
+        //当不是有效弧线的时候,他的bounds是他的起始点和终止点组成的矩形
+        _bounds = RectEX.fromPoints(_startPoint, _endPoint);
         return;
       }
     // print("是: ${_arcOwnEllipseBoundRect}, 起始角:${_startAngle} , 结束角度:${_sweepAngle}");
