@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart' hide TextPainter;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/viewer/painter_of_object/arc_painter.dart';
-import 'package:vectorgraph/viewer/painter_of_object/rect_painter.dart';
 import '../../objects/arc_object.dart';
 import '../../space/space.dart';
 import '../../utils/num_utils.dart';
