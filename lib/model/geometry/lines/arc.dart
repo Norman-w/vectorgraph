@@ -93,6 +93,8 @@ class Arc{
     _sweepAngle = canvasInfo.sweepAngle.toDecimal();
     
     // print("是: ${_arcOwnEllipseBoundRect.center}, 起始角:${_startAngle} , 结束角度:${_sweepAngle}");
+
+    _calcBounds();
   }
 
   ///使用canvas的参数初始化一个弧线
@@ -121,7 +123,26 @@ class Arc{
     // _endPoint = svg.endPoint.toPointEX();
     _laf = svg.largeArcFlag;
     _sf = svg.sweepFlag;
+
+    _calcBounds();
   }
+  //region 获取旋转以后的bound
+  void _calcBounds(){
+    var newLeftTop = _arcOwnEllipseBoundRect.leftTop.toVector2D().rotateZ(_rotationRadians).toPointEX();
+    var newRightTop = _arcOwnEllipseBoundRect.topRight.toVector2D().rotateZ(_rotationRadians).toPointEX();
+    var newLeftBottom = _arcOwnEllipseBoundRect.bottomLeft.toVector2D().rotateZ(_rotationRadians).toPointEX();
+    var newRightBottom = _arcOwnEllipseBoundRect.rightBottom.toVector2D().rotateZ(_rotationRadians).toPointEX();
+    //新矩形包含上面的所有点,计算上下左右
+    var newLeft = decimalMin(decimalMin(newLeftTop.x, newRightTop.x), decimalMin(newLeftBottom.x, newRightBottom.x));
+    var newTop = decimalMin(decimalMin(newLeftTop.y, newRightTop.y), decimalMin(newLeftBottom.y, newRightBottom.y));
+    var newRight = decimalMax(decimalMax(newLeftTop.x, newRightTop.x), decimalMax(newLeftBottom.x, newRightBottom.x));
+    var newBottom = decimalMax(decimalMax(newLeftTop.y, newRightTop.y), decimalMax(newLeftBottom.y, newRightBottom.y));
+
+    //得出_bounds
+    _bounds = RectEX.fromLTRB(newLeft, newTop, newRight, newBottom);
+    // print('新的bounds: $_bounds');
+  }
+  //endregion
 
   RectEX _bounds = RectEX.zero;
   PointEX get startPoint => _startPoint;

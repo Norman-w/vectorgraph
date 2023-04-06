@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide TextPainter;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/viewer/painter_of_object/arc_painter.dart';
+import 'package:vectorgraph/viewer/painter_of_object/rect_painter.dart';
 import '../../objects/arc_object.dart';
 import '../../space/space.dart';
 import '../../utils/num_utils.dart';
@@ -35,7 +36,7 @@ class ArcObjectWidget extends ConsumerWidget{
         this.hoverColor = Colors.white,
         this.focusColor = Colors.red,
         this.showArcOwnEllipseCenter = false,
-        this.showArcOwnEllipseBoundRect = false,
+        this.showArcOwnEllipseBoundRect = true,
         this.showArcStartToEndLine = false,
       }) : super(key: key);
 
@@ -56,6 +57,12 @@ class ArcObjectWidget extends ConsumerWidget{
       showArcOwnEllipseCenter,
       showArcOwnEllipseBoundRect,
     );
+
+    //视图空间中的bounds
+    Rect viewPortBounds = Rect.fromCenter(
+        center: center,
+        width: (arcObject.bounds.width * viewPortScale).toDouble() * 2,
+        height: (arcObject.bounds.height * viewPortScale).doubleValue * 2);
 
     return
       Stack(
@@ -94,6 +101,9 @@ class ArcObjectWidget extends ConsumerWidget{
                       viewPortPixelSize)],
                   Colors.redAccent, 3),
             ),
+          CustomPaint(
+            painter:RectPainter(viewPortBounds, Colors.redAccent),
+          )
         ],
       );
   }

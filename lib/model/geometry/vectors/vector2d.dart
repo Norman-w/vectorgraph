@@ -16,6 +16,9 @@ class Vector2D{
   Offset toOffset(){
     return Offset(x.toDouble(), y.toDouble());
   }
+  PointEX toPointEX(){
+    return PointEX(x,y);
+  }
 
 
   translate(Vector2D vector) {

@@ -380,10 +380,10 @@ Space initSpace(){
   // print("arcObject3 = $arcObject3");
 
 
-  layer9.addArc(arcObject);
+  // layer9.addArc(arcObject);
   layer9.addArc(arcObject1);
-  layer9.addArc(arcObject2);
-  layer9.addArc(arcObject3);
+  // layer9.addArc(arcObject2);
+  // layer9.addArc(arcObject3);
 
 
 
