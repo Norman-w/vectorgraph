@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' hide TextPainter;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/viewer/painter_of_object/arc_painter.dart';
 import '../../objects/arc_object.dart';
+import '../../objects/notifier_and_provider_of_object.dart';
 import '../../space/space.dart';
 import '../../utils/num_utils.dart';
 import '../painter_of_object/line_painter.dart';
@@ -41,7 +42,8 @@ class ArcObjectWidget extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var color = arcObject.isInteractive ? hoverColor : normalColor;
+    var state = ref.watch(lineObjectsProvider(arcObject));
+    var color = state.isInteractive ? hoverColor : normalColor;
     Offset center = Space.spacePointPos2ViewPortPointPos(
         arcObject.position, viewPortOffset, viewPortScale, viewPortPixelSize);
     var painter = ArcPainter(

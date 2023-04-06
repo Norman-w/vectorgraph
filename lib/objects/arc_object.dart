@@ -37,14 +37,12 @@ class ArcObject extends Arc with SpaceObject,ALineObject{
     if(centerToMouseAngle < startAngle || centerToMouseAngle > endAngle){
       return false;
     }
-    // print('在呢在呢');
-    return true;
     //计算该角度在椭圆上的点
     var pointOnEdgeByAngle = getOnEdgePointByAngle(centerToMouseAngle);
     //获取转换到的本地坐标点到 椭圆上该角度点的距离
     var distance = pointOnEdgeByAngle.toVector2D().distance(centerToMouseVector.toVector2D());
     //如果距离小于误差值,就认为在线上
-    if(distance < realDeviation!){
+    if(distance < realDeviation){
       return true;
     }
     return false;
