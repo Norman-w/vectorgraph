@@ -28,7 +28,7 @@ class EllipseObject extends Ellipse with SpaceObject,APlaneObject{
     //获得本地坐标的角度
     var angle = radiansToDegrees(vector.getAngle());
     // print('本地坐标的角度: $angle');
-    //获取椭圆变现上该角度的点坐标
+    //获取椭圆边线上该角度的点坐标
     var pointOnEdgeByAngle = getOnEdgePointByAngle(angle);
     // print('椭圆上该角度点坐标: $pointOnEdgeByAngle');
     //获取转换到的本地坐标点到 椭圆上该角度点的距离

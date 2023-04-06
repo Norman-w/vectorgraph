@@ -369,45 +369,45 @@ Space initSpace(){
 
   ArcObject arcObject3 = ArcObject.fromCanvas(
     //矩形
-      Rect.fromLTWH(100,-100,400,200),
+      Rect.fromLTWH(100,-100,200,200),
       //旋转
       0.0.toDecimal()*decimalPerDegree,
       //开始
-      45.0.toDecimal()*decimalPerDegree,
+      0.0.toDecimal()*decimalPerDegree,
       //结束
       90.0.toDecimal()*decimalPerDegree
   );
   // print("arcObject3 = $arcObject3");
 
 
-  layer9.addArc(arcObject);
-  layer9.addArc(arcObject1);
-  layer9.addArc(arcObject2);
+  // layer9.addArc(arcObject);
+  // layer9.addArc(arcObject1);
+  // layer9.addArc(arcObject2);
   layer9.addArc(arcObject3);
 
 
 
   //region 随机的弧线
-  for(int i=0;i<1000;i++){
-    var radiusX = Decimal.fromInt(Random().nextInt(100)+50);
-    var radiusY = Decimal.fromInt(Random().nextInt(100)+50);
-    var startX = Decimal.fromInt(Random().nextInt(40000)-20000);
-    var startY = Decimal.fromInt(Random().nextInt(20000)-10000);
-    var endX = Decimal.fromInt(Random().nextInt(200)-100) + startX;
-    var endY = Decimal.fromInt(Random().nextInt(200)-100) + startY;
-    var rotationDegrees = Decimal.fromInt(Random().nextInt(360));
-    var laf = Random().nextBool();
-    var sf = Random().nextBool();
-    ArcObject arcObject = ArcObject.fromSVG(
-      PointEX(startX, startY),
-      radiusX,
-      radiusY,
-      rotationDegrees,
-      laf,sf,
-      PointEX(endX, endY),
-    );
-    layer9.addArc(arcObject);
-  }
+  // for(int i=0;i<1000;i++){
+  //   var radiusX = Decimal.fromInt(Random().nextInt(100)+50);
+  //   var radiusY = Decimal.fromInt(Random().nextInt(100)+50);
+  //   var startX = Decimal.fromInt(Random().nextInt(40000)-20000);
+  //   var startY = Decimal.fromInt(Random().nextInt(20000)-10000);
+  //   var endX = Decimal.fromInt(Random().nextInt(200)-100) + startX;
+  //   var endY = Decimal.fromInt(Random().nextInt(200)-100) + startY;
+  //   var rotationDegrees = Decimal.fromInt(Random().nextInt(360));
+  //   var laf = Random().nextBool();
+  //   var sf = Random().nextBool();
+  //   ArcObject arcObject = ArcObject.fromSVG(
+  //     PointEX(startX, startY),
+  //     radiusX,
+  //     radiusY,
+  //     rotationDegrees,
+  //     laf,sf,
+  //     PointEX(endX, endY),
+  //   );
+  //   layer9.addArc(arcObject);
+  // }
   //endregion
   //endregion
 

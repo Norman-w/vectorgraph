@@ -13,6 +13,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vectorgraph/objects/arc_object.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/utils/widget.dart';
 
@@ -74,6 +75,18 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
       //region 线
       else if(element is ALineObject){
         bool newIsInteractive = element.isPointOn(worldPoint, deviation);
+
+
+
+        //TODO delete
+        if(element is ArcObject){
+          print('isPointOn:${element.isPointOn(worldPoint, deviation)}');
+        }
+
+
+
+
+
         if(oldIsInteractive != newIsInteractive)
         {
           element.isInteractive = newIsInteractive;

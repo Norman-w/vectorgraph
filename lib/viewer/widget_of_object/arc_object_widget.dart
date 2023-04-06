@@ -41,6 +41,7 @@ class ArcObjectWidget extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var color = arcObject.isInteractive ? hoverColor : normalColor;
     Offset center = Space.spacePointPos2ViewPortPointPos(
         arcObject.position, viewPortOffset, viewPortScale, viewPortPixelSize);
     var painter = ArcPainter(
@@ -52,7 +53,7 @@ class ArcObjectWidget extends ConsumerWidget{
       arcObject.startAngle.toDouble(),
       arcObject.sweepAngle.toDouble(),
       true,
-      normalColor,
+      color,
       showArcOwnEllipseCenter,
       showArcOwnEllipseBoundRect,
     );

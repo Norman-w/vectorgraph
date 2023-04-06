@@ -333,3 +333,18 @@ Decimal decimalMax(x, y){
   return x>y? x:y;
 }
 
+// 将角度转换为弧度
+Decimal degreesToRadians(Decimal deg) {
+  return deg / Decimal.halfCircle * decimalPi;
+}
+
+// 将弧度转换为角度
+Decimal radiansToDegrees(Decimal rad) {
+  return rad / decimalPi * Decimal.halfCircle;
+}
+
+///计算离心角.椭圆和圆弧需要用到的函数.不明白原理.
+Decimal eccentricAngle(Decimal a, Decimal b, Decimal rad) {
+  return decimalAtan2(a*decimalSin(rad), b*decimalCos(rad));
+}
+
