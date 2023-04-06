@@ -17,6 +17,8 @@ class ArcObject extends Arc with SpaceObject,ALineObject{
 
   bool isPointOnLine(PointEX point, {Decimal? deviation}){
     return false;
+    //得到鼠标所在的世界坐标位置
+    //计算世界坐标位置相对于中心点的偏移量,做出向量
   }
 
   // @override
