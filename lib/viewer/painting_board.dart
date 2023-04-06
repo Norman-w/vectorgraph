@@ -97,7 +97,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
     }
     setState(() {
       logText = '世界坐标$worldPoint   视图坐标${event.position}';
-      logText2 = '视图坐标${event.position}';
+      logText2 = "视口中可见的物件数量:${state.allObjectInViewPort.length}";
     });
   }
 
