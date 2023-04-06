@@ -88,11 +88,7 @@ class Arc{
         return;
       }
     // print("是: ${_arcOwnEllipseBoundRect}, 起始角:${_startAngle} , 结束角度:${_sweepAngle}");
-    _arcOwnEllipseBoundRect = RectEX(
-        canvasInfo.rect.left.toDecimal(),
-        canvasInfo.rect.top.toDecimal(),
-        canvasInfo.rect.width.toDecimal(),
-        canvasInfo.rect.height.toDecimal());
+    _arcOwnEllipseBoundRect = RectEX.fromCenter(center: canvasInfo.rect.center.toPointEX(), width: _rx, height: _ry);
     _startAngle = canvasInfo.startAngle.toDecimal();
     _sweepAngle = canvasInfo.sweepAngle.toDecimal();
     

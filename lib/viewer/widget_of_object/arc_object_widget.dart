@@ -22,6 +22,8 @@ class ArcObjectWidget extends ConsumerWidget{
   final bool showArcOwnEllipseCenter;
   ///是否显示弧线所在椭圆的外切矩形
   final bool showArcOwnEllipseBoundRect;
+  ///是否显示起点到终点的直线
+  final bool showArcStartToEndLine;
 
   const ArcObjectWidget(
       { Key? key,
@@ -29,11 +31,12 @@ class ArcObjectWidget extends ConsumerWidget{
         required this.viewPortScale,
         required this.viewPortOffset,
         required this.viewPortPixelSize,
-        this.normalColor = Colors.white60,
+        this.normalColor = Colors.white24,
         this.hoverColor = Colors.white,
         this.focusColor = Colors.red,
-        this.showArcOwnEllipseCenter = true,
-        this.showArcOwnEllipseBoundRect = true,
+        this.showArcOwnEllipseCenter = false,
+        this.showArcOwnEllipseBoundRect = false,
+        this.showArcStartToEndLine = false,
       }) : super(key: key);
 
   @override
@@ -53,17 +56,7 @@ class ArcObjectWidget extends ConsumerWidget{
       showArcOwnEllipseCenter,
       showArcOwnEllipseBoundRect,
     );
-    //region 显示计算出来的数据是否准确
-    var viewPortArcStartPoint = Space.spacePointPos2ViewPortPointPos(
-        arcObject.startPoint, viewPortOffset, viewPortScale, viewPortPixelSize);
-    var viewPortArcEndPoint = Space.spacePointPos2ViewPortPointPos(
-        arcObject.endPoint, viewPortOffset, viewPortScale, viewPortPixelSize);
-    var linePainter = LinePainter(
-        viewPortArcStartPoint,
-        viewPortArcEndPoint,
-        Colors.blueAccent);
-    var pointPainter = PointPainter(center, Colors.red, 3);
-    //endregion
+
     return
       Stack(
         children: [
@@ -80,12 +73,27 @@ class ArcObjectWidget extends ConsumerWidget{
                     viewPortPixelSize),
                 Colors.red),
           ),
-          CustomPaint(
-            painter: linePainter,
-          ),
-          CustomPaint(
-            painter: pointPainter,
-          ),
+          //显示起点到终点的直线
+          if(showArcStartToEndLine)
+            CustomPaint(
+              painter: LinePainter(
+                  Space.spacePointPos2ViewPortPointPos(
+                      arcObject.startPoint, viewPortOffset, viewPortScale,
+                      viewPortPixelSize),
+                  Space.spacePointPos2ViewPortPointPos(
+                      arcObject.endPoint, viewPortOffset, viewPortScale,
+                      viewPortPixelSize),
+                  Colors.lightBlue),
+            ),
+          //显示圆弧所在的椭圆的圆心
+          if(showArcOwnEllipseCenter)
+            CustomPaint(
+              painter: PointsPainter(
+                  [Space.spacePointPos2ViewPortPointPos(
+                      arcObject.position, viewPortOffset, viewPortScale,
+                      viewPortPixelSize)],
+                  Colors.redAccent, 3),
+            ),
         ],
       );
   }
