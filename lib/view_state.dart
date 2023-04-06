@@ -393,8 +393,8 @@ Space initSpace(){
     var radiusY = Decimal.fromInt(Random().nextInt(100)+50);
     var startX = Decimal.fromInt(Random().nextInt(40000)-20000);
     var startY = Decimal.fromInt(Random().nextInt(20000)-10000);
-    var endX = Decimal.fromInt(Random().nextInt(100)-50) + startX;
-    var endY = Decimal.fromInt(Random().nextInt(80)-40) + startY;
+    var endX = Decimal.fromInt(Random().nextInt(200)-100) + startX;
+    var endY = Decimal.fromInt(Random().nextInt(200)-100) + startY;
     var rotationDegrees = Decimal.fromInt(Random().nextInt(360));
     var laf = Random().nextBool();
     var sf = Random().nextBool();
