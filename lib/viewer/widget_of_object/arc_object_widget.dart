@@ -61,9 +61,10 @@ class ArcObjectWidget extends ConsumerWidget{
     //视图空间中的bounds
     Rect viewPortBounds = Rect.fromCenter(
         center: center,
-        width: (arcObject.bounds.width * viewPortScale).toDouble() * 2,
-        height: (arcObject.bounds.height * viewPortScale).doubleValue * 2);
+        width: (arcObject.bounds.width * viewPortScale).toDouble(),
+        height: (arcObject.bounds.height * viewPortScale).doubleValue);
 
+    // Rect viewPortBounds = arcObject.worldBounds.toRect().shift(center);
     return
       Stack(
         children: [
@@ -102,8 +103,10 @@ class ArcObjectWidget extends ConsumerWidget{
                   Colors.redAccent, 3),
             ),
           CustomPaint(
-            painter:RectPainter(viewPortBounds, Colors.redAccent),
-          )
+            painter: RectPainter(
+                viewPortBounds,
+                Colors.redAccent),
+          ),
         ],
       );
   }

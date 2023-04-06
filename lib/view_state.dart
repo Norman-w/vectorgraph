@@ -341,7 +341,7 @@ Space initSpace(){
     true,true,
     PointEX(Decimal.fromInt(100), Decimal.fromInt(50)),
   );
-
+  //
   ArcObject arcObject1 = ArcObject.fromSVG(
     PointEX(Decimal.fromInt(0), Decimal.fromInt(0)),
     Decimal.fromInt(100),
@@ -371,7 +371,7 @@ Space initSpace(){
     //矩形
       Rect.fromLTWH(100,-100,400,200),
       //旋转
-      90.0.toDecimal()*decimalPerDegree,
+      0.0.toDecimal()*decimalPerDegree,
       //开始
       45.0.toDecimal()*decimalPerDegree,
       //结束
@@ -380,10 +380,10 @@ Space initSpace(){
   // print("arcObject3 = $arcObject3");
 
 
-  // layer9.addArc(arcObject);
+  layer9.addArc(arcObject);
   layer9.addArc(arcObject1);
-  // layer9.addArc(arcObject2);
-  // layer9.addArc(arcObject3);
+  layer9.addArc(arcObject2);
+  layer9.addArc(arcObject3);
 
 
 

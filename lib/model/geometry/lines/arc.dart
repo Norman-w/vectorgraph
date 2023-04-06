@@ -88,7 +88,11 @@ class Arc{
         return;
       }
     // print("是: ${_arcOwnEllipseBoundRect}, 起始角:${_startAngle} , 结束角度:${_sweepAngle}");
-    _arcOwnEllipseBoundRect = RectEX.fromCenter(center: canvasInfo.rect.center.toPointEX(), width: _rx, height: _ry);
+    _arcOwnEllipseBoundRect = RectEX.fromCenter(
+        center: canvasInfo.rect.center.toPointEX(),
+        width: _rx*Decimal.two,
+        height: _ry*Decimal.two
+    );
     _startAngle = canvasInfo.startAngle.toDecimal();
     _sweepAngle = canvasInfo.sweepAngle.toDecimal();
     
@@ -128,19 +132,28 @@ class Arc{
   }
   //region 获取旋转以后的bound
   void _calcBounds(){
-    var newLeftTop = _arcOwnEllipseBoundRect.leftTop.toVector2D().rotateZ(_rotationRadians).toPointEX();
-    var newRightTop = _arcOwnEllipseBoundRect.topRight.toVector2D().rotateZ(_rotationRadians).toPointEX();
-    var newLeftBottom = _arcOwnEllipseBoundRect.bottomLeft.toVector2D().rotateZ(_rotationRadians).toPointEX();
-    var newRightBottom = _arcOwnEllipseBoundRect.rightBottom.toVector2D().rotateZ(_rotationRadians).toPointEX();
-    //新矩形包含上面的所有点,计算上下左右
-    var newLeft = decimalMin(decimalMin(newLeftTop.x, newRightTop.x), decimalMin(newLeftBottom.x, newRightBottom.x));
-    var newTop = decimalMin(decimalMin(newLeftTop.y, newRightTop.y), decimalMin(newLeftBottom.y, newRightBottom.y));
-    var newRight = decimalMax(decimalMax(newLeftTop.x, newRightTop.x), decimalMax(newLeftBottom.x, newRightBottom.x));
-    var newBottom = decimalMax(decimalMax(newLeftTop.y, newRightTop.y), decimalMax(newLeftBottom.y, newRightBottom.y));
+    //从中线点作为原点,到右下角的向量 经过旋转后得到新的x坐标是新的bounds的宽度的一半,新的y坐标是新的bounds的高度的一半
+    var centerToRightBottom = Vector2D(_arcOwnEllipseBoundRect.width/Decimal.two, _arcOwnEllipseBoundRect.height/Decimal.two);
+    var centerToRightTop = Vector2D(_arcOwnEllipseBoundRect.width/Decimal.two, -_arcOwnEllipseBoundRect.height/Decimal.two);
+    var centerToLeftBottom = Vector2D(-_arcOwnEllipseBoundRect.width/Decimal.two, _arcOwnEllipseBoundRect.height/Decimal.two);
+    var centerToLeftTop = Vector2D(-_arcOwnEllipseBoundRect.width/Decimal.two, -_arcOwnEllipseBoundRect.height/Decimal.two);
+    var centerToRightBottomRotated = centerToRightBottom.rotateZ(_rotationRadians);
+    var centerToRightTopRotated = centerToRightTop.rotateZ(_rotationRadians);
+    var centerToLeftBottomRotated = centerToLeftBottom.rotateZ(_rotationRadians);
+    var centerToLeftTopRotated = centerToLeftTop.rotateZ(_rotationRadians);
+    //不一定每个顶点都转到什么地方去了.找最右边的点作为宽度,最上面的点作为高度
+    //找出最大的x和y
+    var maxX = centerToRightBottomRotated.x;
+    var maxY = centerToRightBottomRotated.y;
+    if(centerToRightTopRotated.x > maxX) maxX = centerToRightTopRotated.x;
+    if(centerToLeftBottomRotated.x > maxX) maxX = centerToLeftBottomRotated.x;
+    if(centerToLeftTopRotated.x > maxX) maxX = centerToLeftTopRotated.x;
+    if(centerToRightTopRotated.y > maxY) maxY = centerToRightTopRotated.y;
+    if(centerToLeftBottomRotated.y > maxY) maxY = centerToLeftBottomRotated.y;
+    if(centerToLeftTopRotated.y > maxY) maxY = centerToLeftTopRotated.y;
 
-    //得出_bounds
-    _bounds = RectEX.fromLTRB(newLeft, newTop, newRight, newBottom);
-    // print('新的bounds: $_bounds');
+    _bounds = RectEX.fromCenter(center: _arcOwnEllipseBoundRect.center, width: maxX*Decimal.two, height: maxY*Decimal.two);
+    print("计算出来的bounds:$_bounds");
   }
   //endregion
 
