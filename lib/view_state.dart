@@ -373,7 +373,7 @@ Space initSpace(){
       //旋转
       0.0.toDecimal()*decimalPerDegree,
       //开始
-      0.0.toDecimal()*decimalPerDegree,
+      45.0.toDecimal()*decimalPerDegree,
       //结束
       90.0.toDecimal()*decimalPerDegree
   );

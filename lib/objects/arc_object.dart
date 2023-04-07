@@ -16,29 +16,35 @@ class ArcObject extends Arc with SpaceObject,ALineObject{
   }
 
   bool isPointOnLine(PointEX point, {Decimal? deviation}){
+    // point = PointEX(Decimal.fromInt(0),Decimal.fromInt(100));
     var realDeviation = deviation ?? Decimal.one;
     //得到鼠标所在的世界坐标位置
     //计算世界坐标位置相对于中心点的偏移量,做出向量
+
+    还是不行 旋转了就不对哦
 
     //在此之前先把他当做是没有任何旋转的来计算.
     //起始点到圆心的夹角
     var centerToStartPointVector = startPoint - position;
     var centerToEndPointVector = endPoint - position;
 
-    var startAngle = radiansToDegrees(centerToStartPointVector.toVector2D().getAngle());
-    var endAngle = radiansToDegrees(centerToEndPointVector.toVector2D().getAngle());
+    var startAngle = centerToStartPointVector.toVector2D().getAngle();
+    var endAngle = centerToEndPointVector.toVector2D().getAngle();
 
 
     //中心点到鼠标所在位置的向量和角度
     var centerToMouseVector = point - position;
-    var centerToMouseAngle = radiansToDegrees(centerToMouseVector.toVector2D().getAngle());
+    //旋转一个圆弧旋转的角度
+    var centerToMouseAngle = centerToMouseVector.toVector2D().getAngle();
+
+    print(" angle : start:$startAngle  end: $endAngle 0点到鼠标:$centerToMouseAngle");
 
     //如果没有在起点和终点所在的夹角范围中间,就肯定没有在线上
     if(centerToMouseAngle < startAngle || centerToMouseAngle > endAngle){
       return false;
     }
     //计算该角度在椭圆上的点
-    var pointOnEdgeByAngle = getOnEdgePointByAngle(centerToMouseAngle);
+    var pointOnEdgeByAngle = getOnEdgePointByAngle(radiansToDegrees(centerToMouseAngle));
     //获取转换到的本地坐标点到 椭圆上该角度点的距离
     var distance = pointOnEdgeByAngle.toVector2D().distance(centerToMouseVector.toVector2D());
     //如果距离小于误差值,就认为在线上

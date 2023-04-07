@@ -7,6 +7,7 @@ import '../../space/space.dart';
 import '../../utils/num_utils.dart';
 import '../painter_of_object/line_painter.dart';
 import '../painter_of_object/points_painter.dart';
+import '../painter_of_object/rect_painter.dart';
 
 var times =0;
 
@@ -35,9 +36,9 @@ class ArcObjectWidget extends ConsumerWidget{
         this.normalColor = Colors.white24,
         this.hoverColor = Colors.white,
         this.focusColor = Colors.red,
-        this.showArcOwnEllipseCenter = false,
-        this.showArcOwnEllipseBoundRect = false,
-        this.showArcStartToEndLine = false,
+        this.showArcOwnEllipseCenter = true,
+        this.showArcOwnEllipseBoundRect = true,
+        this.showArcStartToEndLine = true,
       }) : super(key: key);
 
   @override
@@ -60,11 +61,11 @@ class ArcObjectWidget extends ConsumerWidget{
       showArcOwnEllipseBoundRect,
     );
 
-    ////视图空间中的bounds
-    // Rect viewPortBounds = Rect.fromCenter(
-    //     center: center,
-    //     width: (arcObject.bounds.width * viewPortScale).toDouble(),
-    //     height: (arcObject.bounds.height * viewPortScale).doubleValue);
+    //视图空间中的bounds
+    Rect viewPortBounds = Rect.fromCenter(
+        center: center,
+        width: (arcObject.bounds.width * viewPortScale).toDouble(),
+        height: (arcObject.bounds.height * viewPortScale).doubleValue);
 
     return
       Stack(
@@ -103,11 +104,11 @@ class ArcObjectWidget extends ConsumerWidget{
                       viewPortPixelSize)],
                   Colors.redAccent, 3),
             ),
-          // CustomPaint(
-          //   painter: RectPainter(
-          //       viewPortBounds,
-          //       Colors.redAccent),
-          // ),
+          CustomPaint(
+            painter: RectPainter(
+                viewPortBounds,
+                Colors.redAccent),
+          ),
         ],
       );
   }
