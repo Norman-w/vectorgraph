@@ -368,10 +368,12 @@ Space initSpace(){
   // print(arcObject2.toString());
 
   ArcObject arcObject3 = ArcObject.fromCanvas(
-    //矩形
-      Rect.fromLTWH(100,-100,200,200),
-      //旋转
-      0.0.toDecimal()*decimalPerDegree,
+    //矩形,如果是正圆的时候,旋转也能正常检测鼠标交互点
+    //   Rect.fromLTWH(100,-100,200,200),
+      Rect.fromLTWH(100,-100,400,200),
+      //旋转,如果是正圆的时候,旋转是没有问题的
+      // 30.0.toDecimal()*decimalPerDegree,
+      30.0.toDecimal()*decimalPerDegree,
       //开始
       45.0.toDecimal()*decimalPerDegree,
       //结束

@@ -80,7 +80,7 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
 
         //TODO delete
         if(element is ArcObject){
-          print('isPointOn:${element.isPointOn(worldPoint, deviation)}');
+          // print('isPointOn:${element.isPointOn(worldPoint, deviation)}');
         }
 
 
