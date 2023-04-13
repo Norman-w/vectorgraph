@@ -22,7 +22,7 @@ class ArcObject extends Arc with SpaceObject,ALineObject{
     // }
     // return decimalPi + (decimalPi - value.abs());
     //简单写法
-    return value>Decimal.zero?value: (decimalPi+decimalPi+value);
+    return value>Decimal.zero?value: decimalPi+decimalPi+value;
   }
 
   bool isPointOnLine(PointEX point, {Decimal? deviation}){
