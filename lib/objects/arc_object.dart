@@ -60,19 +60,28 @@ class ArcObject extends Arc with SpaceObject,ALineObject{
     print(" angle : start:$startAngle  end: $endAngle 0点到鼠标:$centerToMouseAngle");
 
     //如果没有在起点和终点所在的夹角范围中间,就肯定没有在线上
-    if(centerToMouseAngle < startAngle || centerToMouseAngle > endAngle){
-      return false;
-    }
+    // if(centerToMouseAngle < startAngle || centerToMouseAngle > endAngle){
+    //   return false;
+    // }
+    //180度在椭圆上的点
+    var pointOnEdgeByAngle = getOnEdgePointByAngle(Decimal.fromInt(180));
+    // print("180度在椭圆上的点:$pointOnEdgeByAngle");
+    var rotatedCenterToMouseAngle = (centerToMouseAngle + rotationRadians).mod(decimalPi2);
+    print("鼠标角度:${radiansToDegrees( centerToMouseVector.toVector2D().getAngle())}");
+    var currentAnglePointOnEdge = getOnEdgePointByAngle(radiansToDegrees(centerToMouseAngle));
+    print("当前角度在椭圆上的点:$currentAnglePointOnEdge");
     return true;
-    //计算该角度在椭圆上的点
-    var pointOnEdgeByAngle = getOnEdgePointByAngle(radiansToDegrees(centerToMouseAngle));
-    //获取转换到的本地坐标点到 椭圆上该角度点的距离
-    var distance = pointOnEdgeByAngle.toVector2D().distance(centerToMouseVector.toVector2D());
-    //如果距离小于误差值,就认为在线上
-    if(distance < realDeviation){
-      return true;
-    }
-    return false;
+    // var rotatedCenterToMouseAngle = (centerToMouseAngle + rotationRadians).mod(decimalPi2);
+    // print("旋转后的角度:$rotatedCenterToMouseAngle");
+    // //计算该角度在椭圆上的点
+    // var pointOnEdgeByAngle = getOnEdgePointByAngle(radiansToDegrees(rotatedCenterToMouseAngle));
+    // //获取转换到的本地坐标点到 椭圆上该角度点的距离
+    // var distance = pointOnEdgeByAngle.toVector2D().distance(centerToMouseVector.toVector2D());
+    // //如果距离小于误差值,就认为在线上
+    // if(distance < realDeviation){
+    //   return true;
+    // }
+    // return false;
   }
   ///获取椭圆上某个角度的点坐标
   PointEX getOnEdgePointByAngle(Decimal a){
