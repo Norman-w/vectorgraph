@@ -1,6 +1,8 @@
 import '../../../utils/num_utils.dart';
 import '../points/point_ex.dart';
+import '../rect/RectEX.dart';
 import 'line_segment.dart';
+import 'straight_line.dart';
 
 class CrossInfo {
   bool isCross = false;
@@ -127,4 +129,53 @@ CrossInfo getTwoLineSegmentsCrossInfo(LineSegment lineA, LineSegment lineB) {
       startPointToCrossPointDistance: lineA.start.distanceTo(PointEX(x, y)),
       endPointToCrossPointDistance: lineA.end.distanceTo(PointEX(x, y))
   );
+}
+
+//给定一条直线和一个线段,判断这条直线在线段上的交点
+CrossInfo getStraightLineCrossInfoWithLineSegment(StraightLine straightLine, LineSegment lineSegment){
+  var crossPoint = StraightLine.getCrossPoint(straightLine.point1, straightLine.point2, lineSegment.start, lineSegment.end);
+  if(crossPoint == null){
+    return CrossInfo(false);
+  }
+  return CrossInfo(true,
+      crossPoint: crossPoint,
+      startPointToCrossPointDistance: lineSegment.start.distanceTo(crossPoint),
+      endPointToCrossPointDistance: lineSegment.end.distanceTo(crossPoint)
+  );
+}
+
+//给定两个点和一个包含着两个点的矩形,判断这两个点组成的直线在矩形边缘上的交点,如果返回的列表中没有点或者是点数不是2的话,就不是一个正常的矩形切割线
+List<PointEX> getTwoPointCrossRectEdge(PointEX pointA, PointEX pointB, RectEX rect) {
+  //两点确认直线
+  var straightLine = StraightLine(pointA, pointB);
+  //矩形的边缘线段集合
+  var edgeList = rect.edgeLineSegments;
+  //返回的交点集合
+  List<PointEX> ret = [];
+  if(
+      rect.top>pointA.y || rect.top>pointB.y
+      || rect.bottom<pointA.y || rect.bottom<pointB.y
+      || rect.left>pointA.x || rect.left>pointB.x
+      || rect.right<pointA.x || rect.right<pointB.x
+  ){
+    // print('点不在矩形内, Top:${rect.top} pointA.y:${pointA.y} pointB.y:${pointB.y}');
+    //两个点都不在矩形内部,未切割矩形
+    return ret;
+  }
+  //判断每一条边是否和直线相交,交点在哪里
+  for (var i = 0; i < edgeList.length; i++) {
+    var crossInfo = getStraightLineCrossInfoWithLineSegment(straightLine,edgeList[i]);
+    print("当前判断的线段为:${edgeList[i]}");
+    if (crossInfo.isCross) {
+      print('i:$i 相交点:${crossInfo.crossPoint}');
+      if(crossInfo.crossPoint != null &&
+      crossInfo.crossPoint!.x>=rect.left && crossInfo.crossPoint!.x<=rect.right &&
+      crossInfo.crossPoint!.y>=rect.top && crossInfo.crossPoint!.y<=rect.bottom
+      )
+        {
+          ret.add(crossInfo.crossPoint!);
+        }
+    }
+  }
+  return ret;
 }

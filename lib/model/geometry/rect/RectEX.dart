@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:vectorgraph/model/geometry/lines/line_segment.dart';
+
 import '../../../utils/num_utils.dart';
 import '../SizeEX.dart';
 import '../points/point_ex.dart';
@@ -24,11 +26,16 @@ class RectEX {
   PointEX get topLeft => PointEX(left, top);
   PointEX get bottomRight => PointEX(right, bottom);
   PointEX get bottomLeft => PointEX(left, bottom);
+  ///获取边缘的四条边
+  List<LineSegment> get edgeLineSegments{
+    return [
+      LineSegment(leftTop, topRight),
+      LineSegment(topRight, rightBottom),
+      LineSegment(rightBottom, bottomLeft),
+      LineSegment(bottomLeft, leftTop),
+    ];
+  }
   SizeEX get size => SizeEX(width, height);
-
-
-
-
   set width(Decimal value) => right = left + value;
   set height(Decimal value) => bottom = top + value;
   set leftTop(PointEX value) {
