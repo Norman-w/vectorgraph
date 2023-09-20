@@ -159,22 +159,22 @@ class Bezier
 //endregion
 
 extension BezierFunctions on Bezier{
-  ///判断点是否在贝塞尔曲线上
-  bool isPointOn(PointEX pointEX){
-    //原方程
-    //x=x0*(1-t)^3 + 3*x1*t*(1-t)^2+3*x2*t^2*(1-t)+x3*t^3
-    //变形后
-    //(x3-3*x2+3*x1-x0)*t^3 + (3*x2 - 6*x1 + 3*x0)*t^2 + (3*x1 - 3*x0)*t + (x0-x) = 0;
-    //解出这个方程中的x,假设t = 0.5
-    var t = Decimal.fromDouble(0.5);
-    var x3 = end.x;
-    var x2 = endController.x;
-    var x1 = startController.x;
-    var x0 = PointEX.zero.x;
-    var d3 = Decimal.fromInt(3);
-    var d6 = Decimal.fromInt(6);
-    var x = (x3-d3*x2+d3*x1-x0)*decimalPow(t, 3) + (d3*x2 - d6*x1 + d3*x0)*decimalPow(t, 2) + (d3*x1 - d3*x0)*t + (x0-pointEX.x);
-  }
+  // ///判断点是否在贝塞尔曲线上
+  // bool isPointOn(PointEX pointEX){
+  //   //原方程
+  //   //x=x0*(1-t)^3 + 3*x1*t*(1-t)^2+3*x2*t^2*(1-t)+x3*t^3
+  //   //变形后
+  //   //(x3-3*x2+3*x1-x0)*t^3 + (3*x2 - 6*x1 + 3*x0)*t^2 + (3*x1 - 3*x0)*t + (x0-x) = 0;
+  //   //解出这个方程中的x,假设t = 0.5
+  //   var t = Decimal.fromDouble(0.5);
+  //   var x3 = end.x;
+  //   var x2 = endController.x;
+  //   var x1 = startController.x;
+  //   var x0 = PointEX.zero.x;
+  //   var d3 = Decimal.fromInt(3);
+  //   var d6 = Decimal.fromInt(6);
+  //   var x = (x3-d3*x2+d3*x1-x0)*decimalPow(t, 3) + (d3*x2 - d6*x1 + d3*x0)*decimalPow(t, 2) + (d3*x1 - d3*x0)*t + (x0-pointEX.x);
+  // }
 
 }
 
