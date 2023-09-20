@@ -343,7 +343,7 @@ Space initSpace(){
     true,true,
     PointEX(Decimal.fromInt(100), Decimal.fromInt(50)),
   );
-  //
+  //给定的参数没有有效的弧线,显示一条红色的线段
   ArcObject arcObject1 = ArcObject.fromSVG(
     PointEX(Decimal.fromInt(0), Decimal.fromInt(0)),
     Decimal.fromInt(100),
@@ -372,10 +372,10 @@ Space initSpace(){
   ArcObject arcObject3 = ArcObject.fromCanvas(
       //矩形,如果是正圆的时候,旋转也能正常检测鼠标交互点
       //   Rect.fromLTWH(100,-100,200,200),
-      Rect.fromLTWH(100,-100,400,200),
+      const Rect.fromLTWH(100,-100,400,200),
       //旋转,如果是正圆的时候,旋转是没有问题的
       // 30.0.toDecimal()*decimalPerDegree,
-      90.0.toDecimal()*decimalPerDegree,
+      45.0.toDecimal()*decimalPerDegree,
       //开始
       45.0.toDecimal()*decimalPerDegree,
       //结束
@@ -385,38 +385,38 @@ Space initSpace(){
 
 
   // layer9.addArc(arcObject);
-  // layer9.addArc(arcObject1);
-  // layer9.addArc(arcObject2);
+  layer9.addArc(arcObject1);
+  layer9.addArc(arcObject2);
   layer9.addArc(arcObject3);
 
 
 
   //region 随机的弧线
-  // for(int i=0;i<1000;i++){
-  //   var radiusX = Decimal.fromInt(Random().nextInt(100)+50);
-  //   var radiusY = Decimal.fromInt(Random().nextInt(100)+50);
-  //   var startX = Decimal.fromInt(Random().nextInt(40000)-20000);
-  //   var startY = Decimal.fromInt(Random().nextInt(20000)-10000);
-  //   var endX = Decimal.fromInt(Random().nextInt(200)-100) + startX;
-  //   var endY = Decimal.fromInt(Random().nextInt(200)-100) + startY;
-  //   var rotationDegrees = Decimal.fromInt(Random().nextInt(360));
-  //   var laf = Random().nextBool();
-  //   var sf = Random().nextBool();
-  //   ArcObject arcObject = ArcObject.fromSVG(
-  //     PointEX(startX, startY),
-  //     radiusX,
-  //     radiusY,
-  //     rotationDegrees,
-  //     laf,sf,
-  //     PointEX(endX, endY),
-  //   );
-  //   layer9.addArc(arcObject);
-  // }
+  for(int i=0;i<1000;i++){
+    var radiusX = Decimal.fromInt(Random().nextInt(100)+50);
+    var radiusY = Decimal.fromInt(Random().nextInt(100)+50);
+    var startX = Decimal.fromInt(Random().nextInt(40000)-20000);
+    var startY = Decimal.fromInt(Random().nextInt(20000)-10000);
+    var endX = Decimal.fromInt(Random().nextInt(200)-100) + startX;
+    var endY = Decimal.fromInt(Random().nextInt(200)-100) + startY;
+    var rotationDegrees = Decimal.fromInt(Random().nextInt(360));
+    var laf = Random().nextBool();
+    var sf = Random().nextBool();
+    ArcObject arcObject = ArcObject.fromSVG(
+      PointEX(startX, startY),
+      radiusX,
+      radiusY,
+      rotationDegrees,
+      laf,sf,
+      PointEX(endX, endY),
+    );
+    layer9.addArc(arcObject);
+  }
   //endregion
   //endregion
 
   space.addPaper(paper);
-
+  //
   space.layers.add(layer1);
   space.layers.add(layer2);
   space.layers.add(layer3);

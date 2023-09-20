@@ -24,11 +24,13 @@ class ArcPainter extends CustomPainter {
       );
   @override
   void paint(Canvas canvas, Size size) {
+    //绘制圆弧本体的画笔
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
+    //绘制圆弧的外切矩形的画笔
     final secondaryPaint = Paint()
     ..color = Colors.grey
     ..style = PaintingStyle.stroke
@@ -37,6 +39,10 @@ class ArcPainter extends CustomPainter {
     if(showArcOwnEllipseCenter){
       canvas.drawPoints(PointMode.points, [rect.center], paint);
     }
+
+    //region 把圆弧的360个角度上的每一个点都绘制出来
+    var points =
+    //endregion
 
 
     //region 让canvas绕任意一点旋转.

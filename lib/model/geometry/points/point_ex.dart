@@ -55,6 +55,12 @@ class PointEX {
     return PointEX(x + dx, y + dy);
   }
 
+  PointEX rotate(Decimal radians){
+    var cos = decimalCos(radians);
+    var sin = decimalSin(radians);
+    return PointEX(x * cos - y * sin, x * sin + y * cos);
+  }
+
   Offset toOffset(){
     return Offset(x.toDouble(), y.toDouble());
   }

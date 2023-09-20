@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide TextPainter;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/viewer/painter_of_object/arc_painter.dart';
 import '../../objects/arc_object.dart';
 import '../../objects/notifier_and_provider_of_object.dart';
@@ -24,8 +25,12 @@ class ArcObjectWidget extends ConsumerWidget{
   final bool showArcOwnEllipseCenter;
   ///是否显示弧线所在椭圆的外切矩形
   final bool showArcOwnEllipseBoundRect;
+  ///是否显示弧线所在椭圆的外切矩形的屏幕上的矩形块儿
+  final bool showBoundsBound;
   ///是否显示起点到终点的直线
   final bool showArcStartToEndLine;
+  ///是否显示有旋转和无旋转的圆弧所在椭圆的360个点
+  final bool showArc360Points;
 
   const ArcObjectWidget(
       { Key? key,
@@ -36,9 +41,11 @@ class ArcObjectWidget extends ConsumerWidget{
         this.normalColor = Colors.white24,
         this.hoverColor = Colors.white,
         this.focusColor = Colors.red,
-        this.showArcOwnEllipseCenter = true,
-        this.showArcOwnEllipseBoundRect = true,
-        this.showArcStartToEndLine = true,
+        this.showArcOwnEllipseCenter = false,
+        this.showArcOwnEllipseBoundRect = false,
+        this.showArcStartToEndLine = false,
+        this.showArc360Points = false,
+        this.showBoundsBound = false,
       }) : super(key: key);
 
   @override
@@ -66,6 +73,19 @@ class ArcObjectWidget extends ConsumerWidget{
         center: center,
         width: (arcObject.bounds.width * viewPortScale).toDouble(),
         height: (arcObject.bounds.height * viewPortScale).doubleValue);
+
+    //region 显示带及不带旋转的 圆弧所在的椭圆上的点集合
+    //圆弧上的所有点
+    var edgePoints = arcObject.pointsOnEdge;
+    var edgePointsViewPort = edgePoints.map((e) => Space.spacePointPos2ViewPortPointPos(
+        e, viewPortOffset, viewPortScale, viewPortPixelSize)).toList();
+    // var edgePointsViewPort = [];
+
+    //圆弧上的所有点 没有旋转过的
+    var edgePointsNoRotation = arcObject.pointsOnEdgeNoRotation;
+    var edgePointsNoRotationViewPort = edgePointsNoRotation.map((e) => Space.spacePointPos2ViewPortPointPos(
+        e, viewPortOffset, viewPortScale, viewPortPixelSize)).toList();
+    //endregion
 
     return
       Stack(
@@ -102,12 +122,21 @@ class ArcObjectWidget extends ConsumerWidget{
                   [Space.spacePointPos2ViewPortPointPos(
                       arcObject.position, viewPortOffset, viewPortScale,
                       viewPortPixelSize)],
-                  Colors.redAccent, 3),
+                  Colors.lightGreen, 1),
             ),
+          // 显示带及不带旋转的 圆弧所在的椭圆上的点集合
+          if(showArcOwnEllipseBoundRect)
+          CustomPaint(
+            painter: PointsPainter(
+                [...edgePointsViewPort,...edgePointsNoRotationViewPort],
+                Colors.lightGreen, 1),
+          ),
+          //圆弧内切的矩形的所在世界视图的最外框
+          if(showBoundsBound)
           CustomPaint(
             painter: RectPainter(
                 viewPortBounds,
-                Colors.redAccent),
+                Colors.blueGrey),
           ),
         ],
       );
