@@ -38,7 +38,7 @@ class ArcObjectWidget extends ConsumerWidget{
         required this.viewPortScale,
         required this.viewPortOffset,
         required this.viewPortPixelSize,
-        this.normalColor = Colors.white24,
+        this.normalColor = Colors.black,
         this.hoverColor = Colors.white,
         this.focusColor = Colors.red,
         this.showArcOwnEllipseCenter = false,
@@ -90,21 +90,21 @@ class ArcObjectWidget extends ConsumerWidget{
     return
       Stack(
         children: [
-          //用绿色5个大小的源绘制起点,用红色5个大小的源绘制终点
-          CustomPaint(
-            painter: PointsPainter(
-                [Space.spacePointPos2ViewPortPointPos(
-                    arcObject.startPoint, viewPortOffset, viewPortScale,
-                    viewPortPixelSize)],
-                Colors.green, 5),
-          ),
-          CustomPaint(
-            painter: PointsPainter(
-                [Space.spacePointPos2ViewPortPointPos(
-                    arcObject.endPoint, viewPortOffset, viewPortScale,
-                    viewPortPixelSize)],
-                Colors.red, 5),
-          ),
+          // //用绿色5个大小的源绘制起点,用红色5个大小的源绘制终点
+          // CustomPaint(
+          //   painter: PointsPainter(
+          //       [Space.spacePointPos2ViewPortPointPos(
+          //           arcObject.startPoint, viewPortOffset, viewPortScale,
+          //           viewPortPixelSize)],
+          //       Colors.green, 5),
+          // ),
+          // CustomPaint(
+          //   painter: PointsPainter(
+          //       [Space.spacePointPos2ViewPortPointPos(
+          //           arcObject.endPoint, viewPortOffset, viewPortScale,
+          //           viewPortPixelSize)],
+          //       Colors.red, 5),
+          // ),
 
           CustomPaint(
             painter: arcObject.valid ? painter
