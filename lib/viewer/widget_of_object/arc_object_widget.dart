@@ -90,6 +90,21 @@ class ArcObjectWidget extends ConsumerWidget{
     return
       Stack(
         children: [
+          //用绿色5个大小的源绘制起点,用红色5个大小的源绘制终点
+          CustomPaint(
+            painter: PointsPainter(
+                [Space.spacePointPos2ViewPortPointPos(
+                    arcObject.startPoint, viewPortOffset, viewPortScale,
+                    viewPortPixelSize)],
+                Colors.green, 5),
+          ),
+          CustomPaint(
+            painter: PointsPainter(
+                [Space.spacePointPos2ViewPortPointPos(
+                    arcObject.endPoint, viewPortOffset, viewPortScale,
+                    viewPortPixelSize)],
+                Colors.red, 5),
+          ),
 
           CustomPaint(
             painter: arcObject.valid ? painter
