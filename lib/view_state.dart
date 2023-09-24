@@ -159,6 +159,7 @@ Space initSpace() {
   var layer7 = SpaceLayer(6);
   var layer8 = SpaceLayer(7);
   var layer9 = SpaceLayer(9);
+  var layer10 = SpaceLayer(10);
 
   var paper = Paper(
     name: "paper1",
@@ -208,13 +209,14 @@ Space initSpace() {
 
   //endregion
 
-  //region 第三层 贝塞尔曲线
+  //region 第三层 简易的贝塞尔曲线
+  //直接给出起始点和终止点,自动调整控制点,只适合像简单思维导图的结构分支线使用.
+  //思维导图节点之间的连线就不适用了.因为bounds现在是矩形,且仅仅是从左上到右下,左下到右上等世界空间 水平垂直 放置的矩形的对角点之间的连线.
   try {
-    var start = PointEX(Decimal.fromInt(0), Decimal.fromInt(0));
-    var end = PointEX(Decimal.fromInt(200), Decimal.fromInt(150));
-    var bezier = BezierObject(start, end);
-    // print(bezier);
-    layer3.addBezier(bezier);
+    layer3.addBezier(BezierObject(
+      PointEX(Decimal.fromInt(0), Decimal.fromInt(0)),
+      PointEX(Decimal.fromInt(200), Decimal.fromInt(150)),
+    ));
 
     layer3.addBezier(BezierObject(
       PointEX(Decimal.fromInt(0), Decimal.fromInt(0)),
@@ -421,21 +423,23 @@ Space initSpace() {
     layer9.addArc(arcObject);
   }
   //endregion
-  //endregion
 
   addTestArcList2SpaceLayer(layer9);
+  //endregion
+
+
 
   space.addPaper(paper);
   //
-  space.layers.add(layer1);
-  space.layers.add(layer2);
+  // space.layers.add(layer1);
+  // space.layers.add(layer2);
   space.layers.add(layer3);
-  space.layers.add(layer4);
-  space.layers.add(layer5);
-  space.layers.add(layer6);
-  space.layers.add(layer7);
-  space.layers.add(layer8);
-  space.layers.add(layer9);
+  // space.layers.add(layer4);
+  // space.layers.add(layer5);
+  // space.layers.add(layer6);
+  // space.layers.add(layer7);
+  // space.layers.add(layer8);
+  // space.layers.add(layer9);
 
   //给定一个矩形和矩形内部的两个点,计算两点组成的直线与矩形的交点
   var rect = RectEX(Decimal.fromDouble(0), Decimal.fromDouble(0),
