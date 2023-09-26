@@ -70,6 +70,7 @@ class Vector2D{
     y = length * decimalSin(angle);
   }
 
+  ///获取向量的角度,0度为x轴正方向,顺时针为正,逆时针为负
   Decimal getAngle() {
     return decimalAtan2(y, x);
   }
