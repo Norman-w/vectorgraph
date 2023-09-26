@@ -8,6 +8,8 @@ import 'package:vectorgraph/objects/point_object.dart';
 import 'package:vectorgraph/objects/polygon_object.dart';
 import 'package:vectorgraph/objects/rect_object.dart';
 import 'package:vectorgraph/objects/regular_polygonal_star.dart';
+import 'package:vectorgraph/objects/sector_object.dart';
+import 'package:vectorgraph/viewer/widget_of_object/sector_object_widget.dart';
 
 
 import '../objects/arc_object.dart';
@@ -127,6 +129,14 @@ class ViewPort extends ConsumerWidget {
       else if(e.runtimeType == ArcObject){
         ArcObject arc = e as ArcObject;
         return ArcObjectWidget(arcObject: arc,
+          viewPortPixelSize: state.viewPortSize,
+          viewPortOffset: state.viewSpaceViewPortOffset,
+          viewPortScale: state.viewPortScale,
+        );
+      }
+      else if(e.runtimeType == SectorObject){
+        SectorObject sector = e as SectorObject;
+        return SectorObjectWidget(sectorObject: sector,
           viewPortPixelSize: state.viewPortSize,
           viewPortOffset: state.viewSpaceViewPortOffset,
           viewPortScale: state.viewPortScale,

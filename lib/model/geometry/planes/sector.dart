@@ -83,16 +83,19 @@ class Sector extends Arc{
 
   ///从canvas的弧线构造扇形
   Sector.fromCanvas(
+      this.position,
       super.arcOwnEllipseBoundRect,
       super.rotationRadians,
       super.startAngle,
-      super.sweepAngle) : super.fromCanvas(){
-    _centerToStartLine = LineSegment(PointEX.zero, super.startPoint);
-    _centerToEndLine = LineSegment(PointEX.zero, super.endPoint);
+      super.sweepAngle,
+      ) : super.fromCanvas(){
+    _centerToStartLine = LineSegment(PointEX.zero, position  - super.startPoint);
+    _centerToEndLine = LineSegment(PointEX.zero, position - super.endPoint);
   }
 
   ///从svg的弧线构造扇形
   Sector.fromSVG(
+      this.position,
       super._startPoint,
       super._rx,
       super._ry,
@@ -101,12 +104,14 @@ class Sector extends Arc{
       super._sf,
       super._endPoint
       ) : super.fromSVG(){
-    _centerToStartLine = LineSegment(PointEX.zero, super.startPoint);
-    _centerToEndLine = LineSegment(PointEX.zero, super.endPoint);
+    _centerToStartLine = LineSegment(PointEX.zero, super.startPoint + position);
+    _centerToEndLine = LineSegment(PointEX.zero, super.endPoint + position);
   }
   //endregion
 
   //region 属性
+  @override
+  PointEX position;
   ///中心点到起始点的连线
   LineSegment get centerToStartLine => _centerToStartLine;
   ///中心点到终止点的连线
@@ -116,6 +121,7 @@ class Sector extends Arc{
   //region 方法
   ///点是否在扇形内部
   bool isPointIn(PointEX pointEX, {Decimal? deviation}){
+    return false;
     var realDeviation = deviation ?? Decimal.one;
     //中心点到鼠标所在位置的连线的向量
     var centerToMouseVector = super.getCenterToMouseAngle(pointEX);

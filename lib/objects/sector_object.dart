@@ -6,6 +6,8 @@ import 'space_object.dart';
 
 class SectorObject extends Sector with SpaceObject, APlaneObject {
   SectorObject.fromSVG(
+      ///扇形的中心位置(直线相交点,弧线的圆心,弧线所在的椭圆所内切的矩形的中心)
+      PointEX position,
       ///圆弧的起点
       PointEX startPoint,
       ///椭圆的x轴半径
@@ -20,9 +22,11 @@ class SectorObject extends Sector with SpaceObject, APlaneObject {
       sf,
       ///圆弧的终点
       endPoint)
-      : super.fromSVG(startPoint, rx, ry, rotationDegrees, laf, sf, endPoint);
+      : super.fromSVG(position,startPoint, rx, ry, rotationDegrees, laf, sf, endPoint);
 
   SectorObject.fromCanvas(
+      ///扇形的中心位置(直线相交点,弧线的圆心,弧线所在的椭圆所内切的矩形的中心)
+      PointEX position,
       ///圆弧所在椭圆的外切矩形
       RectEX rect,
       ///圆弧所在椭圆的旋转角度,以弧度为单位,比如旋转45度,就是pi/4
@@ -33,6 +37,7 @@ class SectorObject extends Sector with SpaceObject, APlaneObject {
       Decimal sweepAngle
       )
       : super.fromCanvas(
+            position,
             RectEX.fromLTWH(rect.left, rect.top,
                 rect.width, rect.height),
             rotationRadian,
@@ -42,6 +47,7 @@ class SectorObject extends Sector with SpaceObject, APlaneObject {
   @override
   SectorObject copyWith() {
     return SectorObject.fromSVG(
+        position,
         startPoint, rx, ry, rotationDegrees, laf, sf, endPoint);
   }
 

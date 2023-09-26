@@ -22,6 +22,7 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
       return;
     }
     leftTopSector = SectorObject.fromCanvas(
+        position,
         RectEX.fromLTWH(left, top, leftTopRadius * Decimal.two, leftTopRadius * Decimal.two),
         Decimal.zero,
         Decimal.fromInt(180),
@@ -31,6 +32,7 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
       return;
     }
     rightTopSector = SectorObject.fromCanvas(
+        position,
         RectEX.fromLTWH(right - rightTopRadius * Decimal.two, top, rightTopRadius * Decimal.two, rightTopRadius * Decimal.two),
         Decimal.zero,
         Decimal.fromInt(270),
@@ -40,6 +42,7 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
       return;
     }
     leftBottomSector = SectorObject.fromCanvas(
+        position,
         RectEX.fromLTWH(left, bottom - leftBottomRadius * Decimal.two, leftBottomRadius * Decimal.two, leftBottomRadius * Decimal.two),
         Decimal.zero,
         Decimal.fromInt(90),
@@ -49,6 +52,7 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
       return;
     }
     rightBottomSector = SectorObject.fromCanvas(
+        position,
         RectEX.fromLTWH(right - rightBottomRadius * Decimal.two, bottom - rightBottomRadius * Decimal.two, rightBottomRadius * Decimal.two, rightBottomRadius * Decimal.two),
         Decimal.zero,
         Decimal.zero,
