@@ -65,82 +65,102 @@ a是正常的,b,c等都是要特殊处理的.
 另,以上内容只是一个大纲,具体的参考 "扇形.xmind"及"正常扇形移动线段交点后的扇形变种.skp"
 * */
 
+/*
+另外要注意一个问题是:
+弧线所使用的坐标是世界坐标.而扇形所使用的坐标是相对坐标+Position的方式.
+* */
+
 //一般的扇形
+
 import 'package:vectorgraph/model/geometry/lines/arc.dart';
 import '../../../utils/num_utils.dart';
 import '../lines/line_segment.dart';
 import '../points/point_ex.dart';
+import '../rect/RectEX.dart';
 
-class Sector extends Arc{
+class Sector{
   //region 字段
   ///中心点到起始点的连线
-  late LineSegment _centerToStartLine;
+  late final LineSegment _centerToStartLine;
   ///中心点到终止点的连线
-  late LineSegment _centerToEndLine;
+  late final LineSegment _centerToEndLine;
+  ///弧线
+  late final Arc _arc;
   //endregion
+
+
+  //region 属性
+  ///相对坐标,不是世界坐标的弧线信息
+  Arc get arc => _arc;
+  //endregion
+
 
   //region 工厂函数
 
   ///从canvas的弧线构造扇形
   Sector.fromCanvas(
-      this.position,
-      super.arcOwnEllipseBoundRect,
-      super.rotationRadians,
-      super.startAngle,
-      super.sweepAngle,
-      ) : super.fromCanvas(){
-    _centerToStartLine = LineSegment(PointEX.zero, position  - super.startPoint);
-    _centerToEndLine = LineSegment(PointEX.zero, position - super.endPoint);
+      RectEX arcOwnEllipseBoundRect,
+      Decimal rotationRadian, Decimal startAngle, Decimal sweepAngle)
+  : _arc = Arc.fromCanvas(arcOwnEllipseBoundRect, rotationRadian, startAngle, sweepAngle){
+    _centerToStartLine = LineSegment(_arc.bounds.center, _arc.startPoint);
+    _centerToEndLine = LineSegment(_arc.bounds.center, _arc.endPoint);
   }
 
   ///从svg的弧线构造扇形
   Sector.fromSVG(
-      this.position,
-      super._startPoint,
-      super._rx,
-      super._ry,
-      super._rotationDegrees,
-      super._laf,
-      super._sf,
-      super._endPoint
-      ) : super.fromSVG(){
-    _centerToStartLine = LineSegment(PointEX.zero, super.startPoint + position);
-    _centerToEndLine = LineSegment(PointEX.zero, super.endPoint + position);
+      PointEX startPoint,
+      Decimal rx,
+      Decimal ry,
+      Decimal rotationDegrees,
+      bool laf,
+      bool sf,
+      PointEX endPoint
+      ) : _arc = Arc.fromSVG(startPoint, rx, ry, rotationDegrees, laf, sf, endPoint){
+    _centerToStartLine = LineSegment(PointEX.zero, startPoint);
+    _centerToEndLine = LineSegment(PointEX.zero, endPoint);
   }
   //endregion
 
   //region 属性
-  @override
-  PointEX position;
+  // @override
+  // PointEX position;
   ///中心点到起始点的连线
   LineSegment get centerToStartLine => _centerToStartLine;
   ///中心点到终止点的连线
   LineSegment get centerToEndLine => _centerToEndLine;
+  PointEX get startPoint => _arc.startPoint;
+  PointEX get endPoint => _arc.endPoint;
+  RectEX get bounds => _arc.bounds;
   //endregion
 
   //region 方法
   ///点是否在扇形内部
-  bool isPointIn(PointEX pointEX, {Decimal? deviation}){
-    return false;
+  bool contains(PointEX pointEX, {Decimal? deviation}){
+    // pointEX = PointEX(Decimal.fromInt(-333), Decimal.fromInt(-277));
     var realDeviation = deviation ?? Decimal.one;
     //中心点到鼠标所在位置的连线的向量
-    var centerToMouseVector = super.getCenterToMouseAngle(pointEX);
+    var centerToMouseVector = _arc.getCenterToMouseAngle(pointEX);
     //如果不在弧线的角度内,则一定不在扇形内部
-    if(!isInArcAngleRange(centerToMouseVector, realDeviation)) {
+    if(!_arc.isInArcAngleRange(centerToMouseVector, realDeviation)) {
       return false;
     }
     //在弧线上该角度的点
-    var onArcPoint = super.getOnEdgePointByAngle(radiansToDegrees(centerToMouseVector.getAngle()));
+    var onArcPoint = _arc.getOnEdgePointByAngle(radiansToDegrees(centerToMouseVector.getAngle()));
     //对比长度,如果鼠标所在的点到圆心的距离小于等于弧线上该角度的点到圆心的距离,则在扇形内部
-    return pointEX.distanceTo(PointEX.zero) <= onArcPoint.distanceTo(PointEX.zero);
+    var zero2PointDistance = pointEX.distanceTo(_arc.position);
+    var zero2OnArcPointDistance = onArcPoint.distanceTo(PointEX.zero);
+    var lessThanRadius = zero2PointDistance <= zero2OnArcPointDistance;
+    if(lessThanRadius){
+      print("在里面哦");
+    }
+    return lessThanRadius;
   }
 
   //重写isPointOnLine,因为除了弧线以外还应该检查是否在圆心到起始点和圆心到终止点的连线上
-  @override
   bool isPointOnLine(PointEX point, {Decimal? deviation}) {
     var realDeviation = deviation ?? Decimal.one;
     //在弧线上吗?
-    if(super.isPointOnLine(point, deviation: realDeviation)) {
+    if(_arc.isPointOnLine(point, deviation: realDeviation)) {
       return true;
     }
     //在原点到起始点的连线上吗?

@@ -846,8 +846,7 @@ class Arc{
     //椭圆中心点到鼠标所在位置的向量和角度
     // var centerToMouseVector = getCenterToMouseAngle(point);//point - position;
     //旋转一个圆弧旋转的角度
-    var centerToMouseAngle =
-    _to2PiValue(centerToMouseVector.getAngle());
+    var centerToMouseAngle =_to2PiValue(centerToMouseVector.getAngle());
 
 
     //region 判断鼠标是否在圆弧的角度中

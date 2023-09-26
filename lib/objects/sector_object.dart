@@ -5,9 +5,8 @@ import '../model/geometry/planes/sector.dart';
 import 'space_object.dart';
 
 class SectorObject extends Sector with SpaceObject, APlaneObject {
+  ///扇形的所在位置,也就是弧线所在的椭圆所内切的矩形的中心.
   SectorObject.fromSVG(
-      ///扇形的中心位置(直线相交点,弧线的圆心,弧线所在的椭圆所内切的矩形的中心)
-      PointEX position,
       ///圆弧的起点
       PointEX startPoint,
       ///椭圆的x轴半径
@@ -22,11 +21,9 @@ class SectorObject extends Sector with SpaceObject, APlaneObject {
       sf,
       ///圆弧的终点
       endPoint)
-      : super.fromSVG(position,startPoint, rx, ry, rotationDegrees, laf, sf, endPoint);
+      : super.fromSVG(startPoint, rx, ry, rotationDegrees, laf, sf, endPoint);
 
   SectorObject.fromCanvas(
-      ///扇形的中心位置(直线相交点,弧线的圆心,弧线所在的椭圆所内切的矩形的中心)
-      PointEX position,
       ///圆弧所在椭圆的外切矩形
       RectEX rect,
       ///圆弧所在椭圆的旋转角度,以弧度为单位,比如旋转45度,就是pi/4
@@ -37,9 +34,7 @@ class SectorObject extends Sector with SpaceObject, APlaneObject {
       Decimal sweepAngle
       )
       : super.fromCanvas(
-            position,
-            RectEX.fromLTWH(rect.left, rect.top,
-                rect.width, rect.height),
+            RectEX.fromLTWH(rect.left, rect.top, rect.width, rect.height),
             rotationRadian,
             startAngle,
             sweepAngle);
@@ -47,8 +42,7 @@ class SectorObject extends Sector with SpaceObject, APlaneObject {
   @override
   SectorObject copyWith() {
     return SectorObject.fromSVG(
-        position,
-        startPoint, rx, ry, rotationDegrees, laf, sf, endPoint);
+        startPoint,arc.rx, arc.ry, arc.rotationDegrees, arc.laf, arc.sf, endPoint);
   }
 
   @override
@@ -59,11 +53,14 @@ class SectorObject extends Sector with SpaceObject, APlaneObject {
 
   @override
   bool isWorldPointIn(PointEX pointEX) {
-    return isPointIn(pointEX - position);
+    return contains(pointEX);
   }
 
   @override
   bool isWorldPointOnEdgeLines(PointEX pointEX, Decimal deviation) {
-    return isPointOnLine(pointEX - position, deviation: deviation);
+    return isPointOnLine(pointEX, deviation: deviation);
   }
+
+  @override
+  PointEX get position => super.bounds.center;
 }

@@ -53,12 +53,27 @@ class SectorPainter extends CustomPainter {
     canvas.rotate(rotateZ)  ;
     //坐标圆点重置到 0,0
     canvas.translate(-rect.center.dx, -rect.center.dy) ;
-    //旋转之后的弧线(最终正确展示的)
-    canvas.drawArc(rect, startAngle, sweepAngle, false,paint);
+
+    //填充
+    paint.style = PaintingStyle.fill;
+    // //旋转之后的弧线(最终正确展示的)
+    // canvas.drawArc(rect, startAngle, sweepAngle, false,paint);
+    // //绘制起始点到开始点的连线
+    // canvas.drawLine(rect.center, startPoint, paint);
+    // //绘制起始点到结束点的连线
+    // canvas.drawLine(rect.center, endPoint, paint);
+    //定义path
+    Path path = Path();
     //绘制起始点到开始点的连线
-    canvas.drawLine(rect.center, startPoint, paint);
+    path.moveTo(rect.center.dx, rect.center.dy);
+    path.lineTo(startPoint.dx, startPoint.dy);
+    //用弧线连接到结束点
+    path.arcTo(rect, startAngle, sweepAngle, false);
     //绘制起始点到结束点的连线
-    canvas.drawLine(rect.center, endPoint, paint);
+    path.lineTo(rect.center.dx, rect.center.dy);
+    //绘制path
+    canvas.drawPath(path, paint);
+
     //外切矩形
     if(showSectorOwnEllipseBoundRect){
       canvas.drawRect(rect, secondaryPaint);

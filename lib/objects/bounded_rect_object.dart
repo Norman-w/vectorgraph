@@ -22,7 +22,6 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
       return;
     }
     leftTopSector = SectorObject.fromCanvas(
-        position,
         RectEX.fromLTWH(left, top, leftTopRadius * Decimal.two, leftTopRadius * Decimal.two),
         Decimal.zero,
         Decimal.fromInt(180),
@@ -32,7 +31,6 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
       return;
     }
     rightTopSector = SectorObject.fromCanvas(
-        position,
         RectEX.fromLTWH(right - rightTopRadius * Decimal.two, top, rightTopRadius * Decimal.two, rightTopRadius * Decimal.two),
         Decimal.zero,
         Decimal.fromInt(270),
@@ -42,7 +40,6 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
       return;
     }
     leftBottomSector = SectorObject.fromCanvas(
-        position,
         RectEX.fromLTWH(left, bottom - leftBottomRadius * Decimal.two, leftBottomRadius * Decimal.two, leftBottomRadius * Decimal.two),
         Decimal.zero,
         Decimal.fromInt(90),
@@ -52,7 +49,6 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
       return;
     }
     rightBottomSector = SectorObject.fromCanvas(
-        position,
         RectEX.fromLTWH(right - rightBottomRadius * Decimal.two, bottom - rightBottomRadius * Decimal.two, rightBottomRadius * Decimal.two, rightBottomRadius * Decimal.two),
         Decimal.zero,
         Decimal.zero,
@@ -144,22 +140,22 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
     //运行到这个地方,只有鼠标在四个角的矩形中
     //但是不在鼠标所在的角的扇形中,才会判断为不在我的世界范围内
     var atLeftTopRect = leftTopSector?.bounds.contains(relativePoint) ?? false;
-    if(atLeftTopRect && !leftTopSector!.isPointIn(relativePoint))
+    if(atLeftTopRect && !leftTopSector!.contains(relativePoint))
     {
       return false;
     }
     var atRightTopRect = rightTopSector?.bounds.contains(relativePoint) ?? false;
-    if(atRightTopRect && !rightTopSector!.isPointIn(relativePoint))
+    if(atRightTopRect && !rightTopSector!.contains(relativePoint))
     {
       return false;
     }
     var atLeftBottomRect = leftBottomSector?.bounds.contains(relativePoint) ?? false;
-    if(atLeftBottomRect && !leftBottomSector!.isPointIn(relativePoint))
+    if(atLeftBottomRect && !leftBottomSector!.contains(relativePoint))
     {
       return false;
     }
     var atRightBottomRect = rightBottomSector?.bounds.contains(relativePoint) ?? false;
-    if(atRightBottomRect && !rightBottomSector!.isPointIn(relativePoint))
+    if(atRightBottomRect && !rightBottomSector!.contains(relativePoint))
     {
       return false;
     }

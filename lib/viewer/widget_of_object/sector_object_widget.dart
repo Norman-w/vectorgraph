@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart' hide TextPainter;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vectorgraph/model/geometry/points/point_ex.dart';
-import 'package:vectorgraph/viewer/painter_of_object/sector_painter.dart';
 import '../../objects/sector_object.dart';
 import '../../objects/notifier_and_provider_of_object.dart';
 import '../../space/space.dart';
 import '../../utils/num_utils.dart';
+import '../painter_of_object/arc_painter.dart';
 import '../painter_of_object/line_painter.dart';
 import '../painter_of_object/points_painter.dart';
 import '../painter_of_object/rect_painter.dart';
+import '../painter_of_object/sector_painter.dart';
 
 var times =0;
 
@@ -40,7 +40,7 @@ class SectorObjectWidget extends ConsumerWidget{
         required this.viewPortPixelSize,
         this.normalColor = Colors.black,
         this.hoverColor = Colors.white,
-        this.focusColor = Colors.red,
+        this.focusColor = Colors.lightGreen,
         this.showSectorOwnEllipseCenter = true,
         this.showSectorOwnEllipseBoundRect = true,
         this.showSectorStartToEndLine = true,
@@ -51,21 +51,21 @@ class SectorObjectWidget extends ConsumerWidget{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var state = ref.watch(planeObjectsProvider(sectorObject));
-    var color = state.isInteractive ? hoverColor : normalColor;
+    var color = state.isFocus? focusColor: state.isInteractive? hoverColor: normalColor;
     Offset center = Space.spacePointPos2ViewPortPointPos(
         sectorObject.position, viewPortOffset, viewPortScale, viewPortPixelSize);
     Offset startPoint = Space.spacePointPos2ViewPortPointPos(
-        sectorObject.position - sectorObject.startPoint, viewPortOffset, viewPortScale, viewPortPixelSize);
+        sectorObject.startPoint, viewPortOffset, viewPortScale, viewPortPixelSize);
     Offset endPoint = Space.spacePointPos2ViewPortPointPos(
-        sectorObject.position - sectorObject.endPoint, viewPortOffset, viewPortScale, viewPortPixelSize);
-    var painter = SectorPainter(
-      sectorObject.rotationRadians.toDouble(),
+        sectorObject.endPoint, viewPortOffset, viewPortScale, viewPortPixelSize);
+    var arcPainter = SectorPainter(
+      sectorObject.arc.rotationRadians.toDouble(),
       Rect.fromCenter(
           center: center,
-          width: (sectorObject.rx * viewPortScale).toDouble() * 2,
-          height: (sectorObject.ry * viewPortScale).doubleValue * 2),
-      sectorObject.startAngle.toDouble(),
-      sectorObject.sweepAngle.toDouble(),
+          width: (sectorObject.arc.rx * viewPortScale).toDouble() * 2,
+          height: (sectorObject.arc.ry * viewPortScale).doubleValue * 2),
+      sectorObject.arc.startAngle.toDouble(),
+      sectorObject.arc.sweepAngle.toDouble(),
       startPoint,
       endPoint,
       true,
@@ -83,7 +83,7 @@ class SectorObjectWidget extends ConsumerWidget{
       Stack(
         children: [
           CustomPaint(
-            painter: sectorObject.valid ? painter
+            painter: sectorObject.arc.valid ? arcPainter
             //如果无法找到有效的弧线,使用红色的直线展示以进行提示
                 : LinePainter(
                 Space.spacePointPos2ViewPortPointPos(

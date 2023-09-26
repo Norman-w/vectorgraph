@@ -444,7 +444,7 @@ Space initSpace() {
   // space.layers.add(layer6);
   // space.layers.add(layer7);
   // space.layers.add(layer8);
-  space.layers.add(layer9);
+  // space.layers.add(layer9);
   space.layers.add(layer10);
 
   //给定一个矩形和矩形内部的两个点,计算两点组成的直线与矩形的交点
@@ -783,11 +783,10 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
 
 void addTestSectorList2SpaceLayer(SpaceLayer layer){
   SectorObject sectorObject = SectorObject.fromCanvas(
-    PointEX(Decimal.fromInt(-400), Decimal.fromInt(-300)),
-    RectEX.fromLTWH(Decimal.zero,Decimal.zero, Decimal.fromInt(200), Decimal.fromInt(100)),
+    RectEX.fromLTWH(Decimal.fromInt(-400),Decimal.fromInt(-300), Decimal.fromInt(200), Decimal.fromInt(100)),
     Decimal.zero,
     Decimal.fromInt(180)*decimalPerDegree,
-    Decimal.fromInt(45)*decimalPerDegree,
+    Decimal.fromInt(135)*decimalPerDegree,
   );
   layer.addSector(sectorObject);
 }
