@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/model/geometry/rect/RectEX.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
@@ -26,7 +24,7 @@ class ArcObject extends Arc with SpaceObject, ALineObject {
 
   ArcObject.fromCanvas(
       ///圆弧所在椭圆的外切矩形
-      Rect rect,
+      RectEX rect,
       ///圆弧所在椭圆的旋转角度,以弧度为单位,比如旋转45度,就是pi/4
       Decimal rotationRadian,
       ///圆弧的起始角度
@@ -35,8 +33,8 @@ class ArcObject extends Arc with SpaceObject, ALineObject {
       Decimal sweepAngle
       )
       : super.fromCanvas(
-            RectEX.fromLTWH(rect.left.toDecimal(), rect.top.toDecimal(),
-                rect.width.toDecimal(), rect.height.toDecimal()),
+            RectEX.fromLTWH(rect.left, rect.top,
+                rect.width, rect.height),
             rotationRadian,
             startAngle,
             sweepAngle);
