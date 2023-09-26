@@ -4,7 +4,7 @@ import 'package:vectorgraph/utils/num_utils.dart';
 import '../model/geometry/planes/sector.dart';
 import 'space_object.dart';
 
-class SectorObject extends Sector with SpaceObject, ALineObject {
+class SectorObject extends Sector with SpaceObject, APlaneObject {
   SectorObject.fromSVG(
       ///圆弧的起点
       PointEX startPoint,
@@ -52,7 +52,12 @@ class SectorObject extends Sector with SpaceObject, ALineObject {
   RectEX get worldBounds => bounds;
 
   @override
-  bool isPointOn(PointEX pointEX, Decimal deviation) {
-    return isPointOnLine(pointEX, deviation: deviation);
+  bool isWorldPointIn(PointEX pointEX) {
+    return isPointIn(pointEX - position);
+  }
+
+  @override
+  bool isWorldPointOnEdgeLines(PointEX pointEX, Decimal deviation) {
+    return isPointOnLine(pointEX - position, deviation: deviation);
   }
 }
