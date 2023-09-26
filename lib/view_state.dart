@@ -376,7 +376,7 @@ Space initSpace() {
   ArcObject arcObject3 = ArcObject.fromCanvas(
     //矩形,如果是正圆的时候,旋转也能正常检测鼠标交互点
     //   Rect.fromLTWH(100,-100,200,200),
-    const Rect.fromLTWH(100, -100, 400, 200),
+    RectEX.fromLTWH(Decimal.fromInt(100), Decimal.fromInt(-100), Decimal.fromInt(400), Decimal.fromInt(200)),
     //旋转,如果是正圆的时候,旋转是没有问题的
     // 30.0.toDecimal()*decimalPerDegree,
     0.0.toDecimal() * decimalPerDegree,
@@ -481,8 +481,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   var radiusX = Decimal.fromInt(50);
   var radiusY = Decimal.fromInt(50);
   var arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -492,8 +492,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle += Decimal.fromInt(90) * decimalPerDegree;
   position += PointEX(Decimal.fromInt(100), Decimal.zero);
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -503,8 +503,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle += Decimal.fromInt(90) * decimalPerDegree;
   position += PointEX(Decimal.fromInt(100), Decimal.zero);
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -514,8 +514,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle += Decimal.fromInt(90) * decimalPerDegree;
   position += PointEX(Decimal.fromInt(100), Decimal.zero);
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -532,8 +532,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle = Decimal.fromInt(22) * decimalPerDegree;
   sweepAngle = Decimal.fromInt(135) * decimalPerDegree;
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -543,8 +543,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle += Decimal.fromInt(90) * decimalPerDegree;
   position += PointEX(Decimal.fromInt(100), Decimal.zero);
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -554,8 +554,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle += Decimal.fromInt(90) * decimalPerDegree;
   position += PointEX(Decimal.fromInt(100), Decimal.zero);
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -565,8 +565,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle += Decimal.fromInt(90) * decimalPerDegree;
   position += PointEX(Decimal.fromInt(100), Decimal.zero);
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -583,8 +583,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle = Decimal.fromInt(22) * decimalPerDegree;
   sweepAngle = Decimal.fromInt(225) * decimalPerDegree;
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -594,8 +594,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle += Decimal.fromInt(90) * decimalPerDegree;
   position += PointEX(Decimal.fromInt(100), Decimal.zero);
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -605,8 +605,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle += Decimal.fromInt(90) * decimalPerDegree;
   position += PointEX(Decimal.fromInt(100), Decimal.zero);
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -616,8 +616,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle += Decimal.fromInt(90) * decimalPerDegree;
   position += PointEX(Decimal.fromInt(100), Decimal.zero);
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -634,8 +634,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle = Decimal.fromInt(67) * decimalPerDegree;
   sweepAngle = Decimal.fromInt(315) * decimalPerDegree;
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -645,8 +645,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle += Decimal.fromInt(90) * decimalPerDegree;
   position += PointEX(Decimal.fromInt(100), Decimal.zero);
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -656,8 +656,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle += Decimal.fromInt(90) * decimalPerDegree;
   position += PointEX(Decimal.fromInt(100), Decimal.zero);
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -667,8 +667,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   startAngle += Decimal.fromInt(90) * decimalPerDegree;
   position += PointEX(Decimal.fromInt(100), Decimal.zero);
   arcObject = ArcObject.fromCanvas(
-    Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-        radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+    RectEX.fromLTWH(position.x, position.y,
+        radiusX * Decimal.two, radiusY * Decimal.two),
     Decimal.zero,
     startAngle,
     sweepAngle,
@@ -684,8 +684,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   sweepAngle = Decimal.fromInt(-45) * decimalPerDegree;
   for (int i = 0; i < 4; i++) {
     arcObject = ArcObject.fromCanvas(
-      Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-          radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+      RectEX.fromLTWH(position.x, position.y,
+          radiusX * Decimal.two, radiusY * Decimal.two),
       Decimal.zero,
       startAngle,
       sweepAngle,
@@ -700,8 +700,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   sweepAngle = Decimal.fromInt(-135) * decimalPerDegree;
   for (int i = 0; i < 4; i++) {
     arcObject = ArcObject.fromCanvas(
-      Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-          radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+      RectEX.fromLTWH(position.x, position.y,
+          radiusX * Decimal.two, radiusY * Decimal.two),
       Decimal.zero,
       startAngle,
       sweepAngle,
@@ -716,8 +716,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   sweepAngle = Decimal.fromInt(-225) * decimalPerDegree;
   for (int i = 0; i < 4; i++) {
     arcObject = ArcObject.fromCanvas(
-      Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-          radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+      RectEX.fromLTWH(position.x, position.y,
+          radiusX * Decimal.two, radiusY * Decimal.two),
       Decimal.zero,
       startAngle,
       sweepAngle,
@@ -732,8 +732,8 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   sweepAngle = Decimal.fromInt(-315) * decimalPerDegree;
   for (int i = 0; i < 4; i++) {
     arcObject = ArcObject.fromCanvas(
-      Rect.fromLTWH(position.x.toDouble(), position.y.toDouble(),
-          radiusX.toDouble() * 2, radiusY.toDouble() * 2),
+      RectEX.fromLTWH(position.x, position.y,
+          radiusX * Decimal.two, radiusY * Decimal.two),
       Decimal.zero,
       startAngle,
       sweepAngle,
