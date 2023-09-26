@@ -43,9 +43,9 @@ a是正常的,b,c等都是要特殊处理的.
 
 扇形->扇形的变种   ＝   扇形->弧不变,动两直线的交点.
 
-情况氛围如下四类:
+情况分围如下四类:
 
-1,新点在变上(只能是某一条,不能两条)
+1,新点在边上(只能是某一条,不能两条)
 
 2,新点在变的延长线上(也是只能在某一条,不能两条)
 
@@ -61,4 +61,72 @@ a是正常的,b,c等都是要特殊处理的.
 
   以上正常扇形和非正常扇形,穿刺扇等均会出现在svg等场景,做图形检测等会用到的.
 
+
+另,以上内容只是一个大纲,具体的参考 "扇形.xmind"及"正常扇形移动线段交点后的扇形变种.skp"
 * */
+
+//一般的扇形
+import 'package:vectorgraph/model/geometry/lines/arc.dart';
+import '../../../utils/num_utils.dart';
+import '../lines/line_segment.dart';
+import '../points/point_ex.dart';
+
+class Sector extends Arc{
+  //region 字段
+  ///中心点到起始点的连线
+  late LineSegment _centerToStartLine;
+  ///中心点到终止点的连线
+  late LineSegment _centerToEndLine;
+  //endregion
+
+  //region 工厂函数
+
+  ///从canvas的弧线构造扇形
+  Sector.fromCanvas(
+      super.arcOwnEllipseBoundRect,
+      super.rotationRadians,
+      super.startAngle,
+      super.sweepAngle) : super.fromCanvas(){
+    _centerToStartLine = LineSegment(PointEX.zero, super.startPoint);
+    _centerToEndLine = LineSegment(PointEX.zero, super.endPoint);
+  }
+
+  ///从svg的弧线构造扇形
+  Sector.fromSVG(
+      super._startPoint,
+      super._rx,
+      super._ry,
+      super._rotationDegrees,
+      super._laf,
+      super._sf,
+      super._endPoint
+      ) : super.fromSVG(){
+    _centerToStartLine = LineSegment(PointEX.zero, super.startPoint);
+    _centerToEndLine = LineSegment(PointEX.zero, super.endPoint);
+  }
+  //endregion
+
+  //region 属性
+  ///中心点到起始点的连线
+  LineSegment get centerToStartLine => _centerToStartLine;
+  ///中心点到终止点的连线
+  LineSegment get centerToEndLine => _centerToEndLine;
+  //endregion
+
+  //region 方法
+  ///点是否在扇形内部
+  bool isPointIn(PointEX pointEX, {Decimal? deviation}){
+    var realDeviation = deviation ?? Decimal.one;
+    //中心点到鼠标所在位置的连线的向量
+    var centerToMouseVector = super.getCenterToMouseAngle(pointEX);
+    //如果不在弧线的角度内,则一定不在扇形内部
+    if(!isInArcAngleRange(centerToMouseVector, realDeviation)) {
+      return false;
+    }
+    //在弧线上该角度的点
+    var onArcPoint = super.getOnEdgePointByAngle(radiansToDegrees(centerToMouseVector.getAngle()));
+    //对比长度,如果鼠标所在的点到圆心的距离小于等于弧线上该角度的点到圆心的距离,则在扇形内部
+    return pointEX.distanceTo(PointEX.zero) <= onArcPoint.distanceTo(PointEX.zero);
+  }
+  //endregion
+}
