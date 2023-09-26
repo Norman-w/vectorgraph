@@ -128,5 +128,24 @@ class Sector extends Arc{
     //对比长度,如果鼠标所在的点到圆心的距离小于等于弧线上该角度的点到圆心的距离,则在扇形内部
     return pointEX.distanceTo(PointEX.zero) <= onArcPoint.distanceTo(PointEX.zero);
   }
+
+  //重写isPointOnLine,因为除了弧线以外还应该检查是否在圆心到起始点和圆心到终止点的连线上
+  @override
+  bool isPointOnLine(PointEX point, {Decimal? deviation}) {
+    var realDeviation = deviation ?? Decimal.one;
+    //在弧线上吗?
+    if(super.isPointOnLine(point, deviation: realDeviation)) {
+      return true;
+    }
+    //在原点到起始点的连线上吗?
+    if(_centerToStartLine.isPointOnLine(point, deviation: realDeviation)) {
+      return true;
+    }
+    //在原点到终止点的连线上吗?
+    if(_centerToEndLine.isPointOnLine(point, deviation: realDeviation)) {
+      return true;
+    }
+    return false;
+  }
   //endregion
 }

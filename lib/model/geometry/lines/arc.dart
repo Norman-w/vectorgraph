@@ -893,6 +893,7 @@ class Arc{
     return true;
   }
 
+  //判断鼠标是否在圆弧上
   bool isPointOnLine(PointEX point, {Decimal? deviation}) {
     var realDeviation = deviation ?? Decimal.one;
     var centerToMouseVector = getCenterToMouseAngle(point);//point - position
