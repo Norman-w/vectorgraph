@@ -65,7 +65,21 @@ class Arc{
   //   _bounds = RectEX.fromPoints(_position, _endPoint);
   // }
   ///使用svg的参数初始化一个弧线
-  Arc.fromSVG(this._startPoint, this._rx,this._ry, this._rotationDegrees, this._laf, this._sf, this._endPoint)
+  Arc.fromSVG(
+      ///定义弧线的起始点
+      this._startPoint,
+      ///弧线所在的椭圆内切矩形的x轴半径
+      this._rx,
+      ///弧线所在的椭圆内切矩形的y轴半径
+      this._ry,
+      ///定义圆弧椭圆旋转角度,也就是整个矩形的旋转角度
+      this._rotationDegrees,
+      ///是否是大角弧
+      this._laf,
+      ///是否是反向弧,即 是否为逆时针弧线
+      this._sf,
+      ///定义弧线的终点
+      this._endPoint)
   :
         _arcOwnEllipseBoundRect = RectEX.zero ,
         _startAngle = Decimal.zero,
@@ -297,16 +311,16 @@ class Arc{
     return angle;
   }
 
-  // 将角度转换为弧度
-  double degreesToRadians(double deg) {
-    return deg / 180 * pi;
-  }
-
-  // 将弧度转换为角度
-  double radiansToDegrees(double rad) {
-    return rad / pi * 180;
-  }
-  //endregion
+  // // 将角度转换为弧度
+  // double degreesToRadians(double deg) {
+  //   return deg / 180 * pi;
+  // }
+  //
+  // // 将弧度转换为角度
+  // double radiansToDegrees(double rad) {
+  //   return rad / pi * 180;
+  // }
+  // //endregion
 
   //Conversion from center to endpoint parameterization
   //https://www.w3.org/TR/SVG/implnote.html#ArcConversionEndpointToCenter
@@ -791,6 +805,136 @@ class Arc{
   // // }
 
   //endregion
+
+
+  //region 方法
+
+  //转换从x轴0起点顺时针旋转到x轴零起点(360度的值)转换成0~2π. 正常的值是从0到pi然后到-pi再到-0.为了计算区间,使用此函数
+  Decimal _to2PiValue(Decimal value) {
+    // if(value>Decimal.zero){
+    //   return value;
+    // }
+    // return decimalPi + (decimalPi - value.abs());
+    //简单写法
+    return value > Decimal.zero ? value : decimalPi + decimalPi + value;
+  }
+
+  Vector2D getCenterToMouseAngle(PointEX pointEX)
+  {
+    return (pointEX - position).toVector2D();
+  }
+
+  bool isInArcAngleRange(Vector2D centerToMouseVector, Decimal deviation){
+    //得到鼠标所在的世界坐标位置
+    //计算世界坐标位置相对于中心点的偏移量,做出向量
+
+    //在此之前先把他当做是没有任何旋转的来计算.
+
+    //圆弧起始点到椭圆中心点的夹角
+    var centerToStartPointVector = startPoint - position;
+
+    //圆弧结束点到椭圆中心点的夹角
+    var centerToEndPointVector = endPoint - position;
+
+    //椭圆中心点到圆弧起始点的向量
+    var startAngle =
+    _to2PiValue(centerToStartPointVector.toVector2D().getAngle());
+    //椭圆中心点到圆弧结束点的向量
+    var endAngle = _to2PiValue(centerToEndPointVector.toVector2D().getAngle());
+
+
+    //椭圆中心点到鼠标所在位置的向量和角度
+    // var centerToMouseVector = getCenterToMouseAngle(point);//point - position;
+    //旋转一个圆弧旋转的角度
+    var centerToMouseAngle =_to2PiValue(centerToMouseVector.getAngle());
+
+
+    //region 判断鼠标是否在圆弧的角度中
+    var isInAngle = false;
+
+    if(sweepAngle>Decimal.zero){
+      if(startAngle <= centerToMouseAngle && centerToMouseAngle <= endAngle){
+        isInAngle = true;
+      }
+    }
+    else{
+      if(endAngle <= centerToMouseAngle && centerToMouseAngle <= startAngle){
+        isInAngle = true;
+      }
+    }
+    //如果通过一般的方式没有判断到圆弧角度内,那么就判断是否跨越了3点线(0,2π)
+    //如果旋转角度是顺时针的,从起点加上旋转角度,如果大于2π,就是跨越了3点线
+    //如果旋转角度是逆时针的,从起点减去旋转角度,如果小于0,就是跨越了3点线,因为旋转角度这个时候本身就是负数,所以就是判断startAngle+sweepAngle是否小于0
+    //如果跨越了3点线,那么就要拆分成两段来判断,一段是从起点到3点线的,一段是从3点线到终点的
+    //效果见 截屏2023-09-24 00.50.06
+    if(!isInAngle){
+      if(sweepAngle>Decimal.zero){
+        if(startAngle + sweepAngle >decimalPi2){
+          if(startAngle <= centerToMouseAngle && centerToMouseAngle <= decimalPi2
+              || Decimal.zero <= centerToMouseAngle && centerToMouseAngle <= endAngle){
+            isInAngle = true;
+          }
+        }
+      }
+      else{
+        if(startAngle + sweepAngle < Decimal.zero){
+          if(startAngle >= centerToMouseAngle && centerToMouseAngle >= Decimal.zero
+              || decimalPi2 >= centerToMouseAngle && centerToMouseAngle >= endAngle){
+            isInAngle = true;
+          }
+        }
+      }
+    }
+    if(!isInAngle){
+      return false;
+    }
+    //endregion
+    return true;
+  }
+
+  //判断鼠标是否在圆弧上
+  bool isPointOnLine(PointEX point, {Decimal? deviation}) {
+    var realDeviation = deviation ?? Decimal.one;
+    var centerToMouseVector = getCenterToMouseAngle(point);//point - position
+    if(isInArcAngleRange(centerToMouseVector, realDeviation) == false){
+      return false;
+    }
+    var centerToMouseAngle = centerToMouseVector.getAngle();
+
+    //计算圆弧上的点的时候,使用没有旋转的圆弧进行边缘点计算. 也就是想象有一个正常放置的没旋转的椭圆参与计算
+
+    //圆弧整体正转45度,"判断用的角"就应该是  鼠标所在角度-圆弧整体正转角度(45)
+    var fakeNonRotatingCenterToMouseAngle =
+    (centerToMouseAngle - rotationRadians).mod(decimalPi2);
+
+    // print("判断用角的角度:$fakeNonRotatingCenterToMouseAngle");
+
+    //计算该判断用角度在椭圆上的点
+    var fakeNonRotatingPointOnEdgeByAngle = getOnEdgePointByAngle(
+        radiansToDegrees(fakeNonRotatingCenterToMouseAngle));
+    //将使用判断用角获得到的判断用边上的点,旋转至椭圆整体旋转后的这个判断用点的所在位置.
+    //获取转换到的本地坐标点到 椭圆上该角度点的距离
+    var realPointOnEdgByRealAngle =
+    fakeNonRotatingPointOnEdgeByAngle.rotate(rotationRadians);
+    var distance = realPointOnEdgByRealAngle
+        .toVector2D()
+        .distance(centerToMouseVector);
+    //如果距离小于误差值,就认为在线上
+    if (distance < realDeviation) {
+      return true;
+    }
+    return false;
+  }
+
+  ///获取椭圆上某个角度的点坐标
+  PointEX getOnEdgePointByAngle(Decimal a) {
+    var rad = degreesToRadians(a);
+    var eccAngle = eccentricAngle(rx, ry, rad);
+    var x = rx * decimalCos(eccAngle);
+    var y = ry * decimalSin(eccAngle);
+    return PointEX(x, y);
+  }
+//endregion
 }
 // class DecimalArc2D{
 //   Decimal x = Decimal.zero;

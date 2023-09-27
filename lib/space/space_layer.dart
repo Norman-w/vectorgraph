@@ -11,6 +11,7 @@ import '../objects/bezier_object.dart';
 import '../objects/circle_object.dart';
 import '../objects/ellipse_object.dart';
 import '../objects/rect_object.dart';
+import '../objects/sector_object.dart';
 import '../objects/space_object.dart';
 
 class SpaceLayer{
@@ -48,6 +49,9 @@ class SpaceLayer{
   }
   void addArc(ArcObject arcObject){
     objects.add(arcObject);
+  }
+  void addSector(SectorObject sectorObject){
+    objects.add(sectorObject);
   }
   //get all rects
   // List<Rect> get rectangles => objects.whereType<Rect>().toList();

@@ -8,6 +8,7 @@ import 'package:vectorgraph/objects/circle_object.dart';
 import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
 import 'package:vectorgraph/objects/polygon_object.dart';
 import 'package:vectorgraph/objects/regular_polygonal_star.dart';
+import 'package:vectorgraph/objects/sector_object.dart';
 import 'package:vectorgraph/utils/num_utils.dart';
 import 'package:vectorgraph/viewer/paper.dart';
 
@@ -427,6 +428,10 @@ Space initSpace() {
   addTestArcList2SpaceLayer(layer9);
   //endregion
 
+  //region 第十层,扇形
+  addTestSectorList2SpaceLayer(layer10);
+  //endregion
+
 
 
   space.addPaper(paper);
@@ -440,6 +445,7 @@ Space initSpace() {
   // space.layers.add(layer7);
   // space.layers.add(layer8);
   // space.layers.add(layer9);
+  space.layers.add(layer10);
 
   //给定一个矩形和矩形内部的两个点,计算两点组成的直线与矩形的交点
   var rect = RectEX(Decimal.fromDouble(0), Decimal.fromDouble(0),
@@ -773,4 +779,14 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   如果旋转角度是逆时针的,从起点减去旋转角度,如果小于0,就是跨越了3点线,因为旋转角度这个时候本身就是负数,所以就是判断startAngle+sweepAngle是否小于0
   如果跨越了3点线,那么就要拆分成两段来判断,一段是从起点到3点线的,一段是从3点线到终点的
    */
+}
+
+void addTestSectorList2SpaceLayer(SpaceLayer layer){
+  SectorObject sectorObject = SectorObject.fromCanvas(
+    RectEX.fromLTWH(Decimal.fromInt(-400),Decimal.fromInt(-300), Decimal.fromInt(200), Decimal.fromInt(100)),
+    Decimal.zero,
+    Decimal.fromInt(180)*decimalPerDegree,
+    Decimal.fromInt(135)*decimalPerDegree,
+  );
+  layer.addSector(sectorObject);
 }

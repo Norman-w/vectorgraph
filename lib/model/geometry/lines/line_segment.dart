@@ -16,6 +16,7 @@ class LineSegment{
   Vector2D getVector(){
     return Vector2D(end.x - start.x, end.y - start.y);
   }
+  static LineSegment zero = LineSegment(PointEX.zero, PointEX.zero);
   Decimal getAngle(){
     return getVector().getAngle();
   }
