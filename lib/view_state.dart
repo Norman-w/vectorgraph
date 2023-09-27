@@ -210,15 +210,15 @@ Space initSpace() {
 
   space.addPaper(paper);
   //
-  // space.layers.add(layer1);
-  // space.layers.add(layer2);
+  space.layers.add(layer1);
+  space.layers.add(layer2);
   space.layers.add(layer3);
-  // space.layers.add(layer4);
-  // space.layers.add(layer5);
-  // space.layers.add(layer6);
-  // space.layers.add(layer7);
-  // space.layers.add(layer8);
-  // space.layers.add(layer9);
+  space.layers.add(layer4);
+  space.layers.add(layer5);
+  space.layers.add(layer6);
+  space.layers.add(layer7);
+  space.layers.add(layer8);
+  space.layers.add(layer9);
   space.layers.add(layer10);
   space.layers.add(layer11);
 
