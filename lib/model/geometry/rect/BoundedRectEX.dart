@@ -42,22 +42,23 @@ class BoundedRectEX extends RectEX {
       this.leftBottomRadius,
       this.rightBottomRadius)
       : super.fromLTWH(left, top, width, height){
-    if(leftTopRadius <= Decimal.zero)
+    if(leftTopRadius < Decimal.zero)
     {
-      throw Exception('leftTopRadius must be positive');
+      throw Exception('leftTopRadius of BoundedRectEX can not be negative');
     }
-    if(rightTopRadius <= Decimal.zero)
+    if(rightTopRadius < Decimal.zero)
     {
-      throw Exception('rightTopRadius must be positive');
+      throw Exception('rightTopRadius of BoundedRectEX can not be negative');
     }
-    if(leftBottomRadius <= Decimal.zero)
+    if(leftBottomRadius < Decimal.zero)
     {
-      throw Exception('leftBottomRadius must be positive');
+      throw Exception('leftBottomRadius of BoundedRectEX can not be negative');
     }
-    if(rightBottomRadius <= Decimal.zero)
+    if(rightBottomRadius < Decimal.zero)
     {
-      throw Exception('rightBottomRadius must be positive');
+      throw Exception('rightBottomRadius of BoundedRectEX can not be negative');
     }
+
     if(leftTopRadius != rightTopRadius || leftTopRadius != leftBottomRadius || leftTopRadius != rightBottomRadius)
     {
       commonRadius = null;
