@@ -97,7 +97,12 @@ class _PaintingBoardState extends ConsumerState<PaintingBoard> with SingleTicker
       //region 面
       else if(element is APlaneObject){
         bool newIsInteractive = element.isWorldPointOnEdgeLines(worldPoint, deviation);
+        //如果优先检测是否在边线上的话,就这样写
         bool newIsFocus = element.isWorldPointIn(worldPoint);
+        //如果检测是在边线上,就不设置为在形状内的话,就加上&& !newIsInteractive,这样就不会同时设置为在形状内和在边线上了
+        //当然多数时候我们不望"是否在边线上"影响"是否在形状内".后期可以根据"选线模式","选面模式"来区分是否使用这个逻辑.
+        //可以根据是否在线上有交点和是否在形状内的信息,在渲染层面上动态控制是优先显示在线上还是优先显示在形状内的效果.或者叠加之类的
+        // bool newIsFocus = element.isWorldPointIn(worldPoint) && !newIsInteractive;
         bool oldIsFocus = element.isFocus;
         if(oldIsInteractive != newIsInteractive || oldIsFocus != newIsFocus)
         {
