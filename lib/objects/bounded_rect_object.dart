@@ -59,15 +59,30 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
   }
   void _initRealLineSegments()
   {
-    //初始化四条边(去掉四个角的弧线)
-    var realTopLeft = leftTopSector?.startPoint ?? leftTop;
-    var realTopRight = rightTopSector?.startPoint ?? topRight;
-    var realBottomLeft = leftBottomSector?.startPoint ?? bottomLeft;
-    var realBottomRight = rightBottomSector?.startPoint ?? bottomRight;
-    leftLine = LineSegment(realTopLeft, realBottomLeft);
-    topLine = LineSegment(realTopLeft, realTopRight);
-    rightLine = LineSegment(realTopRight, realBottomRight);
-    bottomLine = LineSegment(realBottomLeft, realBottomRight);
+    /*
+    ╭0→→→→→→→→╮
+    ↑         ↓
+    ↑         ↓
+    ↑         ↓
+    ╰←←←←←←←←←╯
+    * */
+    //初始化四条边(去掉四个角的弧线) 顺时针方向.左上角过了弧线以后开始,从上图的"0"点开始
+    //上方线的开始点为左上角弧线的结束点,如果没有左上角弧线,则使用左上角点.
+    var topLineStart = leftTopSector?.endPoint??leftTop;
+    var topLineEnd = rightTopSector?.startPoint??topRight;
+    //右方线的开始点为右上角弧线的结束点,如果没有右上角弧线,则使用右上角点.
+    var rightLineStart = rightTopSector?.endPoint??topRight;
+    var rightLineEnd = rightBottomSector?.startPoint??bottomRight;
+    //下方线的开始点为右下角弧线的结束点,如果没有右下角弧线,则使用右下角点.
+    var bottomLineStart = rightBottomSector?.endPoint??bottomRight;
+    var bottomLineEnd = leftBottomSector?.startPoint??bottomLeft;
+    //左方线的开始点为左下角弧线的结束点,如果没有左下角弧线,则使用左下角点.
+    var leftLineStart = leftBottomSector?.endPoint??bottomLeft;
+    var leftLineEnd = leftTopSector?.startPoint??topLeft;
+    topLine = LineSegment(topLineStart, topLineEnd);
+    rightLine = LineSegment(rightLineStart, rightLineEnd);
+    bottomLine = LineSegment(bottomLineStart, bottomLineEnd);
+    leftLine = LineSegment(leftLineStart, leftLineEnd);
   }
   BoundedRectObject.fromLTWH(super.left, super.top, super.width, super.height) :
       leftLine = LineSegment(PointEX.zero, PointEX.zero),
@@ -205,12 +220,14 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
   }
 
   @override
-  bool isWorldPointOnEdgeLines(PointEX pointEX, Decimal deviation
-      ) {
+  bool isWorldPointOnEdgeLines(PointEX pointEX, Decimal deviation) {
     //获得相对坐标
     var relativePoint = pointEX - position;
     //如果相对坐标点不在我的自身范围内,则一定不在我的世界范围内
-    if(!selfBounds.contains(relativePoint))
+    //使用selfBounds.expand是因为如果是通过外围的大小来检测的话,就没有容差了.
+    //如 矩形是 从0,0开始到100,100结束,如果容差是10,那么就是从-10,-10开始到110,110结束
+    //如果不进行expand的话,就是从0,0开始到100,100结束,那么就没有容差了.所以鼠标在矩形外围的附近时,检测不到鼠标是否在线上
+    if(!selfBounds.expand(deviation).contains(relativePoint))
     {
       return false;
     }
