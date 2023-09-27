@@ -3,7 +3,6 @@
 目前只使用固定半径的四分之一圆来作为圆角,如果需要更复杂的圆角,后续可以考虑为各个圆角分别设置x,y半径
 * */
 
-
 import '../../../utils/num_utils.dart';
 import 'RectEX.dart';
 
@@ -42,7 +41,34 @@ class BoundedRectEX extends RectEX {
       this.rightTopRadius,
       this.leftBottomRadius,
       this.rightBottomRadius)
-      : super.fromLTWH(left, top, width, height);
+      : super.fromLTWH(left, top, width, height){
+    if(leftTopRadius <= Decimal.zero)
+    {
+      throw Exception('leftTopRadius must be positive');
+    }
+    if(rightTopRadius <= Decimal.zero)
+    {
+      throw Exception('rightTopRadius must be positive');
+    }
+    if(leftBottomRadius <= Decimal.zero)
+    {
+      throw Exception('leftBottomRadius must be positive');
+    }
+    if(rightBottomRadius <= Decimal.zero)
+    {
+      throw Exception('rightBottomRadius must be positive');
+    }
+    if(leftTopRadius != rightTopRadius || leftTopRadius != leftBottomRadius || leftTopRadius != rightBottomRadius)
+    {
+      commonRadius = null;
+    }
+    else
+    {
+      commonRadius = leftTopRadius;
+    }
+    //初始化扇形
+    // _initCornerSectorObjects();
+  }
 
   ///构造函数,给定矩形的左上角坐标,宽度,高度,以及四个角的统一弧度
   BoundedRectEX.fromLTWHRadius(
@@ -55,7 +81,32 @@ class BoundedRectEX extends RectEX {
         leftTopRadius = radius,
         rightBottomRadius = radius,
         rightTopRadius = radius,
-        super.fromLTWH(left, top, width, height);
+        super.fromLTWH(left, top, width, height){
+    if(leftTopRadius <= Decimal.zero)
+    {
+      throw Exception('leftTopRadius must be positive');
+    }
+    if(rightTopRadius <= Decimal.zero)
+    {
+      throw Exception('rightTopRadius must be positive');
+    }
+    if(leftBottomRadius <= Decimal.zero)
+    {
+      throw Exception('leftBottomRadius must be positive');
+    }
+    if(rightBottomRadius <= Decimal.zero)
+    {
+      throw Exception('rightBottomRadius must be positive');
+    }
+    if(leftTopRadius != rightTopRadius || leftTopRadius != leftBottomRadius || leftTopRadius != rightBottomRadius)
+    {
+      commonRadius = null;
+    }
+    else
+    {
+      commonRadius = leftTopRadius;
+    }
+  }
   ///构造函数,给定矩形的左上角坐标,宽度,高度,不设置弧度,构造完以后可以使用..radius = xxx来设置弧度
   BoundedRectEX.fromLTWH(
       Decimal left,
@@ -66,7 +117,31 @@ class BoundedRectEX extends RectEX {
         leftTopRadius = Decimal.zero,
         rightBottomRadius = Decimal.zero,
         rightTopRadius = Decimal.zero,
-        super.fromLTWH(left, top, width, height);
+        super.fromLTWH(left, top, width, height){
+    if(leftTopRadius <= Decimal.zero)
+    {
+      throw Exception('leftTopRadius must be positive');
+    }
+    if(rightTopRadius <= Decimal.zero)
+    {
+      throw Exception('rightTopRadius must be positive');
+    }
+    if(leftBottomRadius <= Decimal.zero)
+    {
+      throw Exception('leftBottomRadius must be positive');
+    }
+    if(rightBottomRadius <= Decimal.zero)
+    {
+      throw Exception('rightBottomRadius must be positive');
+    }
+    if(leftTopRadius != rightTopRadius || leftTopRadius != leftBottomRadius || leftTopRadius != rightBottomRadius)
+    {
+      commonRadius = null;
+    }
+    else
+    {
+      commonRadius = leftTopRadius;
+    }
+  }
   //endregion
 }
-

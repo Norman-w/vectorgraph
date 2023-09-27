@@ -150,9 +150,9 @@ class Sector{
     var zero2PointDistance = pointEX.distanceTo(_arc.position);
     var zero2OnArcPointDistance = onArcPoint.distanceTo(PointEX.zero);
     var lessThanRadius = zero2PointDistance <= zero2OnArcPointDistance;
-    if(lessThanRadius){
-      print("在里面哦");
-    }
+    // if(lessThanRadius){
+    //   print("在扇形里面哦");
+    // }
     return lessThanRadius;
   }
 

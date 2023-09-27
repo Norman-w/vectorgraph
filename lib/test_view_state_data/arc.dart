@@ -409,4 +409,22 @@ void addTestArcList2SpaceLayer(SpaceLayer layer) {
   如果旋转角度是逆时针的,从起点减去旋转角度,如果小于0,就是跨越了3点线,因为旋转角度这个时候本身就是负数,所以就是判断startAngle+sweepAngle是否小于0
   如果跨越了3点线,那么就要拆分成两段来判断,一段是从起点到3点线的,一段是从3点线到终点的
    */
+
+  /*
+  2023年09月27日15:11:25
+  一个矩形为
+  180,100,20,20 的 left top width height矩形
+  里面从270度到90度做一个弧线
+  看弧线的起始点和终止点
+  * */
+
+  // var test270_90 =
+  // ArcObject.fromCanvas(
+  //   RectEX.fromLTWH(
+  //       Decimal.fromInt(180), Decimal.fromInt(100), Decimal.fromInt(20), Decimal.fromInt(20)),
+  //   Decimal.zero,
+  //   Decimal.fromInt(270) * decimalPerDegree,
+  //   Decimal.fromInt(90) * decimalPerDegree,
+  // );
+  // print("起始点:${test270_90.startPoint} 终止点:${test270_90.endPoint}");
 }

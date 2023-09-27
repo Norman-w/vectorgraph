@@ -16,6 +16,9 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
   ///初始化四个扇形的对象
   void _initCornerSectorObjects()
   {
+    var degree90 = Decimal.fromInt(90) * decimalPerDegree;
+    var degree180 = Decimal.fromInt(180) * decimalPerDegree;
+    var degree270 = Decimal.fromInt(270) * decimalPerDegree;
     //如果四个弧度都为0,则不需要初始化
     if(leftTopRadius <= Decimal.zero)
     {
@@ -24,8 +27,8 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
     leftTopSector = SectorObject.fromCanvas(
         RectEX.fromLTWH(left, top, leftTopRadius * Decimal.two, leftTopRadius * Decimal.two),
         Decimal.zero,
-        Decimal.fromInt(180),
-        Decimal.fromInt(90));
+        degree180,
+        degree90);
     if(rightTopRadius <= Decimal.zero)
     {
       return;
@@ -33,8 +36,8 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
     rightTopSector = SectorObject.fromCanvas(
         RectEX.fromLTWH(right - rightTopRadius * Decimal.two, top, rightTopRadius * Decimal.two, rightTopRadius * Decimal.two),
         Decimal.zero,
-        Decimal.fromInt(270),
-        Decimal.fromInt(90));
+        degree270,
+        degree90);
     if(leftBottomRadius <= Decimal.zero)
     {
       return;
@@ -42,8 +45,8 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
     leftBottomSector = SectorObject.fromCanvas(
         RectEX.fromLTWH(left, bottom - leftBottomRadius * Decimal.two, leftBottomRadius * Decimal.two, leftBottomRadius * Decimal.two),
         Decimal.zero,
-        Decimal.fromInt(90),
-        Decimal.fromInt(90));
+        degree90,
+        degree90);
     if(rightBottomRadius <= Decimal.zero)
     {
       return;
@@ -52,7 +55,7 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
         RectEX.fromLTWH(right - rightBottomRadius * Decimal.two, bottom - rightBottomRadius * Decimal.two, rightBottomRadius * Decimal.two, rightBottomRadius * Decimal.two),
         Decimal.zero,
         Decimal.zero,
-        Decimal.fromInt(90));
+        degree90);
   }
   void _initRealLineSegments()
   {
@@ -134,27 +137,66 @@ class BoundedRectObject extends BoundedRectEX with SpaceObject,APlaneObject{
     //如果相对坐标点不在我的自身范围内,则一定不在我的世界范围内
     if(!selfBounds.contains(relativePoint))
     {
+      // print('相对坐标$pointEX不在我自身内部');
       return false;
     }
     //如果相对坐标点在我的自身范围内,需要判断是不是在我的四个角的扇形中
     //运行到这个地方,只有鼠标在四个角的矩形中
     //但是不在鼠标所在的角的扇形中,才会判断为不在我的世界范围内
-    var atLeftTopRect = leftTopSector?.bounds.contains(relativePoint) ?? false;
+
+    //region 弧线所在的矩形是更大一些的,但是我们检查的只是检查了某一个角的,如果是90度角的话 只是检测那个弧线所在矩形的四分之一
+    var leftTopCheckingRect = RectEX.zero;
+    if(leftTopSector!= null){
+      leftTopCheckingRect = RectEX.fromLTWH(
+          selfBounds.left,
+          selfBounds.top,
+          leftTopRadius,
+          leftTopRadius);
+    }
+    var rightTopCheckingRect = RectEX.zero;
+    if(rightTopSector!= null){
+      rightTopCheckingRect = RectEX.fromLTWH(
+          selfBounds.right - rightTopRadius,
+          selfBounds.top,
+          rightTopRadius,
+          rightTopRadius);
+    }
+    var leftBottomCheckingRect = RectEX.zero;
+    if(leftBottomSector!= null){
+      leftBottomCheckingRect = RectEX.fromLTWH(
+          selfBounds.left,
+          selfBounds.bottom - leftBottomRadius,
+          leftBottomRadius,
+          leftBottomRadius);
+    }
+    var rightBottomCheckingRect = RectEX.zero;
+    if(rightBottomSector!= null){
+      rightBottomCheckingRect = RectEX.fromLTWH(
+          selfBounds.right - rightBottomRadius,
+          selfBounds.bottom - rightBottomRadius,
+          rightBottomRadius,
+          rightBottomRadius);
+    }
+    //endregion
+
+    var atLeftTopRect = leftTopCheckingRect.contains(relativePoint);
     if(atLeftTopRect && !leftTopSector!.contains(relativePoint))
     {
+      // print('相对坐标$pointEX在左上角矩形内部,但不在左上角扇形内部');
       return false;
     }
-    var atRightTopRect = rightTopSector?.bounds.contains(relativePoint) ?? false;
+    var atRightTopRect = rightTopCheckingRect.contains(relativePoint);
     if(atRightTopRect && !rightTopSector!.contains(relativePoint))
     {
+      // print('相对坐标$pointEX在右上角矩形内部,但不在右上角扇形内部');
       return false;
     }
-    var atLeftBottomRect = leftBottomSector?.bounds.contains(relativePoint) ?? false;
+    var atLeftBottomRect = leftBottomCheckingRect.contains(relativePoint);
     if(atLeftBottomRect && !leftBottomSector!.contains(relativePoint))
     {
       return false;
     }
-    var atRightBottomRect = rightBottomSector?.bounds.contains(relativePoint) ?? false;
+    var atRightBottomRect =rightBottomCheckingRect.contains(relativePoint);
     if(atRightBottomRect && !rightBottomSector!.contains(relativePoint))
     {
       return false;

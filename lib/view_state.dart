@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vectorgraph/model/geometry/points/point_ex.dart';
 import 'package:vectorgraph/test_view_state_data/arc.dart';
+import 'package:vectorgraph/test_view_state_data/bounded_rect.dart';
 import 'package:vectorgraph/test_view_state_data/line.dart';
 import 'package:vectorgraph/test_view_state_data/rect_and_point.dart';
 import 'package:vectorgraph/test_view_state_data/sector.dart';
@@ -153,6 +154,7 @@ Space initSpace() {
   var layer8 = SpaceLayer(7);
   var layer9 = SpaceLayer(9);
   var layer10 = SpaceLayer(10);
+  var layer11 = SpaceLayer(11);
 
   var paper = Paper(
     name: "paper1",
@@ -203,6 +205,9 @@ Space initSpace() {
   addTestSectorList2SpaceLayer(layer10);
   //endregion
 
+  //region 第十一层,圆角矩形
+  addBoundedRectAndPoint2SpaceLayer(layer11);
+
   space.addPaper(paper);
   //
   // space.layers.add(layer1);
@@ -215,6 +220,7 @@ Space initSpace() {
   // space.layers.add(layer8);
   // space.layers.add(layer9);
   space.layers.add(layer10);
+  space.layers.add(layer11);
 
   return space;
 }

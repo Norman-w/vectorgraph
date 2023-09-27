@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/material.dart';
+import 'package:vectorgraph/objects/bounded_rect_object.dart';
 import 'package:vectorgraph/objects/circle_object.dart';
 import 'package:vectorgraph/objects/ellipse_object.dart';
 import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
@@ -18,6 +19,7 @@ import '../objects/line_object.dart';
 import 'ruler.dart';
 import '../view_state.dart';
 import 'widget_of_object/arc_object_widget.dart';
+import 'widget_of_object/bounded_rect_object_widget.dart';
 import 'widget_of_object/circle_object_widget.dart';
 import 'widget_of_object/ellipse_object_widget.dart';
 import 'widget_of_object/bezier_object_widget.dart';
@@ -137,6 +139,14 @@ class ViewPort extends ConsumerWidget {
       else if(e.runtimeType == SectorObject){
         SectorObject sector = e as SectorObject;
         return SectorObjectWidget(sectorObject: sector,
+          viewPortPixelSize: state.viewPortSize,
+          viewPortOffset: state.viewSpaceViewPortOffset,
+          viewPortScale: state.viewPortScale,
+        );
+      }
+      else if(e.runtimeType == BoundedRectObject){
+        BoundedRectObject boundedRectObject = e as BoundedRectObject;
+        return BoundedRectObjectWidget(boundedRectObject: boundedRectObject,
           viewPortPixelSize: state.viewPortSize,
           viewPortOffset: state.viewSpaceViewPortOffset,
           viewPortScale: state.viewPortScale,

@@ -1,6 +1,7 @@
 //space中包含多个层,层中再包含图元和组,图元由点和线等组成.组就是图元的集合
 
 import 'package:vectorgraph/objects/arc_object.dart';
+import 'package:vectorgraph/objects/bounded_rect_object.dart';
 import 'package:vectorgraph/objects/equilateral_polygon_object.dart';
 import 'package:vectorgraph/objects/line_object.dart';
 import 'package:vectorgraph/objects/point_object.dart';
@@ -52,6 +53,9 @@ class SpaceLayer{
   }
   void addSector(SectorObject sectorObject){
     objects.add(sectorObject);
+  }
+  void addBoundedRect(BoundedRectObject boundedRectObject){
+    objects.add(boundedRectObject);
   }
   //get all rects
   // List<Rect> get rectangles => objects.whereType<Rect>().toList();
